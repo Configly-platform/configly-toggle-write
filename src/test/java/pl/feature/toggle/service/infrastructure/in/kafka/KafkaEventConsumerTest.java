@@ -1,20 +1,20 @@
 package pl.feature.toggle.service.infrastructure.in.kafka;
 
-import com.ftaas.contracts.shared.EventProcessor;
 import pl.feature.toggle.service.AbstractUnitTest;
 import pl.feature.toggle.service.application.port.in.ProjectEnvironmentProjectionUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.feature.toggle.service.contracts.shared.EventProcessor;
 
 import java.util.UUID;
 
-import static com.ftaas.contracts.event.projects.EnvironmentCreated.environmentCreatedEventBuilder;
-import static com.ftaas.contracts.event.projects.ProjectCreated.projectCreatedEventBuilder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static pl.feature.toggle.service.contracts.event.projects.EnvironmentCreated.environmentCreatedEventBuilder;
+import static pl.feature.toggle.service.contracts.event.projects.ProjectCreated.projectCreatedEventBuilder;
 
 class KafkaEventConsumerTest extends AbstractUnitTest {
 

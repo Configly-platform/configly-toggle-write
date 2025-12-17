@@ -1,11 +1,11 @@
 package pl.feature.toggle.service.infrastructure.in.kafka;
 
-import com.ftaas.contracts.shared.EventProcessor;
-import com.ftaas.contracts.shared.IntegrationEvent;
 import pl.feature.toggle.service.application.port.out.ProcessedEventRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+import pl.feature.toggle.service.contracts.shared.EventProcessor;
+import pl.feature.toggle.service.contracts.shared.IntegrationEvent;
 
 import java.util.function.Consumer;
 

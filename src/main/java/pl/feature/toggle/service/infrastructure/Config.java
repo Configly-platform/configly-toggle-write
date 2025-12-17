@@ -1,6 +1,5 @@
 package pl.feature.toggle.service.infrastructure;
 
-import github.saqie.ftaasoutbox.api.OutboxWriter;
 import pl.feature.toggle.service.application.handler.FeatureToggleHandlerFacade;
 import pl.feature.toggle.service.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.application.port.in.DeleteFeatureToggleUseCase;
@@ -11,6 +10,7 @@ import pl.feature.toggle.service.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.application.port.out.ProjectRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pl.feature.toggle.service.outbox.api.OutboxWriter;
 
 @Configuration("featureToggleWriteConfiguration")
 class Config {

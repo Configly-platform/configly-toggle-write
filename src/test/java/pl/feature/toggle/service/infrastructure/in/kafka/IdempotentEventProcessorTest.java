@@ -1,8 +1,8 @@
 package pl.feature.toggle.service.infrastructure.in.kafka;
 
-import com.ftaas.contracts.shared.EventId;
-import com.ftaas.contracts.shared.EventProcessor;
 import pl.feature.toggle.service.AbstractUnitTest;
+import pl.feature.toggle.service.contracts.shared.EventId;
+import pl.feature.toggle.service.contracts.shared.EventProcessor;
 import pl.feature.toggle.service.infrastructure.FakeProcessedEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
 
-import static com.ftaas.contracts.event.projects.ProjectCreated.projectCreatedEventBuilder;
 import static org.mockito.Mockito.*;
+import static pl.feature.toggle.service.contracts.event.projects.ProjectCreated.projectCreatedEventBuilder;
 
 class IdempotentEventProcessorTest extends AbstractUnitTest {
 

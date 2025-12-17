@@ -1,6 +1,7 @@
 package pl.feature.toggle.service.domain.featuretoggle.exception;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleName;
+
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 
 public class FeatureToggleAlreadyExistsException extends RuntimeException {
     public FeatureToggleAlreadyExistsException(FeatureToggleName featureToggleName) {

@@ -1,17 +1,13 @@
 package pl.feature.toggle.service.domain.featuretoggle;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleType;
-import com.ftaas.domain.CreatedAt;
-import com.ftaas.domain.UpdatedAt;
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.featuretoggle.FeatureToggleDescription;
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
-import com.ftaas.domain.featuretoggle.FeatureToggleName;
-import com.ftaas.domain.featuretoggle.FeatureToggleValue;
-import com.ftaas.domain.project.ProjectId;
 import pl.feature.toggle.service.application.port.in.command.CreateFeatureToggleCommand;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
+import pl.feature.toggle.service.model.CreatedAt;
+import pl.feature.toggle.service.model.UpdatedAt;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.featuretoggle.*;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 public record FeatureToggle(
         FeatureToggleId id,

@@ -1,16 +1,16 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
-import github.saqie.ftaasoutbox.api.OutboxWriter;
 import pl.feature.toggle.service.application.port.in.DeleteFeatureToggleUseCase;
 import pl.feature.toggle.service.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.domain.featuretoggle.exception.FeatureToggleNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.outbox.api.OutboxWriter;
 
-import static com.ftaas.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 import static pl.feature.toggle.service.application.handler.FeatureToggleHandlerEventMapper.createFeatureToggleDeletedEvent;
+import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 
 @AllArgsConstructor
 class DeleteFeatureToggleHandler implements DeleteFeatureToggleUseCase {

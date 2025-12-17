@@ -1,11 +1,12 @@
 package pl.feature.toggle.service.infrastructure.out.db;
 
-import com.ftaas.contracts.shared.EventId;
 import pl.feature.toggle.service.application.port.out.ProcessedEventRepository;
 import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
+import pl.feature.toggle.service.contracts.shared.EventId;
 
-import static github.saqie.ftaas.jooq.Tables.PROCESSED_EVENTS;
+import static github.saqie.ftaas.jooq.tables.ProcessedEvents.PROCESSED_EVENTS;
+
 
 @AllArgsConstructor
 class ProcessedEventJooqRepository implements ProcessedEventRepository {

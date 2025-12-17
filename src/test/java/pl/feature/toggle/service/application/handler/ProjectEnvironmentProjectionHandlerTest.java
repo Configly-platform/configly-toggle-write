@@ -1,7 +1,5 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.project.ProjectId;
 import pl.feature.toggle.service.AbstractUnitTest;
 import pl.feature.toggle.service.application.port.in.ProjectEnvironmentProjectionUseCase;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
@@ -9,12 +7,14 @@ import pl.feature.toggle.service.domain.project.ProjectSnapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 import java.util.UUID;
 
-import static com.ftaas.contracts.event.projects.EnvironmentCreated.environmentCreatedEventBuilder;
-import static com.ftaas.contracts.event.projects.ProjectCreated.projectCreatedEventBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
+import static pl.feature.toggle.service.contracts.event.projects.EnvironmentCreated.environmentCreatedEventBuilder;
+import static pl.feature.toggle.service.contracts.event.projects.ProjectCreated.projectCreatedEventBuilder;
 
 class ProjectEnvironmentProjectionHandlerTest extends AbstractUnitTest {
 

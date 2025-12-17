@@ -1,16 +1,16 @@
 package pl.feature.toggle.service.infrastructure.out.db;
 
-import com.ftaas.domain.CreatedAt;
-import com.ftaas.domain.UpdatedAt;
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.featuretoggle.*;
-import com.ftaas.domain.project.ProjectId;
 import github.saqie.ftaas.jooq.tables.records.EnvironmentSnapshotRecord;
 import github.saqie.ftaas.jooq.tables.records.FeatureToggleRecord;
 import github.saqie.ftaas.jooq.tables.records.ProjectSnapshotRecord;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
+import pl.feature.toggle.service.model.CreatedAt;
+import pl.feature.toggle.service.model.UpdatedAt;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.featuretoggle.*;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 class Mapper {
 

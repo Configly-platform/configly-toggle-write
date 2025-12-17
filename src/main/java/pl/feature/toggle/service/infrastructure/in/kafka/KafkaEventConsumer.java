@@ -1,13 +1,13 @@
 package pl.feature.toggle.service.infrastructure.in.kafka;
 
-import com.ftaas.contracts.event.projects.EnvironmentCreated;
-import com.ftaas.contracts.event.projects.ProjectCreated;
-import com.ftaas.contracts.shared.EventProcessor;
 import pl.feature.toggle.service.application.port.in.ProjectEnvironmentProjectionUseCase;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import pl.feature.toggle.service.contracts.event.projects.EnvironmentCreated;
+import pl.feature.toggle.service.contracts.event.projects.ProjectCreated;
+import pl.feature.toggle.service.contracts.shared.EventProcessor;
 
 @Slf4j
 @AllArgsConstructor

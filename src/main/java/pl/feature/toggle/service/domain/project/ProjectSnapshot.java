@@ -1,7 +1,8 @@
 package pl.feature.toggle.service.domain.project;
 
-import com.ftaas.contracts.event.projects.ProjectCreated;
-import com.ftaas.domain.project.ProjectId;
+
+import pl.feature.toggle.service.contracts.event.projects.ProjectCreated;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 public record ProjectSnapshot(
         ProjectId id

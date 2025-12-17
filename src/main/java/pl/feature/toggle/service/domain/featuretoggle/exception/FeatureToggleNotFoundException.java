@@ -1,6 +1,7 @@
 package pl.feature.toggle.service.domain.featuretoggle.exception;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
+
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 
 public class FeatureToggleNotFoundException extends RuntimeException {
     public FeatureToggleNotFoundException(FeatureToggleId featureToggleId) {

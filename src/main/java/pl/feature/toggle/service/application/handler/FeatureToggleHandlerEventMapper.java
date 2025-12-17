@@ -1,14 +1,15 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.contracts.event.featuretoggle.FeatureToggleCreated;
-import com.ftaas.contracts.event.featuretoggle.FeatureToggleDeleted;
-import com.ftaas.contracts.event.featuretoggle.FeatureToggleUpdated;
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleCreated;
+import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleDeleted;
+import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleUpdated;
 import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 
-import static com.ftaas.contracts.event.featuretoggle.FeatureToggleCreated.featureToggleCreatedEventBuilder;
-import static com.ftaas.contracts.event.featuretoggle.FeatureToggleDeleted.featureToggleDeletedEvent;
-import static com.ftaas.contracts.event.featuretoggle.FeatureToggleUpdated.featureToggleUpdatedEventBuilder;
+import static pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleCreated.featureToggleCreatedEventBuilder;
+import static pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleDeleted.featureToggleDeletedEvent;
+import static pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleUpdated.featureToggleUpdatedEventBuilder;
+
 
 final class FeatureToggleHandlerEventMapper {
 

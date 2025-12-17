@@ -1,7 +1,7 @@
 package pl.feature.toggle.service.infrastructure;
 
-import com.ftaas.contracts.shared.EventId;
 import pl.feature.toggle.service.application.port.out.ProcessedEventRepository;
+import pl.feature.toggle.service.contracts.shared.EventId;
 
 import java.util.HashSet;
 import java.util.Set;

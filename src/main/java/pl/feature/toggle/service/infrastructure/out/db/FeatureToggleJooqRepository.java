@@ -1,16 +1,16 @@
 package pl.feature.toggle.service.infrastructure.out.db;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
-import com.ftaas.domain.featuretoggle.FeatureToggleName;
-import github.saqie.ftaas.jooq.tables.records.FeatureToggleRecord;
 import pl.feature.toggle.service.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
 import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 
 import java.util.Optional;
 
-import static github.saqie.ftaas.jooq.Tables.*;
+import static github.saqie.ftaas.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
+
 
 @AllArgsConstructor
 class FeatureToggleJooqRepository implements FeatureToggleRepository {

@@ -1,9 +1,9 @@
 package pl.feature.toggle.service.domain.environment;
 
-import com.ftaas.contracts.event.projects.EnvironmentCreated;
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.project.ProjectId;
+import pl.feature.toggle.service.contracts.event.projects.EnvironmentCreated;
 import pl.feature.toggle.service.domain.environment.exception.EnvironmentNotAssignedToProjectException;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 public record EnvironmentSnapshot(
         EnvironmentId id,

@@ -1,6 +1,5 @@
 package pl.feature.toggle.service.application.handler;
 
-import github.saqie.ftaasoutbox.api.OutboxWriter;
 import pl.feature.toggle.service.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.application.port.in.DeleteFeatureToggleUseCase;
 import pl.feature.toggle.service.application.port.in.ProjectEnvironmentProjectionUseCase;
@@ -10,6 +9,7 @@ import pl.feature.toggle.service.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.application.port.out.ProjectRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import pl.feature.toggle.service.outbox.api.OutboxWriter;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FeatureToggleHandlerFacade {

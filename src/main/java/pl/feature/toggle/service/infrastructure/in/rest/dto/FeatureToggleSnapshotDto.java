@@ -1,8 +1,8 @@
 package pl.feature.toggle.service.infrastructure.in.rest.dto;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleType;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleType;
 
 public record FeatureToggleSnapshotDto(
         @NotNull

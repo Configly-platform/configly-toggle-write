@@ -1,7 +1,7 @@
 package pl.feature.toggle.service.builder;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleType;
 import pl.feature.toggle.service.application.port.in.command.UpdateFeatureToggleCommand;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleType;
 
 import java.util.UUID;
 

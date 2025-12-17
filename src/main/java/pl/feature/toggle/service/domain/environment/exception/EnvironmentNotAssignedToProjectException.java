@@ -1,7 +1,8 @@
 package pl.feature.toggle.service.domain.environment.exception;
 
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.project.ProjectId;
+
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 public class EnvironmentNotAssignedToProjectException extends RuntimeException {
     public EnvironmentNotAssignedToProjectException(EnvironmentId environmentId, ProjectId projectId) {

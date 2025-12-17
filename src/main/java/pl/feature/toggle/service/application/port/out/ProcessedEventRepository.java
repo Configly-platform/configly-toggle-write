@@ -1,6 +1,7 @@
 package pl.feature.toggle.service.application.port.out;
 
-import com.ftaas.contracts.shared.EventId;
+
+import pl.feature.toggle.service.contracts.shared.EventId;
 
 public interface ProcessedEventRepository {
 

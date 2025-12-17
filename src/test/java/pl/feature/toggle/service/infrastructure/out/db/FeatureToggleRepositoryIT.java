@@ -1,15 +1,15 @@
 package pl.feature.toggle.service.infrastructure.out.db;
 
-import com.ftaas.domain.featuretoggle.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.AbstractITTest;
 import pl.feature.toggle.service.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import pl.feature.toggle.service.model.featuretoggle.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

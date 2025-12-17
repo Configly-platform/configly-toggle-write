@@ -1,6 +1,7 @@
 package pl.feature.toggle.service.domain.project.exception;
 
-import com.ftaas.domain.project.ProjectId;
+
+import pl.feature.toggle.service.model.project.ProjectId;
 
 public class ProjectNotFoundException extends RuntimeException {
     public ProjectNotFoundException(ProjectId projectId) {

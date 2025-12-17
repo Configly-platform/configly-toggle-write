@@ -1,11 +1,11 @@
 package pl.feature.toggle.service.infrastructure.out.db;
 
-import com.ftaas.contracts.shared.EventId;
 import pl.feature.toggle.service.AbstractITTest;
 import pl.feature.toggle.service.application.port.out.ProcessedEventRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.feature.toggle.service.contracts.shared.EventId;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

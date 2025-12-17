@@ -1,8 +1,8 @@
 package pl.feature.toggle.service.infrastructure;
 
-import com.ftaas.domain.project.ProjectId;
 import pl.feature.toggle.service.application.port.out.ProjectRepository;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 import java.util.HashMap;
 import java.util.Map;

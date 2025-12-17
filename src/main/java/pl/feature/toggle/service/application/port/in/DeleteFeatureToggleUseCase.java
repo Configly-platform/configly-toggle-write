@@ -1,6 +1,7 @@
 package pl.feature.toggle.service.application.port.in;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
+
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 
 public interface DeleteFeatureToggleUseCase {
 

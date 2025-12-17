@@ -1,9 +1,5 @@
 package pl.feature.toggle.service;
 
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.featuretoggle.FeatureToggleType;
-import com.ftaas.domain.project.ProjectId;
-import github.saqie.ftaasoutbox.FakeOutboxWriter;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
@@ -12,6 +8,10 @@ import pl.feature.toggle.service.infrastructure.FakeFeatureToggleRepository;
 import pl.feature.toggle.service.infrastructure.FakeProjectRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleType;
+import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.outbox.FakeOutboxWriter;
 
 import static pl.feature.toggle.service.builder.FakeCreateFeatureToggleCommandBuilder.createFeatureToggleCommandBuilder;
 

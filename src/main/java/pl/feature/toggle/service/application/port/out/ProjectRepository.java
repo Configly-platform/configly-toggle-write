@@ -1,7 +1,7 @@
 package pl.feature.toggle.service.application.port.out;
 
-import com.ftaas.domain.project.ProjectId;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 import java.util.Optional;
 

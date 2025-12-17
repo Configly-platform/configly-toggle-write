@@ -1,9 +1,9 @@
 package pl.feature.toggle.service.infrastructure;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
-import com.ftaas.domain.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 
 import java.util.HashMap;
 import java.util.Map;

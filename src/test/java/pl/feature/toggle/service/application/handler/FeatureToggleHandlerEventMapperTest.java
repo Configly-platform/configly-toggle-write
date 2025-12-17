@@ -1,10 +1,10 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.project.ProjectId;
 import pl.feature.toggle.service.AbstractUnitTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

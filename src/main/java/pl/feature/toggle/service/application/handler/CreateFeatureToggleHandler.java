@@ -1,9 +1,7 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
-import com.ftaas.domain.project.ProjectId;
-import github.saqie.ftaasoutbox.api.OutboxWriter;
+import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.application.port.in.command.CreateFeatureToggleCommand;
 import pl.feature.toggle.service.application.port.out.EnvironmentRepository;
@@ -11,15 +9,17 @@ import pl.feature.toggle.service.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.application.port.out.ProjectRepository;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.domain.environment.exception.EnvironmentNotFoundException;
+import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.domain.featuretoggle.exception.FeatureToggleAlreadyExistsException;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
 import pl.feature.toggle.service.domain.project.exception.ProjectNotFoundException;
-import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
-import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.outbox.api.OutboxWriter;
 
-import static com.ftaas.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 import static pl.feature.toggle.service.application.handler.FeatureToggleHandlerEventMapper.createFeatureToggleCreatedEvent;
+import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 
 @AllArgsConstructor
 class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {

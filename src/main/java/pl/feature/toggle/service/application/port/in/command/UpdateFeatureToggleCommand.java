@@ -1,10 +1,9 @@
 package pl.feature.toggle.service.application.port.in.command;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleType;
-import com.ftaas.domain.environment.EnvironmentId;
-import com.ftaas.domain.featuretoggle.*;
-import com.ftaas.domain.project.ProjectId;
 import pl.feature.toggle.service.infrastructure.in.rest.dto.FeatureToggleSnapshotDto;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.featuretoggle.*;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 import java.util.UUID;
 

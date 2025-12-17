@@ -1,10 +1,10 @@
 package pl.feature.toggle.service.infrastructure.out.db;
 
-import com.ftaas.domain.project.ProjectId;
 import pl.feature.toggle.service.application.port.out.ProjectRepository;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
 import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 import java.util.Optional;
 

@@ -1,14 +1,15 @@
 package pl.feature.toggle.service.infrastructure.out.db;
 
-import com.ftaas.domain.environment.EnvironmentId;
 import pl.feature.toggle.service.application.port.out.EnvironmentRepository;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
 
 import java.util.Optional;
 
-import static github.saqie.ftaas.jooq.Tables.ENVIRONMENT_SNAPSHOT;
+import static github.saqie.ftaas.jooq.tables.EnvironmentSnapshot.ENVIRONMENT_SNAPSHOT;
+
 
 @AllArgsConstructor
 class EnvironmentJooqRepository implements EnvironmentRepository {

@@ -1,8 +1,8 @@
 package pl.feature.toggle.service.infrastructure.in.kafka;
 
-import com.ftaas.contracts.shared.EventProcessor;
 import pl.feature.toggle.service.application.port.in.ProjectEnvironmentProjectionUseCase;
 import pl.feature.toggle.service.application.port.out.ProcessedEventRepository;
+import pl.feature.toggle.service.contracts.shared.EventProcessor;
 import pl.feature.toggle.service.exception.NotRetryableException;
 import pl.feature.toggle.service.exception.RetryableException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

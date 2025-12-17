@@ -1,6 +1,5 @@
 package pl.feature.toggle.service;
 
-import com.ftaas.domain.project.ProjectId;
 import pl.feature.toggle.service.application.port.out.EnvironmentRepository;
 import pl.feature.toggle.service.application.port.out.ProjectRepository;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
@@ -14,12 +13,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import pl.feature.toggle.service.model.project.ProjectId;
 
 import static github.saqie.ftaas.jooq.tables.EnvironmentSnapshot.ENVIRONMENT_SNAPSHOT;
 import static github.saqie.ftaas.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
 import static github.saqie.ftaas.jooq.tables.ProcessedEvents.PROCESSED_EVENTS;
 import static github.saqie.ftaas.jooq.tables.ProjectSnapshot.PROJECT_SNAPSHOT;
-import static github.saqie.ftaas.outbox.jooq.tables.OutboxEvents.OUTBOX_EVENTS;
+import static pl.feature.ftaas.outbox.jooq.tables.OutboxEvents.OUTBOX_EVENTS;
 
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

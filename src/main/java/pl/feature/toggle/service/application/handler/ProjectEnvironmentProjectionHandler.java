@@ -1,10 +1,10 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.contracts.event.projects.EnvironmentCreated;
-import com.ftaas.contracts.event.projects.ProjectCreated;
 import pl.feature.toggle.service.application.port.in.ProjectEnvironmentProjectionUseCase;
 import pl.feature.toggle.service.application.port.out.EnvironmentRepository;
 import pl.feature.toggle.service.application.port.out.ProjectRepository;
+import pl.feature.toggle.service.contracts.event.projects.EnvironmentCreated;
+import pl.feature.toggle.service.contracts.event.projects.ProjectCreated;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
 import lombok.AllArgsConstructor;

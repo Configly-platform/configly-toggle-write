@@ -1,19 +1,19 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.contracts.event.featuretoggle.FeatureToggleDeleted;
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.AbstractUnitTest;
 import pl.feature.toggle.service.application.port.in.DeleteFeatureToggleUseCase;
+import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleDeleted;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.domain.featuretoggle.exception.FeatureToggleNotFoundException;
 import pl.feature.toggle.service.domain.project.ProjectSnapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 
-import static com.ftaas.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
+import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 
 class DeleteFeatureToggleHandlerTest extends AbstractUnitTest {
 

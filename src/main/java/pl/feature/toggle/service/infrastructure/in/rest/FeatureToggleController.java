@@ -1,6 +1,5 @@
 package pl.feature.toggle.service.infrastructure.in.rest;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.application.port.in.DeleteFeatureToggleUseCase;
 import pl.feature.toggle.service.application.port.in.UpdateFeatureToggleUseCase;
 import pl.feature.toggle.service.application.port.in.command.CreateFeatureToggleCommand;
@@ -10,6 +9,7 @@ import pl.feature.toggle.service.infrastructure.in.rest.dto.FeatureToggleSnapsho
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 
 import java.util.UUID;
 

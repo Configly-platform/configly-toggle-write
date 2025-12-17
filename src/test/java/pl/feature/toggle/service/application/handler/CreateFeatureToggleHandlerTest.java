@@ -1,9 +1,8 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.contracts.event.featuretoggle.FeatureToggleCreated;
-import com.ftaas.domain.featuretoggle.FeatureToggleType;
 import pl.feature.toggle.service.AbstractUnitTest;
 import pl.feature.toggle.service.application.port.in.CreateFeatureToggleUseCase;
+import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleCreated;
 import pl.feature.toggle.service.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.domain.environment.exception.EnvironmentNotAssignedToProjectException;
 import pl.feature.toggle.service.domain.environment.exception.EnvironmentNotFoundException;
@@ -13,13 +12,14 @@ import pl.feature.toggle.service.domain.project.exception.ProjectNotFoundExcepti
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleType;
 
 import java.util.UUID;
 
-import static com.ftaas.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 import static pl.feature.toggle.service.builder.FakeCreateFeatureToggleCommandBuilder.createFeatureToggleCommandBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
+import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 
 class CreateFeatureToggleHandlerTest extends AbstractUnitTest {
 

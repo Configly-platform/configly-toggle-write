@@ -1,7 +1,5 @@
 package pl.feature.toggle.service.application.handler;
 
-import com.ftaas.domain.featuretoggle.FeatureToggleId;
-import github.saqie.ftaasoutbox.api.OutboxWriter;
 import pl.feature.toggle.service.application.port.in.UpdateFeatureToggleUseCase;
 import pl.feature.toggle.service.application.port.in.command.UpdateFeatureToggleCommand;
 import pl.feature.toggle.service.application.port.out.EnvironmentRepository;
@@ -13,9 +11,11 @@ import pl.feature.toggle.service.domain.project.exception.ProjectNotFoundExcepti
 import pl.feature.toggle.service.domain.featuretoggle.FeatureToggle;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.outbox.api.OutboxWriter;
 
-import static com.ftaas.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 import static pl.feature.toggle.service.application.handler.FeatureToggleHandlerEventMapper.createFeatureToggleUpdatedEvent;
+import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 
 @AllArgsConstructor
 class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
