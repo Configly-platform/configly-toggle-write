@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: feature-toggle-write
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  datasource:
+    url: jdbc:postgresql://localhost:5433/togglewrite
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+outbox:
+  batch-size: 100
+  pool-interval-ms: 10s
+  initial-delay-ms: 0s
+  attempt-limit: 3
+  kafka:
+    enabled: true
+    bootstrap-servers: localhost:9092
+    client-id: feature-toggle-write-client
+    topics:
+      - name: feature-toggle-events
+        partitions: 3
+        replication-factor: 1
+    props:
+      spring.json.add.type.headers: true
+
+#logging:
+#  level:
+#    org.springframework.kafka: DEBUG
+#    org.apache.kafka.clients.consumer: DEBUG
+server:
+  port: 8082
