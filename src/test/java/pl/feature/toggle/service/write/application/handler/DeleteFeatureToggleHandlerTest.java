@@ -23,7 +23,7 @@ class DeleteFeatureToggleHandlerTest extends AbstractUnitTest {
 
     @BeforeEach
     void setUp() {
-        sut = FeatureToggleHandlerFacade.deleteFeatureToggleUseCase(featureToggleRepository, outboxWriter);
+        sut = FeatureToggleHandlerFacade.deleteFeatureToggleUseCase(featureToggleRepository, outboxWriter, actorProvider, correlationProvider);
         projectSnapshot = createProject();
         environmentSnapshot = createEnvironment(projectSnapshot.id());
     }

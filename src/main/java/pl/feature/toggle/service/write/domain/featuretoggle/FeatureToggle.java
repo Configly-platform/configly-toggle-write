@@ -1,5 +1,7 @@
 package pl.feature.toggle.service.write.domain.featuretoggle;
 
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValue;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
 import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;

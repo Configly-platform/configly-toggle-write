@@ -1,5 +1,7 @@
 package pl.feature.toggle.service.write.application.handler;
 
+import pl.feature.toggle.service.model.security.actor.ActorProvider;
+import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.write.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.DeleteFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjectionUseCase;
@@ -18,25 +20,31 @@ public final class FeatureToggleHandlerFacade {
             FeatureToggleRepository featureToggleRepository,
             ProjectRepository projectRepository,
             EnvironmentRepository environmentRepository,
-            OutboxWriter outboxWriter
+            OutboxWriter outboxWriter,
+            ActorProvider actorProvider,
+            CorrelationProvider correlationProvider
     ) {
-        return new CreateFeatureToggleHandler(featureToggleRepository, projectRepository, environmentRepository, outboxWriter);
+        return new CreateFeatureToggleHandler(featureToggleRepository, projectRepository, environmentRepository, outboxWriter, actorProvider, correlationProvider);
     }
 
     public static UpdateFeatureToggleUseCase updateFeatureToggleUseCase(
             FeatureToggleRepository featureToggleRepository,
             ProjectRepository projectRepository,
             EnvironmentRepository environmentRepository,
-            OutboxWriter outboxWriter
+            OutboxWriter outboxWriter,
+            ActorProvider actorProvider,
+            CorrelationProvider correlationProvider
     ) {
-        return new UpdateFeatureToggleHandler(featureToggleRepository, projectRepository, environmentRepository, outboxWriter);
+        return new UpdateFeatureToggleHandler(featureToggleRepository, projectRepository, environmentRepository, outboxWriter, actorProvider, correlationProvider);
     }
 
     public static DeleteFeatureToggleUseCase deleteFeatureToggleUseCase(
             FeatureToggleRepository featureToggleRepository,
-            OutboxWriter outboxWriter
+            OutboxWriter outboxWriter,
+            ActorProvider actorProvider,
+            CorrelationProvider correlationProvider
     ) {
-        return new DeleteFeatureToggleHandler(featureToggleRepository, outboxWriter);
+        return new DeleteFeatureToggleHandler(featureToggleRepository, outboxWriter, actorProvider, correlationProvider);
     }
 
     public static ProjectEnvironmentProjectionUseCase projectEnvironmentProjectionUseCase(

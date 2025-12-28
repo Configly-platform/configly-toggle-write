@@ -17,7 +17,7 @@ class FeatureToggleHandlerEventMapperTest extends AbstractUnitTest {
         var featureToggle = createFeatureToggle("TEST", ProjectId.create(), EnvironmentId.create());
 
         // when
-        var featureToggleCreatedEvent = FeatureToggleHandlerEventMapper.createFeatureToggleCreatedEvent(featureToggle);
+        var featureToggleCreatedEvent = FeatureToggleHandlerEventMapper.createFeatureToggleCreatedEvent(featureToggle, actorProvider.current(), correlationProvider.current());
 
         // then
         assertThat(featureToggleCreatedEvent.id()).isEqualTo(featureToggle.id().uuid());
@@ -26,7 +26,7 @@ class FeatureToggleHandlerEventMapperTest extends AbstractUnitTest {
         assertThat(featureToggleCreatedEvent.type()).isEqualTo(featureToggle.type().name());
         assertThat(featureToggleCreatedEvent.environmentId()).isEqualTo(featureToggle.environmentId().uuid());
         assertThat(featureToggleCreatedEvent.projectId()).isEqualTo(featureToggle.projectId().uuid());
-        assertThat(featureToggleCreatedEvent.value()).isEqualTo(featureToggle.value().stringValue());
+        assertThat(featureToggleCreatedEvent.value()).isEqualTo(featureToggle.value().asText());
         assertThat(featureToggleCreatedEvent.eventId()).isNotNull();
         assertThat(featureToggleCreatedEvent.createdAt()).isNotNull();
         assertThat(featureToggleCreatedEvent.updatedAt()).isNotNull();
@@ -39,7 +39,7 @@ class FeatureToggleHandlerEventMapperTest extends AbstractUnitTest {
         var featureToggle = createFeatureToggle("TEST", ProjectId.create(), EnvironmentId.create());
 
         // when
-        var featureToggleDeletedEvent = FeatureToggleHandlerEventMapper.createFeatureToggleDeletedEvent(featureToggle.id());
+        var featureToggleDeletedEvent = FeatureToggleHandlerEventMapper.createFeatureToggleDeletedEvent(featureToggle.id(), actorProvider.current(), correlationProvider.current());
 
         // then
         assertThat(featureToggleDeletedEvent.id()).isEqualTo(featureToggle.id().uuid());
@@ -52,7 +52,7 @@ class FeatureToggleHandlerEventMapperTest extends AbstractUnitTest {
         var featureToggle = createFeatureToggle("TEST", ProjectId.create(), EnvironmentId.create());
 
         // when
-        var featureToggleUpdatedEvent = FeatureToggleHandlerEventMapper.createFeatureToggleUpdatedEvent(featureToggle);
+        var featureToggleUpdatedEvent = FeatureToggleHandlerEventMapper.createFeatureToggleUpdatedEvent(featureToggle, actorProvider.current(), correlationProvider.current());
 
         // then
         assertThat(featureToggleUpdatedEvent.id()).isEqualTo(featureToggle.id().uuid());
@@ -61,7 +61,7 @@ class FeatureToggleHandlerEventMapperTest extends AbstractUnitTest {
         assertThat(featureToggleUpdatedEvent.type()).isEqualTo(featureToggle.type().name());
         assertThat(featureToggleUpdatedEvent.environmentId()).isEqualTo(featureToggle.environmentId().uuid());
         assertThat(featureToggleUpdatedEvent.projectId()).isEqualTo(featureToggle.projectId().uuid());
-        assertThat(featureToggleUpdatedEvent.value()).isEqualTo(featureToggle.value().stringValue());
+        assertThat(featureToggleUpdatedEvent.value()).isEqualTo(featureToggle.value().asText());
         assertThat(featureToggleUpdatedEvent.eventId()).isNotNull();
         assertThat(featureToggleUpdatedEvent.createdAt()).isNotNull();
         assertThat(featureToggleUpdatedEvent.updatedAt()).isNotNull();

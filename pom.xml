@@ -16,9 +16,9 @@
         <java.version>21</java.version>
         <jooq.version>3.20.6</jooq.version>
         <revision>1.0.0-SNAPSHOT</revision>
-        <contracts.version>1.0.1</contracts.version>
         <outbox.version>1.0.1</outbox.version>
-        <model.version>1.0.1</model.version>
+        <contracts.version>1.0.0-6-SNAPSHOT</contracts.version>
+        <model.version>1.0.0-10-SNAPSHOT</model.version>
     </properties>
     <dependencies>
         <dependency>
@@ -40,6 +40,14 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>

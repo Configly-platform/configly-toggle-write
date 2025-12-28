@@ -2,6 +2,8 @@ package pl.feature.toggle.service.write.application.handler;
 
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import pl.feature.toggle.service.model.security.actor.ActorProvider;
+import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.write.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRepository;
@@ -28,6 +30,8 @@ class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {
     private final ProjectRepository projectRepository;
     private final EnvironmentRepository environmentRepository;
     private final OutboxWriter outboxWriter;
+    private final ActorProvider actorProvider;
+    private final CorrelationProvider correlationProvider;
 
     @Override
     @Transactional
@@ -40,7 +44,7 @@ class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {
         var featureToggle = FeatureToggle.create(command, project, environment);
         toggleRepository.save(featureToggle);
 
-        var event = createFeatureToggleCreatedEvent(featureToggle);
+        var event = createFeatureToggleCreatedEvent(featureToggle, actorProvider.current(), correlationProvider.current());
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
 
         return featureToggle.id();

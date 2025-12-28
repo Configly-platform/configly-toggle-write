@@ -1,15 +1,13 @@
 package pl.feature.toggle.service.write;
 
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
 import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
-import pl.feature.toggle.service.write.infrastructure.FakeEnvironmentRepository;
-import pl.feature.toggle.service.write.infrastructure.FakeFeatureToggleRepository;
-import pl.feature.toggle.service.write.infrastructure.FakeProjectRepository;
+import pl.feature.toggle.service.write.infrastructure.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
-import pl.feature.toggle.service.model.featuretoggle.FeatureToggleType;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.outbox.FakeOutboxWriter;
 
@@ -21,6 +19,8 @@ public abstract class AbstractUnitTest {
     protected FakeEnvironmentRepository environmentRepository;
     protected FakeProjectRepository projectRepository;
     protected FakeOutboxWriter outboxWriter;
+    protected FakeCorrelationProvider correlationProvider;
+    protected FakeActorProvider actorProvider;
 
     @BeforeEach
     void setUp() {
@@ -28,6 +28,8 @@ public abstract class AbstractUnitTest {
         environmentRepository = new FakeEnvironmentRepository();
         projectRepository = new FakeProjectRepository();
         outboxWriter = new FakeOutboxWriter();
+        actorProvider = new FakeActorProvider();
+        correlationProvider = new FakeCorrelationProvider();
     }
 
     @AfterEach
@@ -48,7 +50,7 @@ public abstract class AbstractUnitTest {
                 .withDescription("TEST")
                 .withName(name)
                 .withType(FeatureToggleType.BOOLEAN)
-                .withValue("true")
+                .withValue("TRUE")
                 .withEnvironmentId(environmentId.idAsString())
                 .withProjectId(projectId.idAsString())
                 .build();

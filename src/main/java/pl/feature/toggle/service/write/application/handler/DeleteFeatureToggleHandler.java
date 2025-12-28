@@ -1,5 +1,7 @@
 package pl.feature.toggle.service.write.application.handler;
 
+import pl.feature.toggle.service.model.security.actor.ActorProvider;
+import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.write.application.port.in.DeleteFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
@@ -17,6 +19,8 @@ class DeleteFeatureToggleHandler implements DeleteFeatureToggleUseCase {
 
     private final FeatureToggleRepository featureToggleRepository;
     private final OutboxWriter outboxWriter;
+    private final ActorProvider actorProvider;
+    private final CorrelationProvider correlationProvider;
 
     @Override
     @Transactional
@@ -25,7 +29,7 @@ class DeleteFeatureToggleHandler implements DeleteFeatureToggleUseCase {
 
         featureToggleRepository.delete(featureToggle);
 
-        var event = createFeatureToggleDeletedEvent(featureToggleId);
+        var event = createFeatureToggleDeletedEvent(featureToggleId, actorProvider.current(), correlationProvider.current());
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
     }
 

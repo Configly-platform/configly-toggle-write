@@ -1,5 +1,9 @@
 package pl.feature.toggle.service.write.application.port.in.command;
 
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValue;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueRecognizer;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueSpec;
 import pl.feature.toggle.service.write.infrastructure.in.rest.dto.FeatureToggleSnapshotDto;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.*;
@@ -23,7 +27,7 @@ public record CreateFeatureToggleCommand(
                 FeatureToggleName.create(dto.name()),
                 FeatureToggleDescription.create(dto.description()),
                 dto.type(),
-                FeatureToggleValueRecognizer.from(dto.type(), dto.value())
+                FeatureToggleValueRecognizer.from(FeatureToggleValueSpec.create(dto.value(), dto.type()))
         );
     }
 
@@ -34,7 +38,7 @@ public record CreateFeatureToggleCommand(
                 FeatureToggleName.create(name),
                 FeatureToggleDescription.create(description),
                 type,
-                FeatureToggleValueRecognizer.from(type, value)
+                FeatureToggleValueRecognizer.from(FeatureToggleValueSpec.create(value, type))
         );
     }
 

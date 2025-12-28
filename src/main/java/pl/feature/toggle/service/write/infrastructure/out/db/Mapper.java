@@ -3,6 +3,9 @@ package pl.feature.toggle.service.write.infrastructure.out.db;
 import github.saqie.ftaas.jooq.tables.records.EnvironmentSnapshotRecord;
 import github.saqie.ftaas.jooq.tables.records.FeatureToggleRecord;
 import github.saqie.ftaas.jooq.tables.records.ProjectSnapshotRecord;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueRecognizer;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueSpec;
 import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
@@ -23,7 +26,7 @@ class Mapper {
                 FeatureToggleName.create(record.getName()),
                 FeatureToggleDescription.create(record.getDescription()),
                 type,
-                FeatureToggleValueRecognizer.from(type, record.getCurrentValue()),
+                FeatureToggleValueRecognizer.from(FeatureToggleValueSpec.create(record.getCurrentValue(), type)),
                 CreatedAt.of(record.getCreatedAt()),
                 UpdatedAt.of(record.getUpdatedAt())
         );
@@ -37,7 +40,7 @@ class Mapper {
         featureToggleRecord.setName(featureToggle.name().value());
         featureToggleRecord.setDescription(featureToggle.description().value());
         featureToggleRecord.setType(featureToggle.type().name());
-        featureToggleRecord.setCurrentValue(featureToggle.value().stringValue());
+        featureToggleRecord.setCurrentValue(featureToggle.value().asText());
         featureToggleRecord.setCreatedAt(featureToggle.createdAt().toLocalDateTime());
         featureToggleRecord.setUpdatedAt(featureToggle.updatedAt().toLocalDateTime());
         return featureToggleRecord;

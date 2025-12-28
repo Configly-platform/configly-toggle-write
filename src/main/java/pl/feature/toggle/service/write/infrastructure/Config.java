@@ -1,5 +1,7 @@
 package pl.feature.toggle.service.write.infrastructure;
 
+import pl.feature.toggle.service.model.security.actor.ActorProvider;
+import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.write.application.handler.FeatureToggleHandlerFacade;
 import pl.feature.toggle.service.write.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.DeleteFeatureToggleUseCase;
@@ -20,17 +22,21 @@ class Config {
             FeatureToggleRepository featureToggleRepository,
             ProjectRepository projectRepository,
             EnvironmentRepository environmentRepository,
-            OutboxWriter outboxWriter
+            OutboxWriter outboxWriter,
+            ActorProvider actorProvider,
+            CorrelationProvider correlationProvider
     ) {
-        return FeatureToggleHandlerFacade.createFeatureToggleUseCase(featureToggleRepository, projectRepository, environmentRepository, outboxWriter);
+        return FeatureToggleHandlerFacade.createFeatureToggleUseCase(featureToggleRepository, projectRepository, environmentRepository, outboxWriter, actorProvider, correlationProvider);
     }
 
     @Bean
     DeleteFeatureToggleUseCase deleteFeatureToggleUseCase(
             FeatureToggleRepository featureToggleRepository,
-            OutboxWriter outboxWriter
+            OutboxWriter outboxWriter,
+            ActorProvider actorProvider,
+            CorrelationProvider correlationProvider
     ) {
-        return FeatureToggleHandlerFacade.deleteFeatureToggleUseCase(featureToggleRepository, outboxWriter);
+        return FeatureToggleHandlerFacade.deleteFeatureToggleUseCase(featureToggleRepository, outboxWriter, actorProvider, correlationProvider);
     }
 
     @Bean
@@ -38,9 +44,11 @@ class Config {
             FeatureToggleRepository featureToggleRepository,
             ProjectRepository projectRepository,
             EnvironmentRepository environmentRepository,
-            OutboxWriter outboxWriter
+            OutboxWriter outboxWriter,
+            ActorProvider actorProvider,
+            CorrelationProvider correlationProvider
     ) {
-        return FeatureToggleHandlerFacade.updateFeatureToggleUseCase(featureToggleRepository, projectRepository, environmentRepository, outboxWriter);
+        return FeatureToggleHandlerFacade.updateFeatureToggleUseCase(featureToggleRepository, projectRepository, environmentRepository, outboxWriter, actorProvider, correlationProvider);
     }
 
     @Bean

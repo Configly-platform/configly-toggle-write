@@ -1,5 +1,7 @@
 package pl.feature.toggle.service.write.application.handler;
 
+import pl.feature.toggle.service.model.security.actor.ActorProvider;
+import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.write.application.port.in.UpdateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.command.UpdateFeatureToggleCommand;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRepository;
@@ -24,6 +26,8 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
     private final ProjectRepository projectRepository;
     private final EnvironmentRepository environmentRepository;
     private final OutboxWriter outboxWriter;
+    private final ActorProvider actorProvider;
+    private final CorrelationProvider correlationProvider;
 
     @Override
     @Transactional
@@ -41,7 +45,7 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
         );
         toggleRepository.update(featureToggleUpdated);
 
-        var event = createFeatureToggleUpdatedEvent(featureToggleUpdated);
+        var event = createFeatureToggleUpdatedEvent(featureToggleUpdated, actorProvider.current(), correlationProvider.current());
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
     }
 

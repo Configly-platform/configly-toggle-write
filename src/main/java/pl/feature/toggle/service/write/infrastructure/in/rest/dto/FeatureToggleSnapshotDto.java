@@ -2,7 +2,7 @@ package pl.feature.toggle.service.write.infrastructure.in.rest.dto;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
-import pl.feature.toggle.service.model.featuretoggle.FeatureToggleType;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
 
 public record FeatureToggleSnapshotDto(
         @NotNull
