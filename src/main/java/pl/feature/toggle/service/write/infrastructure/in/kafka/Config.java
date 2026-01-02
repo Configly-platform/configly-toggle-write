@@ -1,5 +1,6 @@
 package pl.feature.toggle.service.write.infrastructure.in.kafka;
 
+import pl.feature.toggle.service.contracts.shared.IntegrationEvent;
 import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjectionUseCase;
 import pl.feature.toggle.service.write.application.port.out.ProcessedEventRepository;
 import pl.feature.toggle.service.contracts.shared.EventProcessor;
@@ -39,7 +40,7 @@ class Config {
     private Environment environment;
 
     @Bean
-    ConsumerFactory<String, Object> consumerFactory() {
+    ConsumerFactory<String, IntegrationEvent> consumerFactory() {
         Map<String, Object> cfg = new HashMap<>();
         cfg.put(BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("outbox.kafka.bootstrap-servers"));
         cfg.put(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -51,11 +52,11 @@ class Config {
     }
 
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(
-            ConsumerFactory<String, Object> consumerFactory,
+    ConcurrentKafkaListenerContainerFactory<String, IntegrationEvent> kafkaListenerContainerFactory(
+            ConsumerFactory<String, IntegrationEvent> consumerFactory,
             KafkaTemplate<String, Object> kafkaTemplate
     ) {
-        var factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
+        var factory = new ConcurrentKafkaListenerContainerFactory<String, IntegrationEvent>();
         factory.setConsumerFactory(consumerFactory);
         factory.getContainerProperties()
                 .setAckMode(MANUAL_IMMEDIATE);
