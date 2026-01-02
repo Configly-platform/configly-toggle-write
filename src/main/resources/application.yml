@@ -8,6 +8,12 @@ spring:
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
+  kafka:
+    consumer:
+      group-id: feature-toggle-write
+
+topics:
+  project-env-events: project-env-events
 
 outbox:
   batch-size: 100

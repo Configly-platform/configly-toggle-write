@@ -29,12 +29,11 @@ import java.util.Map;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
+import static org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE;
 
 @Configuration("kafkaConfig")
 @ConditionalOnProperty(name = "outbox.kafka.enabled", havingValue = "true")
 class Config {
-
-    private static final String GROUP_ID = "feature-toggle-write-consumer-group";
 
     @Autowired
     private Environment environment;
@@ -47,7 +46,7 @@ class Config {
         cfg.put(VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         cfg.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JacksonJsonDeserializer.class);
         cfg.put(JacksonJsonDeserializer.TRUSTED_PACKAGES, "*");
-        cfg.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
+        cfg.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("spring.kafka.consumer.group-id"));
         return new DefaultKafkaConsumerFactory<>(cfg);
     }
 
@@ -58,6 +57,8 @@ class Config {
     ) {
         var factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
         factory.setConsumerFactory(consumerFactory);
+        factory.getContainerProperties()
+                .setAckMode(MANUAL_IMMEDIATE);
 
         var recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
                 (record, ex) -> new TopicPartition(record.topic() + ".DLT", record.partition()));

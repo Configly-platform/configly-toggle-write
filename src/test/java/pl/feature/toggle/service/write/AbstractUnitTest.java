@@ -21,6 +21,7 @@ public abstract class AbstractUnitTest {
     protected FakeOutboxWriter outboxWriter;
     protected FakeCorrelationProvider correlationProvider;
     protected FakeActorProvider actorProvider;
+    protected FakeAcknowledgment acknowledgment;
 
     @BeforeEach
     void setUp() {
@@ -30,6 +31,7 @@ public abstract class AbstractUnitTest {
         outboxWriter = new FakeOutboxWriter();
         actorProvider = new FakeActorProvider();
         correlationProvider = new FakeCorrelationProvider();
+        acknowledgment = new FakeAcknowledgment();
     }
 
     @AfterEach

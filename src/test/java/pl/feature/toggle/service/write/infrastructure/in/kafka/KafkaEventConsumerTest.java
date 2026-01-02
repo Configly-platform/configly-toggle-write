@@ -38,10 +38,10 @@ class KafkaEventConsumerTest extends AbstractUnitTest {
                 .build();
 
         // when
-        sut.handle(projectCreated);
+        sut.handle(projectCreated, acknowledgment);
 
         // then
-        verify(eventProcessor).process(eq(projectCreated), any());
+        verify(eventProcessor).process(eq(projectCreated), any(), any());
     }
 
     @Test
@@ -55,10 +55,10 @@ class KafkaEventConsumerTest extends AbstractUnitTest {
                 .build();
 
         // when
-        sut.handle(environmentCreated);
+        sut.handle(environmentCreated, acknowledgment);
 
         // then
-        verify(eventProcessor).process(eq(environmentCreated), any());
+        verify(eventProcessor).process(eq(environmentCreated), any(), any());
     }
 
 }

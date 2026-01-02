@@ -33,8 +33,8 @@ class IdempotentEventProcessorTest extends AbstractUnitTest {
         var handler = mock(Consumer.class);
 
         // when
-        sut.process(event, handler);
-        sut.process(event, handler);
+        sut.process(event, handler, () -> {});
+        sut.process(event, handler, () -> {});
 
         // then
         verify(handler, times(1)).accept(event);
