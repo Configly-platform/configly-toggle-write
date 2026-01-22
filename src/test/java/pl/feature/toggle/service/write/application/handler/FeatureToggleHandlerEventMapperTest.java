@@ -1,12 +1,20 @@
 package pl.feature.toggle.service.write.application.handler;
 
+import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleUpdated;
+import pl.feature.toggle.service.contracts.shared.Changes;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.write.AbstractUnitTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleField;
+import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static pl.feature.toggle.service.contracts.shared.Changes.buildChange;
 
 class FeatureToggleHandlerEventMapperTest extends AbstractUnitTest {
 
@@ -50,9 +58,20 @@ class FeatureToggleHandlerEventMapperTest extends AbstractUnitTest {
     void test03() {
         // given
         var featureToggle = createFeatureToggle("TEST", ProjectId.create(), EnvironmentId.create());
+        var updateResult = new FeatureToggleUpdateResult(featureToggle,
+                List.of(
+                        new FeatureToggleUpdateResult.FeatureToggleFieldChange(
+                                FeatureToggleField.NAME,
+                                FeatureToggleName.create("TEST"),
+                                FeatureToggleName.create("TESTAFTER")
+                        ))
+        );
+        var expectedChanges = Changes.of(buildChange(FeatureToggleField.NAME.name(), "TEST", "TESTAFTER"));
 
         // when
-        var featureToggleUpdatedEvent = FeatureToggleHandlerEventMapper.createFeatureToggleUpdatedEvent(featureToggle, actorProvider.current(), correlationProvider.current());
+        var featureToggleUpdatedEvent = FeatureToggleHandlerEventMapper.createFeatureToggleUpdatedEvent(updateResult, actorProvider.current(), correlationProvider.current());
+
+        // TODO Parametrized test for all switches in serialize method
 
         // then
         assertThat(featureToggleUpdatedEvent.id()).isEqualTo(featureToggle.id().uuid());
@@ -65,6 +84,8 @@ class FeatureToggleHandlerEventMapperTest extends AbstractUnitTest {
         assertThat(featureToggleUpdatedEvent.eventId()).isNotNull();
         assertThat(featureToggleUpdatedEvent.createdAt()).isNotNull();
         assertThat(featureToggleUpdatedEvent.updatedAt()).isNotNull();
+        assertThat(featureToggleUpdatedEvent.changes()).isNotNull();
+        assertThat(featureToggleUpdatedEvent.changes()).isEqualTo(expectedChanges);
     }
 
 }

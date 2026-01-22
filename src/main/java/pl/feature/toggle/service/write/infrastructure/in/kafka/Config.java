@@ -47,6 +47,7 @@ class Config {
         cfg.put(VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
         cfg.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JacksonJsonDeserializer.class);
         cfg.put(JacksonJsonDeserializer.TRUSTED_PACKAGES, "*");
+        cfg.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         cfg.put(ConsumerConfig.GROUP_ID_CONFIG, environment.getProperty("spring.kafka.consumer.group-id"));
         return new DefaultKafkaConsumerFactory<>(cfg);
     }

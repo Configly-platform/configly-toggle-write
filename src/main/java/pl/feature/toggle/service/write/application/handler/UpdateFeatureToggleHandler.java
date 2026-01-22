@@ -35,7 +35,7 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
         validate(command);
         var featureToggle = loadFeatureToggle(command.featureToggleId());
 
-        var featureToggleUpdated = featureToggle.update(
+        var updateResult = featureToggle.update(
                 command.projectId(),
                 command.environmentId(),
                 command.name(),
@@ -43,9 +43,13 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
                 command.type(),
                 command.value()
         );
-        toggleRepository.update(featureToggleUpdated);
+        if (!updateResult.hasChanges()) {
+            return;
+        }
 
-        var event = createFeatureToggleUpdatedEvent(featureToggleUpdated, actorProvider.current(), correlationProvider.current());
+        toggleRepository.update(updateResult.updated());
+
+        var event = createFeatureToggleUpdatedEvent(updateResult, actorProvider.current(), correlationProvider.current());
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
     }
 
