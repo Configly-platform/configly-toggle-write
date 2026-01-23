@@ -12,8 +12,7 @@ public class FakeUpdateFeatureToggleCommandBuilder {
     private String environmentId;
     private String name;
     private String description;
-    private FeatureToggleType type;
-    private String value;
+    private Object value;
 
     private FakeUpdateFeatureToggleCommandBuilder() {
         this.featureToggleId = UUID.randomUUID().toString();
@@ -21,8 +20,7 @@ public class FakeUpdateFeatureToggleCommandBuilder {
         this.environmentId = UUID.randomUUID().toString();
         this.name = "name";
         this.description = "description";
-        this.type = FeatureToggleType.BOOLEAN;
-        this.value = "true";
+        this.value = true;
     }
 
     public static FakeUpdateFeatureToggleCommandBuilder createFeatureToggleCommandBuilder() {
@@ -54,19 +52,14 @@ public class FakeUpdateFeatureToggleCommandBuilder {
         return this;
     }
 
-    public FakeUpdateFeatureToggleCommandBuilder withType(FeatureToggleType type) {
-        this.type = type;
-        return this;
-    }
-
-    public FakeUpdateFeatureToggleCommandBuilder withValue(String value) {
+    public FakeUpdateFeatureToggleCommandBuilder withValue(Object value) {
         this.value = value;
         return this;
     }
 
     public UpdateFeatureToggleCommand build() {
         return UpdateFeatureToggleCommand.from(UUID.fromString(featureToggleId), UUID.fromString(projectId),
-                UUID.fromString(environmentId), name, description, type, value);
+                UUID.fromString(environmentId), name, description, value);
     }
 
 }

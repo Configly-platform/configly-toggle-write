@@ -40,7 +40,6 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
                 command.environmentId(),
                 command.name(),
                 command.description(),
-                command.type(),
                 command.value()
         );
         if (!updateResult.hasChanges()) {

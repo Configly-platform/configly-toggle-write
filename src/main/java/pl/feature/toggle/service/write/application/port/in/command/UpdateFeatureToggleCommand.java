@@ -1,13 +1,13 @@
 package pl.feature.toggle.service.write.application.port.in.command;
 
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValue;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueRecognizer;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueSpec;
-import pl.feature.toggle.service.write.infrastructure.in.rest.dto.FeatureToggleSnapshotDto;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
-import pl.feature.toggle.service.model.featuretoggle.*;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValue;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.write.infrastructure.in.rest.dto.FeatureToggleSnapshotDto;
 
 import java.util.UUID;
 
@@ -17,7 +17,6 @@ public record UpdateFeatureToggleCommand(
         EnvironmentId environmentId,
         FeatureToggleName name,
         FeatureToggleDescription description,
-        FeatureToggleType type,
         FeatureToggleValue value
 ) {
 
@@ -28,21 +27,19 @@ public record UpdateFeatureToggleCommand(
                 EnvironmentId.create(dto.environmentId()),
                 FeatureToggleName.create(dto.name()),
                 FeatureToggleDescription.create(dto.description()),
-                dto.type(),
-                FeatureToggleValueRecognizer.from(FeatureToggleValueSpec.create(dto.value(), dto.type()))
+                FeatureToggleValueBuilder.from(dto.value())
         );
     }
 
     public static UpdateFeatureToggleCommand from(UUID featureToggleId, UUID projectId, UUID environmentId, String name,
-                                                  String description, FeatureToggleType type, String value) {
+                                                  String description, Object value) {
         return new UpdateFeatureToggleCommand(
                 FeatureToggleId.create(featureToggleId),
                 ProjectId.create(projectId),
                 EnvironmentId.create(environmentId),
                 FeatureToggleName.create(name),
                 FeatureToggleDescription.create(description),
-                type,
-                FeatureToggleValueRecognizer.from(FeatureToggleValueSpec.create(value, type))
+                FeatureToggleValueBuilder.from(value)
         );
     }
 

@@ -5,8 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueRecognizer;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueSpec;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleRepository;
 import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
@@ -130,8 +129,7 @@ class FeatureToggleRepositoryIT extends AbstractITTest {
                 projectSnapshot.id(),
                 FeatureToggleName.create(name),
                 FeatureToggleDescription.empty(),
-                FeatureToggleType.BOOLEAN,
-                FeatureToggleValueRecognizer.from(FeatureToggleValueSpec.create("FALSE", FeatureToggleType.BOOLEAN))
+                FeatureToggleValueBuilder.bool(false)
         );
     }
 
@@ -142,7 +140,6 @@ class FeatureToggleRepositoryIT extends AbstractITTest {
                 featureToggle.projectId(),
                 FeatureToggleName.create(newName),
                 featureToggle.description(),
-                featureToggle.type(),
                 featureToggle.value(),
                 featureToggle.createdAt(),
                 featureToggle.updatedAt()
