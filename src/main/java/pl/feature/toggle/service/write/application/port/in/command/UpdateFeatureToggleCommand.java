@@ -1,46 +1,21 @@
 package pl.feature.toggle.service.write.application.port.in.command;
 
-import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValue;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueBuilder;
-import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.write.infrastructure.in.rest.dto.FeatureToggleSnapshotDto;
-
-import java.util.UUID;
+import pl.feature.toggle.service.write.infrastructure.in.rest.dto.UpdateFeatureToggleDto;
 
 public record UpdateFeatureToggleCommand(
         FeatureToggleId featureToggleId,
-        ProjectId projectId,
-        EnvironmentId environmentId,
         FeatureToggleName name,
-        FeatureToggleDescription description,
-        FeatureToggleValue value
+        FeatureToggleDescription description
 ) {
 
-    public static UpdateFeatureToggleCommand from(String featureToggleId, FeatureToggleSnapshotDto dto) {
+    public static UpdateFeatureToggleCommand from(String featureToggleId, UpdateFeatureToggleDto dto) {
         return new UpdateFeatureToggleCommand(
                 FeatureToggleId.create(featureToggleId),
-                ProjectId.create(dto.projectId()),
-                EnvironmentId.create(dto.environmentId()),
                 FeatureToggleName.create(dto.name()),
-                FeatureToggleDescription.create(dto.description()),
-                FeatureToggleValueBuilder.from(dto.value())
-        );
-    }
-
-    public static UpdateFeatureToggleCommand from(UUID featureToggleId, UUID projectId, UUID environmentId, String name,
-                                                  String description, Object value) {
-        return new UpdateFeatureToggleCommand(
-                FeatureToggleId.create(featureToggleId),
-                ProjectId.create(projectId),
-                EnvironmentId.create(environmentId),
-                FeatureToggleName.create(name),
-                FeatureToggleDescription.create(description),
-                FeatureToggleValueBuilder.from(value)
-        );
+                FeatureToggleDescription.create(dto.description()));
     }
 
 }

@@ -1,6 +1,5 @@
 package pl.feature.toggle.service.write.builder;
 
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
 import pl.feature.toggle.service.write.application.port.in.command.UpdateFeatureToggleCommand;
 
 import java.util.UUID;

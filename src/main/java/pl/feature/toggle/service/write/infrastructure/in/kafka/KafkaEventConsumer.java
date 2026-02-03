@@ -1,13 +1,13 @@
 package pl.feature.toggle.service.write.infrastructure.in.kafka;
 
 import org.springframework.kafka.support.Acknowledgment;
-import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjectionUseCase;
+import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjection;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
-import pl.feature.toggle.service.contracts.event.projects.EnvironmentCreated;
-import pl.feature.toggle.service.contracts.event.projects.ProjectCreated;
+import pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated;
+import pl.feature.toggle.service.contracts.event.project.ProjectCreated;
 import pl.feature.toggle.service.contracts.shared.EventProcessor;
 
 @Slf4j
@@ -15,7 +15,7 @@ import pl.feature.toggle.service.contracts.shared.EventProcessor;
 @KafkaListener(topics = "${topics.project-env-events}")
 class KafkaEventConsumer {
 
-    private final ProjectEnvironmentProjectionUseCase projectionUseCase;
+    private final ProjectEnvironmentProjection projectionUseCase;
     private final EventProcessor eventProcessor;
 
     @KafkaHandler

@@ -4,27 +4,27 @@ import pl.feature.toggle.service.model.security.actor.ActorProvider;
 import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.write.application.port.in.UpdateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.command.UpdateFeatureToggleCommand;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRepository;
-import pl.feature.toggle.service.write.application.port.out.FeatureToggleRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRepository;
-import pl.feature.toggle.service.write.domain.environment.exception.EnvironmentNotFoundException;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.domain.reference.exception.EnvironmentNotFoundException;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
-import pl.feature.toggle.service.write.domain.project.exception.ProjectNotFoundException;
+import pl.feature.toggle.service.write.domain.reference.exception.ProjectNotFoundException;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
 
-import static pl.feature.toggle.service.write.application.handler.FeatureToggleHandlerEventMapper.createFeatureToggleUpdatedEvent;
+import static pl.feature.toggle.service.write.application.handler.EventMapper.createFeatureToggleUpdatedEvent;
 import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 
 @AllArgsConstructor
 class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
 
-    private final FeatureToggleRepository toggleRepository;
-    private final ProjectRepository projectRepository;
-    private final EnvironmentRepository environmentRepository;
+    private final FeatureToggleQueryRepository toggleRepository;
+    private final ProjectRefRepository projectRefRepository;
+    private final EnvironmentRefRepository environmentRefRepository;
     private final OutboxWriter outboxWriter;
     private final ActorProvider actorProvider;
     private final CorrelationProvider correlationProvider;
@@ -59,12 +59,12 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
     }
 
     private void loadEnvironment(UpdateFeatureToggleCommand command) {
-        environmentRepository.findById(command.environmentId())
+        environmentRefRepository.findById(command.environmentId())
                 .orElseThrow(() -> new EnvironmentNotFoundException(command.environmentId()));
     }
 
     private void loadProject(UpdateFeatureToggleCommand command) {
-        projectRepository.findById(command.projectId())
+        projectRefRepository.findById(command.projectId())
                 .orElseThrow(() -> new ProjectNotFoundException(command.projectId()));
     }
 

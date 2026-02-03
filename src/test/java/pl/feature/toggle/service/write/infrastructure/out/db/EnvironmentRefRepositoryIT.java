@@ -1,0 +1,40 @@
+package pl.feature.toggle.service.write.infrastructure.out.db;
+
+import pl.feature.toggle.service.write.AbstractITTest;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
+import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class EnvironmentRefRepositoryIT extends AbstractITTest {
+
+    @Autowired
+    private EnvironmentRefRepository sut;
+
+    private ProjectSnapshot projectSnapshot;
+
+    @BeforeEach
+    void setUp() {
+        projectSnapshot = createProject();
+    }
+
+    @Test
+    @DisplayName("Should save and then find by id")
+    void test01() {
+        // given
+        var environmentSnapshot = EnvironmentSnapshot.create(projectSnapshot.id());
+        sut.upsert(environmentSnapshot);
+
+        // when
+        var result = sut.findById(environmentSnapshot.id());
+
+        // then
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(environmentSnapshot);
+    }
+}

@@ -1,12 +1,12 @@
 package pl.feature.toggle.service.write.application.port.in.command;
 
-import pl.feature.toggle.service.model.featuretoggle.value.*;
-import pl.feature.toggle.service.write.infrastructure.in.rest.dto.FeatureToggleSnapshotDto;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
-import pl.feature.toggle.service.model.featuretoggle.*;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValue;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.model.project.ProjectId;
-
-import java.util.UUID;
+import pl.feature.toggle.service.write.infrastructure.in.rest.dto.CreateFeatureToggleDto;
 
 public record CreateFeatureToggleCommand(
         ProjectId projectId,
@@ -16,7 +16,7 @@ public record CreateFeatureToggleCommand(
         FeatureToggleValue value
 ) {
 
-    public static CreateFeatureToggleCommand from(FeatureToggleSnapshotDto dto) {
+    public static CreateFeatureToggleCommand from(CreateFeatureToggleDto dto) {
         return new CreateFeatureToggleCommand(
                 ProjectId.create(dto.projectId()),
                 EnvironmentId.create(dto.environmentId()),
@@ -25,15 +25,4 @@ public record CreateFeatureToggleCommand(
                 FeatureToggleValueBuilder.from(dto.value())
         );
     }
-
-    public static CreateFeatureToggleCommand from(UUID projectId, UUID environmentId, String name, String description, Object value) {
-        return new CreateFeatureToggleCommand(
-                ProjectId.create(projectId),
-                EnvironmentId.create(environmentId),
-                FeatureToggleName.create(name),
-                FeatureToggleDescription.create(description),
-                FeatureToggleValueBuilder.from(value)
-        );
-    }
-
 }

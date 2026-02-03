@@ -5,6 +5,6 @@ public enum FeatureToggleField {
     PROJECT_ID,
     NAME,
     DESCRIPTION,
-    TYPE,
     VALUE,
+    STATUS
 }

@@ -1,15 +1,14 @@
 package pl.feature.toggle.service.write.application.handler;
 
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueType;
 import pl.feature.toggle.service.write.AbstractUnitTest;
 import pl.feature.toggle.service.write.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleCreated;
 import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
-import pl.feature.toggle.service.write.domain.environment.exception.EnvironmentNotAssignedToProjectException;
-import pl.feature.toggle.service.write.domain.environment.exception.EnvironmentNotFoundException;
+import pl.feature.toggle.service.write.domain.reference.exception.EnvironmentNotFoundException;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleAlreadyExistsException;
 import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
-import pl.feature.toggle.service.write.domain.project.exception.ProjectNotFoundException;
+import pl.feature.toggle.service.write.domain.reference.exception.ProjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ class CreateFeatureToggleHandlerTest extends AbstractUnitTest {
         var command = createFeatureToggleCommandBuilder()
                 .withDescription("TEST")
                 .withName("FEATURE_TOGGLE_01")
-                .withType(FeatureToggleType.BOOLEAN)
+                .withType(FeatureToggleValueType.BOOLEAN)
                 .withValue("TRUE")
                 .withEnvironmentId(environmentSnapshot.id().idAsString())
                 .withProjectId(projectSnapshot.id().idAsString())
@@ -65,7 +64,7 @@ class CreateFeatureToggleHandlerTest extends AbstractUnitTest {
         var command = createFeatureToggleCommandBuilder()
                 .withDescription("TEST")
                 .withName("TEST")
-                .withType(FeatureToggleType.BOOLEAN)
+                .withType(FeatureToggleValueType.BOOLEAN)
                 .withValue("TRUE")
                 .withEnvironmentId(environmentSnapshot.id().idAsString())
                 .withProjectId(projectSnapshot.id().idAsString())
@@ -85,7 +84,7 @@ class CreateFeatureToggleHandlerTest extends AbstractUnitTest {
         var command = createFeatureToggleCommandBuilder()
                 .withDescription("TEST")
                 .withName("TEST")
-                .withType(FeatureToggleType.BOOLEAN)
+                .withType(FeatureToggleValueType.BOOLEAN)
                 .withValue("TRUE")
                 .withEnvironmentId(environmentSnapshot.id().idAsString())
                 .withProjectId(UUID.randomUUID().toString())
@@ -105,7 +104,7 @@ class CreateFeatureToggleHandlerTest extends AbstractUnitTest {
         var command = createFeatureToggleCommandBuilder()
                 .withDescription("TEST")
                 .withName("TEST")
-                .withType(FeatureToggleType.BOOLEAN)
+                .withType(FeatureToggleValueType.BOOLEAN)
                 .withValue("TRUE")
                 .withEnvironmentId(UUID.randomUUID().toString())
                 .withProjectId(projectSnapshot.id().idAsString())
@@ -127,7 +126,7 @@ class CreateFeatureToggleHandlerTest extends AbstractUnitTest {
         var command = createFeatureToggleCommandBuilder()
                 .withDescription("TEST")
                 .withName("TEST")
-                .withType(FeatureToggleType.BOOLEAN)
+                .withType(FeatureToggleValueType.BOOLEAN)
                 .withValue("TRUE")
                 .withEnvironmentId(environment.id().idAsString())
                 .withProjectId(projectSnapshot.id().idAsString())

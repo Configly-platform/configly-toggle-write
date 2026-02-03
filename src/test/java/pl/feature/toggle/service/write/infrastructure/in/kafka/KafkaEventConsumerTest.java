@@ -1,7 +1,7 @@
 package pl.feature.toggle.service.write.infrastructure.in.kafka;
 
 import pl.feature.toggle.service.write.AbstractUnitTest;
-import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjectionUseCase;
+import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +13,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static pl.feature.toggle.service.contracts.event.projects.EnvironmentCreated.environmentCreatedEventBuilder;
-import static pl.feature.toggle.service.contracts.event.projects.ProjectCreated.projectCreatedEventBuilder;
+import static pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated.environmentCreatedEventBuilder;
+import static pl.feature.toggle.service.contracts.event.project.ProjectCreated.projectCreatedEventBuilder;
 
 class KafkaEventConsumerTest extends AbstractUnitTest {
 
@@ -23,7 +23,7 @@ class KafkaEventConsumerTest extends AbstractUnitTest {
 
     @BeforeEach
     void setUp() {
-        var projectEnvProjectionUseCase = mock(ProjectEnvironmentProjectionUseCase.class);
+        var projectEnvProjectionUseCase = mock(ProjectEnvironmentProjection.class);
         eventProcessor = mock(IdempotentEventProcessor.class);
         sut = new KafkaEventConsumer(projectEnvProjectionUseCase, eventProcessor);
     }

@@ -1,10 +1,7 @@
 package pl.feature.toggle.service.write.infrastructure.out.db;
 
 
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRepository;
-import pl.feature.toggle.service.write.application.port.out.FeatureToggleRepository;
-import pl.feature.toggle.service.write.application.port.out.ProcessedEventRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRepository;
+import pl.feature.toggle.service.write.application.port.out.*;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.conf.RenderNameCase;
@@ -34,18 +31,23 @@ class Config {
     }
 
     @Bean
-    FeatureToggleRepository featureToggleRepository(DSLContext dslContext) {
-        return new FeatureToggleJooqRepository(dslContext);
+    FeatureToggleQueryRepository featureToggleQueryRepository(DSLContext dslContext) {
+        return new FeatureToggleJooqQueryRepository(dslContext);
     }
 
     @Bean
-    ProjectRepository projectRepository(DSLContext dslContext) {
-        return new ProjectJooqRepository(dslContext);
+    FeatureToggleCommandRepository featureToggleCommandRepository(DSLContext dslContext) {
+        return new FeatureToggleJooqCommandRepository(dslContext);
     }
 
     @Bean
-    EnvironmentRepository environmentRepository(DSLContext dslContext) {
-        return new EnvironmentJooqRepository(dslContext);
+    ProjectRefRepository projectRepository(DSLContext dslContext) {
+        return new ProjectRefJooqRepository(dslContext);
+    }
+
+    @Bean
+    EnvironmentRefRepository environmentRepository(DSLContext dslContext) {
+        return new EnvironmentRefJooqRepository(dslContext);
     }
 
     @Bean

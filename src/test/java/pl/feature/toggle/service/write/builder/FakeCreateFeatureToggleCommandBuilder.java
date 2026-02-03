@@ -1,6 +1,6 @@
 package pl.feature.toggle.service.write.builder;
 
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueType;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
 
 import java.util.UUID;
@@ -11,7 +11,7 @@ public class FakeCreateFeatureToggleCommandBuilder {
     private String environmentId;
     private String name;
     private String description;
-    private FeatureToggleType type;
+    private FeatureToggleValueType type;
     private Object value;
 
     private FakeCreateFeatureToggleCommandBuilder() {
@@ -19,7 +19,7 @@ public class FakeCreateFeatureToggleCommandBuilder {
         this.environmentId = UUID.randomUUID().toString();
         this.name = "name";
         this.description = "description";
-        this.type = FeatureToggleType.BOOLEAN;
+        this.type = FeatureToggleValueType.BOOLEAN;
         this.value = true;
     }
 
@@ -47,7 +47,7 @@ public class FakeCreateFeatureToggleCommandBuilder {
         return this;
     }
 
-    public FakeCreateFeatureToggleCommandBuilder withType(FeatureToggleType type) {
+    public FakeCreateFeatureToggleCommandBuilder withType(FeatureToggleValueType type) {
         this.type = type;
         return this;
     }

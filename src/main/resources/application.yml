@@ -12,7 +12,7 @@ spring:
     consumer:
       group-id: feature-toggle-write
 
-topics:
+topics: # Topic do konsumowania
   project-env-events: project-env-events
 
 outbox:
@@ -24,7 +24,7 @@ outbox:
     enabled: true
     bootstrap-servers: localhost:9092
     client-id: feature-toggle-write-client
-    topics:
+    topics: # Topic do wytwarzania
       - name: feature-toggle-events
         partitions: 3
         replication-factor: 1

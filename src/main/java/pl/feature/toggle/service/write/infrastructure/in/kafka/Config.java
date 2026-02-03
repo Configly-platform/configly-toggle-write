@@ -1,11 +1,5 @@
 package pl.feature.toggle.service.write.infrastructure.in.kafka;
 
-import pl.feature.toggle.service.contracts.shared.IntegrationEvent;
-import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjectionUseCase;
-import pl.feature.toggle.service.write.application.port.out.ProcessedEventRepository;
-import pl.feature.toggle.service.contracts.shared.EventProcessor;
-import pl.feature.toggle.service.write.exception.NotRetryableException;
-import pl.feature.toggle.service.write.exception.RetryableException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -23,6 +17,10 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JacksonJsonDeserializer;
 import org.springframework.util.backoff.FixedBackOff;
+import pl.feature.toggle.service.contracts.shared.EventProcessor;
+import pl.feature.toggle.service.contracts.shared.IntegrationEvent;
+import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjection;
+import pl.feature.toggle.service.write.application.port.out.ProcessedEventRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,8 +66,6 @@ class Config {
         var backOff = new FixedBackOff(5000, 3);
 
         var errorHandler = new DefaultErrorHandler(recoverer, backOff);
-        errorHandler.addNotRetryableExceptions(NotRetryableException.class);
-        errorHandler.addRetryableExceptions(RetryableException.class);
 
         factory.setCommonErrorHandler(errorHandler);
 
@@ -82,7 +78,7 @@ class Config {
     }
 
     @Bean
-    KafkaEventConsumer kafkaEventConsumer(ProjectEnvironmentProjectionUseCase projectionUseCase, EventProcessor eventProcessor) {
+    KafkaEventConsumer kafkaEventConsumer(ProjectEnvironmentProjection projectionUseCase, EventProcessor eventProcessor) {
         return new KafkaEventConsumer(projectionUseCase, eventProcessor);
     }
 }

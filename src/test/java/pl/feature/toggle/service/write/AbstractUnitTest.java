@@ -1,6 +1,6 @@
 package pl.feature.toggle.service.write;
 
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleType;
+import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueType;
 import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
@@ -15,9 +15,9 @@ import static pl.feature.toggle.service.write.builder.FakeCreateFeatureToggleCom
 
 public abstract class AbstractUnitTest {
 
-    protected FakeFeatureToggleRepository featureToggleRepository;
-    protected FakeEnvironmentRepository environmentRepository;
-    protected FakeProjectRepository projectRepository;
+    protected FakeFeatureToggleQueryRepository featureToggleRepository;
+    protected FakeEnvironmentRefRepository environmentRepository;
+    protected FakeProjectRefRepository projectRepository;
     protected FakeOutboxWriter outboxWriter;
     protected FakeCorrelationProvider correlationProvider;
     protected FakeActorProvider actorProvider;
@@ -25,9 +25,9 @@ public abstract class AbstractUnitTest {
 
     @BeforeEach
     void setUp() {
-        featureToggleRepository = new FakeFeatureToggleRepository();
-        environmentRepository = new FakeEnvironmentRepository();
-        projectRepository = new FakeProjectRepository();
+        featureToggleRepository = new FakeFeatureToggleQueryRepository();
+        environmentRepository = new FakeEnvironmentRefRepository();
+        projectRepository = new FakeProjectRefRepository();
         outboxWriter = new FakeOutboxWriter();
         actorProvider = new FakeActorProvider();
         correlationProvider = new FakeCorrelationProvider();
@@ -51,7 +51,7 @@ public abstract class AbstractUnitTest {
         var command = createFeatureToggleCommandBuilder()
                 .withDescription("TEST")
                 .withName(name)
-                .withType(FeatureToggleType.BOOLEAN)
+                .withType(FeatureToggleValueType.BOOLEAN)
                 .withValue("TRUE")
                 .withEnvironmentId(environmentId.idAsString())
                 .withProjectId(projectId.idAsString())

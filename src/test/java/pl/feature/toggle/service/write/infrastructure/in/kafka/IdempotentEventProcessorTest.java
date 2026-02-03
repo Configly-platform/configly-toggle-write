@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.function.Consumer;
 
 import static org.mockito.Mockito.*;
-import static pl.feature.toggle.service.contracts.event.projects.ProjectCreated.projectCreatedEventBuilder;
+import static pl.feature.toggle.service.contracts.event.project.ProjectCreated.projectCreatedEventBuilder;
 
 class IdempotentEventProcessorTest extends AbstractUnitTest {
 

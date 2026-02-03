@@ -1,7 +1,7 @@
 package pl.feature.toggle.service.write;
 
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
 import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
 import org.jooq.DSLContext;
@@ -39,10 +39,10 @@ public abstract class AbstractITTest {
     private DSLContext dslContext;
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectRefRepository projectRefRepository;
 
     @Autowired
-    private EnvironmentRepository environmentRepository;
+    private EnvironmentRefRepository environmentRefRepository;
 
     @AfterEach
     void tearDown() {
@@ -75,13 +75,13 @@ public abstract class AbstractITTest {
 
     protected ProjectSnapshot createProject() {
         var projectSnapshot = ProjectSnapshot.create();
-        projectRepository.save(projectSnapshot);
+        projectRefRepository.upsert(projectSnapshot);
         return projectSnapshot;
     }
 
     protected EnvironmentSnapshot createEnvironment(ProjectId projectId) {
         var environmentSnapshot = EnvironmentSnapshot.create(projectId);
-        environmentRepository.save(environmentSnapshot);
+        environmentRefRepository.upsert(environmentSnapshot);
         return environmentSnapshot;
     }
 

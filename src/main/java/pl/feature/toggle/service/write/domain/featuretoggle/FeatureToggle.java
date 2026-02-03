@@ -9,15 +9,17 @@ import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValue;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
-import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.FeatureToggleFieldChange;
-import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
+import pl.feature.toggle.service.write.domain.featuretoggle.exception.CannotOperateOnArchivedFeatureToggleException;
+import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
+import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.FeatureToggleFieldChange.change;
+import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleField.*;
+import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus.ACTIVE;
+import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus.ARCHIVED;
+import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.ChangeSet.createChangeSet;
+import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.FeatureToggleFieldChange.fieldChange;
+import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.noChanges;
+import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.updated;
 
 public record FeatureToggle(
         FeatureToggleId id,
@@ -26,86 +28,113 @@ public record FeatureToggle(
         FeatureToggleName name,
         FeatureToggleDescription description,
         FeatureToggleValue value,
+        FeatureToggleStatus status,
         CreatedAt createdAt,
         UpdatedAt updatedAt
 ) {
 
 
-    public static FeatureToggle create(CreateFeatureToggleCommand command, ProjectSnapshot project, EnvironmentSnapshot environment) {
-        environment.mustBelongTo(project.id());
+    public static FeatureToggle create(CreateFeatureToggleCommand command, ProjectRef projectRef, EnvironmentRef environmentRef) {
         return new FeatureToggle(
                 FeatureToggleId.create(),
-                command.environmentId(),
-                project.id(),
+                environmentRef.environmentId(),
+                projectRef.projectId(),
                 command.name(),
                 command.description(),
                 command.value(),
+                ACTIVE,
                 CreatedAt.now(),
                 UpdatedAt.now()
         );
     }
 
-    public static FeatureToggle create(
-            EnvironmentId environmentId,
-            ProjectId projectId,
-            FeatureToggleName name,
-            FeatureToggleDescription description,
-            FeatureToggleValue value
-    ) {
-        return new FeatureToggle(
-                FeatureToggleId.create(),
+    public FeatureToggleUpdateResult archive() {
+        if (isArchived()) {
+            return noChanges(this);
+        }
+        var featureToggle = new FeatureToggle(
+                id,
                 environmentId,
                 projectId,
                 name,
                 description,
                 value,
-                CreatedAt.now(),
-                UpdatedAt.now()
-        );
+                ARCHIVED,
+                createdAt,
+                UpdatedAt.now());
+        var fieldChange = fieldChange(STATUS, ACTIVE, ARCHIVED);
+        return updated(featureToggle, fieldChange);
     }
 
-    public FeatureToggleUpdateResult update(ProjectId projectId,
-                                            EnvironmentId environmentId,
-                                            FeatureToggleName name,
-                                            FeatureToggleDescription description,
-                                            FeatureToggleValue value
-    ) {
-
-        List<FeatureToggleFieldChange> changes = new ArrayList<>();
-        // TODO - docelowo tutaj tylko update nazwy/opisu i tych prostych pol - reszta inne wejscia domenowe
-
-        if (!Objects.equals(this.name, name)) {
-            changes.add(change(FeatureToggleField.NAME, this.name, name));
+    public FeatureToggleUpdateResult restore() {
+        if (isActive()) {
+            return noChanges(this);
         }
-
-        if (!Objects.equals(this.environmentId, environmentId)) {
-            changes.add(change(FeatureToggleField.ENVIRONMENT_ID, this.environmentId, environmentId));
-        }
-
-        if (!Objects.equals(this.projectId, projectId)) {
-            changes.add(change(FeatureToggleField.PROJECT_ID, this.projectId, projectId));
-        }
-
-        if (!Objects.equals(this.description, description)) {
-            changes.add(change(FeatureToggleField.DESCRIPTION, this.description, description));
-        }
-
-        if (!Objects.equals(this.value, value)) {
-            changes.add(change(FeatureToggleField.VALUE, this.value, value));
-        }
-
-        FeatureToggle updated = new FeatureToggle(
-                this.id,
+        var featureToggle = new FeatureToggle(
+                id,
                 environmentId,
                 projectId,
                 name,
                 description,
                 value,
-                this.createdAt,
-                UpdatedAt.now()
-        );
-
-        return new FeatureToggleUpdateResult(updated, List.copyOf(changes));
+                ACTIVE,
+                createdAt,
+                UpdatedAt.now());
+        var fieldChange = fieldChange(STATUS, ARCHIVED, ACTIVE);
+        return updated(featureToggle, fieldChange);
     }
+
+    public FeatureToggleUpdateResult changeValue(FeatureToggleValue newValue) {
+        if (isArchived()) {
+            throw new CannotOperateOnArchivedFeatureToggleException(name);
+        }
+        var changeSet = createChangeSet();
+        changeSet.addIfChanged(FeatureToggleField.VALUE, value, newValue);
+        var featureToggle = new FeatureToggle(
+                id,
+                environmentId,
+                projectId,
+                name,
+                description,
+                value,
+                status,
+                createdAt,
+                UpdatedAt.now());
+        return updated(featureToggle, changeSet.toArray());
+    }
+
+    public FeatureToggleUpdateResult update(FeatureToggleName newName, FeatureToggleDescription newDescription) {
+        if (isArchived()) {
+            throw new CannotOperateOnArchivedFeatureToggleException(name);
+        }
+        var changeSet = createChangeSet();
+        changeSet.addIfChanged(NAME, name, newName);
+        changeSet.addIfChanged(DESCRIPTION, description, newDescription);
+
+        if (changeSet.isEmpty()) {
+            return noChanges(this);
+        }
+
+        var featureToggle = new FeatureToggle(
+                id,
+                environmentId,
+                projectId,
+                newName,
+                newDescription,
+                value,
+                status,
+                createdAt,
+                UpdatedAt.now());
+        return updated(featureToggle, changeSet.toArray());
+    }
+
+    public boolean isArchived() {
+        return ARCHIVED == status;
+    }
+
+    public boolean isActive() {
+        return FeatureToggleStatus.ACTIVE == status;
+    }
+
 
 }
