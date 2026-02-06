@@ -1,7 +1,7 @@
 package pl.feature.toggle.service.write.infrastructure.in.kafka;
 
 import pl.feature.toggle.service.write.AbstractUnitTest;
-import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjection;
+import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ class KafkaEventConsumerTest extends AbstractUnitTest {
 
     @BeforeEach
     void setUp() {
-        var projectEnvProjectionUseCase = mock(ProjectEnvironmentProjection.class);
+        var projectEnvProjectionUseCase = mock(ProjectProjection.class);
         eventProcessor = mock(IdempotentEventProcessor.class);
         sut = new KafkaEventConsumer(projectEnvProjectionUseCase, eventProcessor);
     }

@@ -1,7 +1,6 @@
 package pl.feature.toggle.service.write.infrastructure.out.db;
 
 import pl.feature.toggle.service.write.AbstractITTest;
-import pl.feature.toggle.service.write.application.port.out.ProcessedEventRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

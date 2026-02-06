@@ -7,8 +7,8 @@ import org.springframework.web.context.annotation.RequestScope;
 import pl.feature.toggle.service.model.security.actor.ActorProvider;
 import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 
-@Configuration("securityConfig")
-class Config {
+@Configuration
+class SecurityConfig {
 
     @Bean
     ActorProvider actorProvider() {

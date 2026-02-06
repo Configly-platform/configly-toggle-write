@@ -1,6 +1,6 @@
 package pl.feature.toggle.service.write.domain.featuretoggle;
 
-import org.springframework.core.env.Environment;
+import pl.feature.toggle.service.model.Revision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,19 +10,20 @@ import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle
 
 public record FeatureToggleUpdateResult(
         FeatureToggle featureToggle,
+        Revision expectedRevision,
         List<FeatureToggleFieldChange> changes
 ) {
 
-    public static FeatureToggleUpdateResult updated(FeatureToggle featureToggle, FeatureToggleFieldChange... changes) {
-        return new FeatureToggleUpdateResult(featureToggle, List.of(changes));
+    public static FeatureToggleUpdateResult updated(FeatureToggle featureToggle, Revision expectedRevision, FeatureToggleFieldChange... changes) {
+        return new FeatureToggleUpdateResult(featureToggle, expectedRevision, List.of(changes));
     }
 
     public static FeatureToggleUpdateResult noChanges(FeatureToggle featureToggle) {
-        return new FeatureToggleUpdateResult(featureToggle, List.of());
+        return new FeatureToggleUpdateResult(featureToggle, featureToggle.revision(), List.of());
     }
 
-    public static FeatureToggleUpdateResult of(FeatureToggle featureToggle, List<FeatureToggleFieldChange> changes) {
-        return new FeatureToggleUpdateResult(featureToggle, changes);
+    public static FeatureToggleUpdateResult of(FeatureToggle featureToggle, Revision expectedRevision, List<FeatureToggleFieldChange> changes) {
+        return new FeatureToggleUpdateResult(featureToggle, expectedRevision, changes);
     }
 
     public boolean wasUpdated() {

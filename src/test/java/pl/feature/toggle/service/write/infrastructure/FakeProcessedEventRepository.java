@@ -1,6 +1,5 @@
 package pl.feature.toggle.service.write.infrastructure;
 
-import pl.feature.toggle.service.write.application.port.out.ProcessedEventRepository;
 import pl.feature.toggle.service.contracts.shared.EventId;
 
 import java.util.HashSet;

@@ -1,13 +1,11 @@
 package pl.feature.toggle.service.write.application.port.in;
 
-
 import pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated;
-import pl.feature.toggle.service.contracts.event.project.ProjectCreated;
+import pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged;
 
-public interface ProjectEnvironmentProjection {
-
-    void handle(ProjectCreated event);
+public interface EnvironmentProjection {
 
     void handle(EnvironmentCreated event);
 
+    void handle(EnvironmentStatusChanged event);
 }

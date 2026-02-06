@@ -2,19 +2,20 @@ package pl.feature.toggle.service.write.application.handler;
 
 import pl.feature.toggle.service.model.security.actor.ActorProvider;
 import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
+import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
+import pl.feature.toggle.service.write.application.port.in.EnvironmentRefConsistency;
+import pl.feature.toggle.service.write.application.port.in.ProjectRefConsistency;
 import pl.feature.toggle.service.write.application.port.in.UpdateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.command.UpdateFeatureToggleCommand;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
-import pl.feature.toggle.service.write.domain.reference.exception.EnvironmentNotFoundException;
-import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
-import pl.feature.toggle.service.write.domain.reference.exception.ProjectNotFoundException;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
+import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
+import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
 import static pl.feature.toggle.service.write.application.handler.EventMapper.createFeatureToggleUpdatedEvent;
 import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
@@ -22,9 +23,11 @@ import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGL
 @AllArgsConstructor
 class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
 
-    private final FeatureToggleQueryRepository toggleRepository;
-    private final ProjectRefRepository projectRefRepository;
-    private final EnvironmentRefRepository environmentRefRepository;
+    private final FeatureToggleCommandRepository toggleCommandRepository;
+    private final FeatureToggleQueryRepository toggleQueryRepository;
+    private final FeatureTogglePolicyFacade togglePolicyFacade;
+    private final ProjectRefConsistency projectRefConsistency;
+    private final EnvironmentRefConsistency environmentRefConsistency;
     private final OutboxWriter outboxWriter;
     private final ActorProvider actorProvider;
     private final CorrelationProvider correlationProvider;
@@ -32,44 +35,25 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
     @Override
     @Transactional
     public void execute(UpdateFeatureToggleCommand command) {
-        validate(command);
-        var featureToggle = loadFeatureToggle(command.featureToggleId());
+        var environmentRef = environmentRefConsistency.getTrusted(command.projectId(), command.environmentId());
+        environmentRef.assertIsActive();
+        var projectRef = projectRefConsistency.getTrusted(command.projectId());
+        projectRef.assertIsActive();
 
-        var updateResult = featureToggle.update(
-                command.projectId(),
-                command.environmentId(),
-                command.name(),
-                command.description(),
-                command.value()
-        );
-        if (!updateResult.hasChanges()) {
+        var featureToggle = toggleQueryRepository.getOrThrow(command.featureToggleId());
+        togglePolicyFacade.ensureUpdateAllowed(featureToggle, command.name());
+
+        var updateResult = featureToggle.update(command.name(), command.description());
+        if (!updateResult.wasUpdated()) {
             return;
         }
 
-        toggleRepository.update(updateResult.updated());
+        toggleCommandRepository.update(updateResult);
 
-        var event = createFeatureToggleUpdatedEvent(updateResult, actorProvider.current(), correlationProvider.current());
+        var event = createFeatureToggleUpdatedEvent(updateResult,
+                environmentRef,
+                actorProvider.current(),
+                correlationProvider.current());
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
-    }
-
-
-    private FeatureToggle loadFeatureToggle(FeatureToggleId featureToggleId) {
-        return toggleRepository.findById(featureToggleId)
-                .orElseThrow(() -> new FeatureToggleNotFoundException(featureToggleId));
-    }
-
-    private void loadEnvironment(UpdateFeatureToggleCommand command) {
-        environmentRefRepository.findById(command.environmentId())
-                .orElseThrow(() -> new EnvironmentNotFoundException(command.environmentId()));
-    }
-
-    private void loadProject(UpdateFeatureToggleCommand command) {
-        projectRefRepository.findById(command.projectId())
-                .orElseThrow(() -> new ProjectNotFoundException(command.projectId()));
-    }
-
-    private void validate(UpdateFeatureToggleCommand command) {
-        loadEnvironment(command);
-        loadProject(command);
     }
 }

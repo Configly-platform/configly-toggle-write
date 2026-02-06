@@ -1,7 +1,6 @@
 package pl.feature.toggle.service.write.infrastructure.out.db;
 
 
-import pl.feature.toggle.service.write.application.port.out.*;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.conf.RenderNameCase;
@@ -10,6 +9,11 @@ import org.jooq.conf.Settings;
 import org.jooq.impl.DefaultConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pl.feature.toggle.service.event.processing.api.ProcessedEventRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
+import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
 
 import javax.sql.DataSource;
 

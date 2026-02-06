@@ -17,10 +17,10 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JacksonJsonDeserializer;
 import org.springframework.util.backoff.FixedBackOff;
-import pl.feature.toggle.service.contracts.shared.EventProcessor;
 import pl.feature.toggle.service.contracts.shared.IntegrationEvent;
-import pl.feature.toggle.service.write.application.port.in.ProjectEnvironmentProjection;
-import pl.feature.toggle.service.write.application.port.out.ProcessedEventRepository;
+import pl.feature.toggle.service.event.processing.api.EventProcessor;
+import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
+import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,12 +73,11 @@ class Config {
     }
 
     @Bean
-    EventProcessor eventProcessor(ProcessedEventRepository repository) {
-        return new IdempotentEventProcessor(repository);
-    }
-
-    @Bean
-    KafkaEventConsumer kafkaEventConsumer(ProjectEnvironmentProjection projectionUseCase, EventProcessor eventProcessor) {
-        return new KafkaEventConsumer(projectionUseCase, eventProcessor);
+    KafkaEventConsumer kafkaEventConsumer(
+            ProjectProjection projectProjection,
+            EnvironmentProjection environmentProjection,
+            EventProcessor eventProcessor
+    ) {
+        return new KafkaEventConsumer(projectProjection, environmentProjection, eventProcessor);
     }
 }

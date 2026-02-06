@@ -3,9 +3,9 @@ package pl.feature.toggle.service.write.application.port.in.command;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValue;
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.value.FeatureToggleValueType;
+import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
 import pl.feature.toggle.service.write.infrastructure.in.rest.dto.CreateFeatureToggleDto;
 
 public record CreateFeatureToggleCommand(
@@ -13,16 +13,18 @@ public record CreateFeatureToggleCommand(
         EnvironmentId environmentId,
         FeatureToggleName name,
         FeatureToggleDescription description,
-        FeatureToggleValue value
+        FeatureToggleRawValue rawValue,
+        FeatureToggleValueType valueType
 ) {
 
-    public static CreateFeatureToggleCommand from(CreateFeatureToggleDto dto) {
+    public static CreateFeatureToggleCommand from(String projectId, String environmentId, CreateFeatureToggleDto dto) {
         return new CreateFeatureToggleCommand(
-                ProjectId.create(dto.projectId()),
-                EnvironmentId.create(dto.environmentId()),
+                ProjectId.create(projectId),
+                EnvironmentId.create(environmentId),
                 FeatureToggleName.create(dto.name()),
                 FeatureToggleDescription.create(dto.description()),
-                FeatureToggleValueBuilder.from(dto.value())
+                FeatureToggleRawValue.of(dto.value()),
+                FeatureToggleValueType.valueOf(dto.type())
         );
     }
 }

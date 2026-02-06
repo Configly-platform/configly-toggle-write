@@ -2,6 +2,7 @@ package pl.feature.toggle.service.write.infrastructure.out.db;
 
 import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
@@ -28,13 +29,12 @@ class FeatureToggleJooqQueryRepository implements FeatureToggleQueryRepository {
     }
 
     @Override
-    public boolean exists(FeatureToggleId featureToggleId) {
-        return dslContext.fetchExists(FEATURE_TOGGLE, FEATURE_TOGGLE.ID.eq(featureToggleId.uuid()));
+    public boolean exists(FeatureToggleName featureToggleName, EnvironmentId environmentId) {
+        return dslContext.fetchExists(FEATURE_TOGGLE,
+                FEATURE_TOGGLE.NAME.eq(featureToggleName.value()),
+                FEATURE_TOGGLE.ENVIRONMENT_ID.eq(environmentId.uuid())
+        );
     }
 
-    @Override
-    public boolean exists(FeatureToggleName name) {
-        return dslContext.fetchExists(FEATURE_TOGGLE, FEATURE_TOGGLE.NAME.eq(name.value()));
-    }
 
 }

@@ -1,7 +1,6 @@
 package pl.feature.toggle.service.write.application.handler;
 
 import pl.feature.toggle.service.write.AbstractUnitTest;
-import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleDeleted;
 import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
 import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;

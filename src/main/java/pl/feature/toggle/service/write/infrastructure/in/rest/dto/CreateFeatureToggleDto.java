@@ -9,6 +9,8 @@ public record CreateFeatureToggleDto(
         @Nullable
         String description,
         @NotNull
-        Object value
+        String value,
+        @NotNull
+        String type
 ) {
 }
