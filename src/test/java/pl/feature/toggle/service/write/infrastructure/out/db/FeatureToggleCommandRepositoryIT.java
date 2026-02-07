@@ -2,33 +2,31 @@ package pl.feature.toggle.service.write.infrastructure.out.db;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
-import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
-import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
+import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
+import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleUpdateFailedException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
+import static github.saqie.ftaas.jooq.tables.EnvironmentRef.ENVIRONMENT_REF;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static pl.feature.toggle.service.write.builder.FakeEnvironmentRefBuilder.fakeEnvironmentRefBuilder;
 import static pl.feature.toggle.service.write.builder.FakeFeatureToggleBuilder.fakeFeatureToggleBuilder;
 import static pl.feature.toggle.service.write.builder.FakeProjectRefBuilder.fakeProjectRefBuilder;
 
-class FeatureToggleQueryRepositoryIT extends AbstractITTest {
+class FeatureToggleCommandRepositoryIT extends AbstractITTest {
 
     @Autowired
-    private FeatureToggleQueryRepository sut;
-
-    @Autowired
-    private FeatureToggleCommandRepository commandRepository;
+    private FeatureToggleCommandRepository sut;
 
     @Autowired
     private EnvironmentRefRepository environmentRefRepository;
@@ -36,8 +34,12 @@ class FeatureToggleQueryRepositoryIT extends AbstractITTest {
     @Autowired
     private ProjectRefRepository projectRefRepository;
 
+    @Autowired
+    private FeatureToggleQueryRepository queryRepository;
+
+
     @Test
-    void should_get_feature_toggle_or_throw_when_exists() {
+    void should_save_feature_toggle() {
         // given
         var project = createProjectRef(ProjectStatus.ACTIVE);
         var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
@@ -46,80 +48,83 @@ class FeatureToggleQueryRepositoryIT extends AbstractITTest {
                 .environmentId(env.environmentId())
                 .build();
 
-        commandRepository.save(toggle);
-
         // when
-        var result = sut.getOrThrow(toggle.id());
+        sut.save(toggle);
 
         // then
-        assertThat(result).isEqualTo(toggle);
+        var actual = queryRepository.getOrThrow(toggle.id());
+        assertThat(actual).isEqualTo(toggle);
     }
 
     @Test
-    void should_throw_when_feature_toggle_not_found() {
+    void should_update_feature_toggle_when_expected_revision_matches() {
         // given
-        var missingId = FeatureToggleId.create();
+        var project = createProjectRef(ProjectStatus.ACTIVE);
+        var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
+
+        var original = fakeFeatureToggleBuilder()
+                .environmentId(env.environmentId())
+                .build();
+        sut.save(original);
+
+        var updateResult = original.changeValue(new FeatureToggleRawValue("FALSE"));
+        assertThat(updateResult.wasUpdated()).isTrue();
+
+        // when
+        sut.update(updateResult);
+
+        // then
+        var actual = queryRepository.getOrThrow(original.id());
+        assertThat(actual).isEqualTo(updateResult.featureToggle());
+    }
+
+    @Test
+    void should_throw_and_not_update_when_expected_revision_does_not_match() {
+        // given
+        var project = createProjectRef(ProjectStatus.ACTIVE);
+        var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
+
+        var original = fakeFeatureToggleBuilder()
+                .environmentId(env.environmentId())
+                .build();
+        sut.save(original);
+
+        var validUpdate = original.changeValue(new FeatureToggleRawValue("TRUE"));
+
+        var wrongExpectedRevision = validUpdate.expectedRevision().next();
+        var invalidUpdate = FeatureToggleUpdateResult.of(
+                validUpdate.featureToggle(),
+                wrongExpectedRevision,
+                validUpdate.changes()
+        );
 
         // when / then
-        assertThatThrownBy(() -> sut.getOrThrow(missingId))
-                .isInstanceOf(FeatureToggleNotFoundException.class);
+        assertThatThrownBy(() -> sut.update(invalidUpdate))
+                .isInstanceOf(FeatureToggleUpdateFailedException.class);
+
+        var actual = queryRepository.getOrThrow(original.id());
+        assertThat(actual).isEqualTo(original);
     }
 
     @Test
-    void should_return_true_when_toggle_with_name_exists_in_environment() {
+    void should_fail_on_second_update_attempt_for_same_expected_revision() {
         // given
         var project = createProjectRef(ProjectStatus.ACTIVE);
         var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
 
-        var toggle = fakeFeatureToggleBuilder()
+        var original = fakeFeatureToggleBuilder()
                 .environmentId(env.environmentId())
-                .name(FeatureToggleName.create("my.toggle"))
                 .build();
+        sut.save(original);
 
-        commandRepository.save(toggle);
-
-        // when
-        var result = sut.exists(toggle.name(), env.environmentId());
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void should_return_false_when_toggle_name_exists_but_in_other_environment() {
-        // given
-        var project = createProjectRef(ProjectStatus.ACTIVE);
-
-        var env1 = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
-        var env2 = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
-
-        var name = FeatureToggleName.create("my.toggle");
-
-        var toggleInEnv1 = fakeFeatureToggleBuilder()
-                .environmentId(env1.environmentId())
-                .name(name)
-                .build();
-
-        commandRepository.save(toggleInEnv1);
+        var updateResult = original.changeValue(new FeatureToggleRawValue("TRUE"));
 
         // when
-        var result = sut.exists(name, env2.environmentId());
+        sut.update(updateResult);
 
         // then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    void should_return_false_when_toggle_does_not_exist() {
-        // given
-        var project = createProjectRef(ProjectStatus.ACTIVE);
-        var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
-
-        // when
-        var result = sut.exists(FeatureToggleName.create("missing.toggle"), env.environmentId());
-
-        // then
-        assertThat(result).isFalse();
+        assertThatThrownBy(() -> sut.update(updateResult))
+                .isInstanceOf(FeatureToggleUpdateFailedException.class);
     }
 
     private EnvironmentRef createEnvironmentRef(ProjectId projectId, EnvironmentStatus environmentStatus) {
@@ -138,6 +143,4 @@ class FeatureToggleQueryRepositoryIT extends AbstractITTest {
         projectRefRepository.insert(projectRef);
         return projectRef;
     }
-
-
 }

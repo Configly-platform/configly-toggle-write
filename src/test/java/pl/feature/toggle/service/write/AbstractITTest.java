@@ -1,9 +1,5 @@
 package pl.feature.toggle.service.write;
 
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
-import pl.feature.toggle.service.write.domain.environment.EnvironmentSnapshot;
-import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.TestInstance;
@@ -13,12 +9,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import pl.feature.toggle.service.model.project.ProjectId;
 
-import static github.saqie.ftaas.jooq.tables.EnvironmentSnapshot.ENVIRONMENT_SNAPSHOT;
+import static github.saqie.ftaas.jooq.tables.EnvironmentRef.ENVIRONMENT_REF;
 import static github.saqie.ftaas.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
 import static github.saqie.ftaas.jooq.tables.ProcessedEvents.PROCESSED_EVENTS;
-import static github.saqie.ftaas.jooq.tables.ProjectSnapshot.PROJECT_SNAPSHOT;
+import static github.saqie.ftaas.jooq.tables.ProjectRef.PROJECT_REF;
 import static pl.feature.ftaas.outbox.jooq.tables.OutboxEvents.OUTBOX_EVENTS;
 
 @Testcontainers
@@ -36,13 +31,7 @@ public abstract class AbstractITTest {
     }
 
     @Autowired
-    private DSLContext dslContext;
-
-    @Autowired
-    private ProjectRefRepository projectRefRepository;
-
-    @Autowired
-    private EnvironmentRefRepository environmentRefRepository;
+    protected DSLContext dslContext;
 
     @AfterEach
     void tearDown() {
@@ -53,16 +42,16 @@ public abstract class AbstractITTest {
         clearProcessedEvents();
     }
 
-    private void clearFeatureToggles(){
+    private void clearFeatureToggles() {
         dslContext.deleteFrom(FEATURE_TOGGLE).execute();
     }
 
     private void clearEnvironments() {
-        dslContext.deleteFrom(ENVIRONMENT_SNAPSHOT).execute();
+        dslContext.deleteFrom(ENVIRONMENT_REF).execute();
     }
 
     private void clearProjects() {
-        dslContext.deleteFrom(PROJECT_SNAPSHOT).execute();
+        dslContext.deleteFrom(PROJECT_REF).execute();
     }
 
     protected void clearOutbox() {
@@ -71,18 +60,6 @@ public abstract class AbstractITTest {
 
     protected void clearProcessedEvents() {
         dslContext.deleteFrom(PROCESSED_EVENTS).execute();
-    }
-
-    protected ProjectSnapshot createProject() {
-        var projectSnapshot = ProjectSnapshot.create();
-        projectRefRepository.upsert(projectSnapshot);
-        return projectSnapshot;
-    }
-
-    protected EnvironmentSnapshot createEnvironment(ProjectId projectId) {
-        var environmentSnapshot = EnvironmentSnapshot.create(projectId);
-        environmentRefRepository.upsert(environmentSnapshot);
-        return environmentSnapshot;
     }
 
 

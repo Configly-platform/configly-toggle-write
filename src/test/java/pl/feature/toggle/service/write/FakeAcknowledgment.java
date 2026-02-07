@@ -1,4 +1,4 @@
-package pl.feature.toggle.service.write.infrastructure;
+package pl.feature.toggle.service.write;
 
 import org.springframework.kafka.support.Acknowledgment;
 

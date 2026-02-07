@@ -1,13 +1,14 @@
 package pl.feature.toggle.service.write.infrastructure.out.db;
 
-import pl.feature.toggle.service.write.AbstractITTest;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
-import pl.feature.toggle.service.write.domain.project.ProjectSnapshot;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.feature.toggle.service.model.Revision;
+import pl.feature.toggle.service.write.AbstractITTest;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static pl.feature.toggle.service.write.builder.FakeProjectRefBuilder.fakeProjectRefBuilder;
 
 class ProjectRefRepositoryIT extends AbstractITTest {
 
@@ -15,18 +16,140 @@ class ProjectRefRepositoryIT extends AbstractITTest {
     private ProjectRefRepository sut;
 
     @Test
-    @DisplayName("Should save and then find by id")
-    void test01() {
+    void should_save_project_ref() {
         // given
-        var projectSnapshot = ProjectSnapshot.create();
-        sut.upsert(projectSnapshot);
+        var projectRef = fakeProjectRefBuilder().build();
 
         // when
-        var result = sut.findById(projectSnapshot.id());
+        sut.insert(projectRef);
 
         // then
-        assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(projectSnapshot);
+        var actual = sut.find(projectRef.projectId()).orElseThrow();
+        assertThat(actual).isEqualTo(projectRef);
+    }
+
+    @Test
+    void should_find_project_ref() {
+        // given
+        var projectRef = fakeProjectRefBuilder().build();
+        sut.insert(projectRef);
+
+        // when
+        var result = sut.find(projectRef.projectId()).orElseThrow();
+
+        // then
+        assertThat(result).isEqualTo(projectRef);
+    }
+
+    @Test
+    void should_find_consistent_project_ref_when_consistent() {
+        // given
+        var projectRef = fakeProjectRefBuilder()
+                .consistent(true)
+                .build();
+        sut.insert(projectRef);
+
+        // when
+        var result = sut.findConsistent(projectRef.projectId());
+
+        // then
+        assertThat(result).contains(projectRef);
+    }
+
+    @Test
+    void should_not_find_project_ref_when_inconsistent() {
+        // given
+        var projectRef = fakeProjectRefBuilder()
+                .consistent(false)
+                .build();
+        sut.insert(projectRef);
+
+        // when
+        var result = sut.findConsistent(projectRef.projectId());
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void should_update_project_ref() {
+        // given
+        var original = fakeProjectRefBuilder()
+                .lastRevision(Revision.from(1))
+                .build();
+        sut.insert(original);
+
+        var updated = original.apply(ProjectStatus.ACTIVE, original.lastRevision().next());
+
+        // when
+        sut.update(updated);
+
+        // then
+        var actual = sut.find(original.projectId()).orElseThrow();
+        assertThat(actual).isEqualTo(updated);
+    }
+
+    @Test
+    void should_upsert_and_insert_when_not_exists() {
+        // given
+        var projectRef = fakeProjectRefBuilder().build();
+
+        // when
+        sut.upsert(projectRef);
+
+        // then
+        var actual = sut.find(projectRef.projectId()).orElseThrow();
+        assertThat(actual).isEqualTo(projectRef);
+    }
+
+    @Test
+    void should_upsert_and_update_when_exists() {
+        // given
+        var original = fakeProjectRefBuilder()
+                .lastRevision(Revision.from(1))
+                .build();
+        sut.insert(original);
+
+        var updated = original.apply(ProjectStatus.ACTIVE, original.lastRevision().next());
+
+        // when
+        sut.upsert(updated);
+
+        // then
+        var actual = sut.find(original.projectId()).orElseThrow();
+        assertThat(actual).isEqualTo(updated);
+    }
+
+    @Test
+    void should_mark_project_as_inconsistent_when_not_marked() {
+        // given
+        var projectRef = fakeProjectRefBuilder()
+                .consistent(true)
+                .build();
+        sut.insert(projectRef);
+
+        // when
+        var result = sut.markInconsistentIfNotMarked(projectRef.projectId());
+
+        // then
+        assertThat(result).isTrue();
+        assertThat(sut.findConsistent(projectRef.projectId())).isEmpty();
+    }
+
+    @Test
+    void should_not_mark_project_as_inconsistent_twice() {
+        // given
+        var projectRef = fakeProjectRefBuilder()
+                .consistent(true)
+                .build();
+        sut.insert(projectRef);
+        sut.markInconsistentIfNotMarked(projectRef.projectId());
+
+        // when
+        var result = sut.markInconsistentIfNotMarked(projectRef.projectId());
+
+        // then
+        assertThat(result).isFalse();
     }
 
 }

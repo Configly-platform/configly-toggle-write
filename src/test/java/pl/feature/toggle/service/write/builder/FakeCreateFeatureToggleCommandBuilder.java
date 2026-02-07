@@ -1,49 +1,65 @@
 package pl.feature.toggle.service.write.builder;
 
-import pl.feature.toggle.service.model.featuretoggle.value.FeatureToggleValueType;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.environment.EnvironmentName;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.value.FeatureToggleValueType;
+import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
 
 import java.util.UUID;
 
 public class FakeCreateFeatureToggleCommandBuilder {
 
-    private String projectId;
-    private String environmentId;
-    private String name;
-    private String description;
+    private ProjectId projectId;
+    private EnvironmentId environmentId;
+    private FeatureToggleName name;
+    private FeatureToggleDescription description;
     private FeatureToggleValueType type;
-    private Object value;
+    private FeatureToggleRawValue value;
 
     private FakeCreateFeatureToggleCommandBuilder() {
-        this.projectId = UUID.randomUUID().toString();
-        this.environmentId = UUID.randomUUID().toString();
-        this.name = "name";
-        this.description = "description";
+        this.projectId = ProjectId.create();
+        this.environmentId = EnvironmentId.create();
+        this.name = FeatureToggleName.create("name");
+        this.description = FeatureToggleDescription.create("description");
         this.type = FeatureToggleValueType.BOOLEAN;
-        this.value = true;
+        this.value = FeatureToggleRawValue.of(Boolean.TRUE.toString());
     }
 
-    public static FakeCreateFeatureToggleCommandBuilder createFeatureToggleCommandBuilder() {
+    public static FakeCreateFeatureToggleCommandBuilder fakeCreateFeatureToggleCommandBuilder() {
         return new FakeCreateFeatureToggleCommandBuilder();
     }
 
     public FakeCreateFeatureToggleCommandBuilder withProjectId(String projectId) {
-        this.projectId = projectId;
+        this.projectId = ProjectId.create(projectId);
         return this;
     }
 
     public FakeCreateFeatureToggleCommandBuilder withEnvironmentId(String environmentId) {
+        this.environmentId = EnvironmentId.create(environmentId);
+        return this;
+    }
+
+    public FakeCreateFeatureToggleCommandBuilder withEnvironmentId(EnvironmentId environmentId) {
         this.environmentId = environmentId;
         return this;
     }
 
+    public FakeCreateFeatureToggleCommandBuilder withProjectId(ProjectId projectId) {
+        this.projectId = projectId;
+        return this;
+    }
+
     public FakeCreateFeatureToggleCommandBuilder withName(String name) {
-        this.name = name;
+        this.name = FeatureToggleName.create(name);
         return this;
     }
 
     public FakeCreateFeatureToggleCommandBuilder withDescription(String description) {
-        this.description = description;
+        this.description = FeatureToggleDescription.create(description);
         return this;
     }
 
@@ -52,13 +68,13 @@ public class FakeCreateFeatureToggleCommandBuilder {
         return this;
     }
 
-    public FakeCreateFeatureToggleCommandBuilder withValue(Object value) {
-        this.value = value;
+    public FakeCreateFeatureToggleCommandBuilder withValue(String value) {
+        this.value = FeatureToggleRawValue.of(value);
         return this;
     }
 
     public CreateFeatureToggleCommand build() {
-        return CreateFeatureToggleCommand.from(UUID.fromString(projectId), UUID.fromString(environmentId), name, description, value);
+        return new CreateFeatureToggleCommand(projectId, environmentId, name, description, value, type);
     }
 
 }

@@ -1,17 +1,14 @@
 package pl.feature.toggle.service.write.application.handler;
 
-import pl.feature.toggle.service.model.security.actor.ActorProvider;
-import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
-import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
-import pl.feature.toggle.service.write.application.port.in.*;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
-import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
-import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import pl.feature.toggle.service.model.security.actor.ActorProvider;
+import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
-import pl.feature.toggle.service.write.application.projection.environment.EnvironmentProjectionHandler;
+import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
+import pl.feature.toggle.service.write.application.port.in.*;
+import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
+import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FeatureToggleHandlerFacade {
@@ -19,16 +16,16 @@ public final class FeatureToggleHandlerFacade {
     public static CreateFeatureToggleUseCase createFeatureToggleUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureTogglePolicyFacade featureTogglePolicyFacade,
-            ProjectRefRepository projectRefRepository,
-            EnvironmentRefRepository environmentRefRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter,
             ActorProvider actorProvider,
             CorrelationProvider correlationProvider
     ) {
         return new CreateFeatureToggleHandler(featureToggleCommandRepository,
                 featureTogglePolicyFacade,
-                projectRefRepository,
-                environmentRefRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
                 outboxWriter,
                 actorProvider,
                 correlationProvider);
@@ -38,8 +35,8 @@ public final class FeatureToggleHandlerFacade {
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureToggleQueryRepository featureToggleQueryRepository,
             FeatureTogglePolicyFacade featureTogglePolicyFacade,
-            ProjectRefRepository projectRefRepository,
-            EnvironmentRefRepository environmentRefRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter,
             ActorProvider actorProvider,
             CorrelationProvider correlationProvider
@@ -47,8 +44,8 @@ public final class FeatureToggleHandlerFacade {
         return new UpdateFeatureToggleHandler(featureToggleCommandRepository,
                 featureToggleQueryRepository,
                 featureTogglePolicyFacade,
-                projectRefRepository,
-                environmentRefRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
                 outboxWriter,
                 actorProvider,
                 correlationProvider);
@@ -57,16 +54,16 @@ public final class FeatureToggleHandlerFacade {
     public static ChangeFeatureToggleValueUseCase changeFeatureToggleValueUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureToggleQueryRepository featureToggleQueryRepository,
-            ProjectRefRepository projectRefRepository,
-            EnvironmentRefRepository environmentRefRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter,
             ActorProvider actorProvider,
             CorrelationProvider correlationProvider
     ) {
         return new ChangeFeatureToggleValueHandler(featureToggleCommandRepository,
                 featureToggleQueryRepository,
-                projectRefRepository,
-                environmentRefRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
                 outboxWriter,
                 actorProvider,
                 correlationProvider);
@@ -75,8 +72,8 @@ public final class FeatureToggleHandlerFacade {
     public static ChangeFeatureToggleStatusUseCase changeFeatureToggleStatusUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureToggleQueryRepository featureToggleQueryRepository,
-            ProjectRefRepository projectRefRepository,
-            EnvironmentRefRepository environmentRefRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter,
             ActorProvider actorProvider,
             CorrelationProvider correlationProvider
@@ -84,8 +81,8 @@ public final class FeatureToggleHandlerFacade {
         return new ChangeFeatureToggleStatusHandler(
                 featureToggleCommandRepository,
                 featureToggleQueryRepository,
-                projectRefRepository,
-                environmentRefRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
                 outboxWriter,
                 actorProvider,
                 correlationProvider

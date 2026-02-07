@@ -21,7 +21,7 @@ class EnvironmentRefJooqRepository implements EnvironmentRefRepository {
     @Override
     public Optional<EnvironmentRef> find(ProjectId projectId, EnvironmentId environmentId) {
         return dslContext.selectFrom(ENVIRONMENT_REF)
-                .where(ENVIRONMENT_REF.ID.eq(projectId.uuid()))
+                .where(ENVIRONMENT_REF.ID.eq(environmentId.uuid()))
                 .and(ENVIRONMENT_REF.PROJECT_ID.eq(projectId.uuid()))
                 .fetchOptional()
                 .map(Mapper::toReference);
@@ -30,7 +30,7 @@ class EnvironmentRefJooqRepository implements EnvironmentRefRepository {
     @Override
     public Optional<EnvironmentRef> findConsistent(ProjectId projectId, EnvironmentId environmentId) {
         return dslContext.selectFrom(ENVIRONMENT_REF)
-                .where(ENVIRONMENT_REF.ID.eq(projectId.uuid()))
+                .where(ENVIRONMENT_REF.ID.eq(environmentId.uuid()))
                 .and(ENVIRONMENT_REF.CONSISTENT.eq(true))
                 .and(ENVIRONMENT_REF.PROJECT_ID.eq(projectId.uuid()))
                 .fetchOptional()
@@ -40,10 +40,11 @@ class EnvironmentRefJooqRepository implements EnvironmentRefRepository {
     @Override
     public void insert(EnvironmentRef ref) {
         dslContext.insertInto(ENVIRONMENT_REF)
-                .set(ENVIRONMENT_REF.ID, ref.projectId().uuid())
+                .set(ENVIRONMENT_REF.ID, ref.environmentId().uuid())
                 .set(ENVIRONMENT_REF.STATUS, ref.status().name())
                 .set(ENVIRONMENT_REF.LAST_REVISION, ref.lastRevision().value())
                 .set(ENVIRONMENT_REF.CONSISTENT, ref.consistent())
+                .set(ENVIRONMENT_REF.PROJECT_ID, ref.projectId().uuid())
                 .execute();
     }
 
@@ -53,7 +54,7 @@ class EnvironmentRefJooqRepository implements EnvironmentRefRepository {
                 .set(ENVIRONMENT_REF.STATUS, ref.status().name())
                 .set(ENVIRONMENT_REF.LAST_REVISION, ref.lastRevision().value())
                 .set(ENVIRONMENT_REF.CONSISTENT, ref.consistent())
-                .where(ENVIRONMENT_REF.ID.eq(ref.projectId().uuid()))
+                .where(ENVIRONMENT_REF.ID.eq(ref.environmentId().uuid()))
                 .execute();
 
         if (rows == 0) {
@@ -64,9 +65,10 @@ class EnvironmentRefJooqRepository implements EnvironmentRefRepository {
     @Override
     public void upsert(EnvironmentRef ref) {
         dslContext.insertInto(ENVIRONMENT_REF)
-                .set(ENVIRONMENT_REF.ID, ref.projectId().uuid())
+                .set(ENVIRONMENT_REF.ID, ref.environmentId().uuid())
                 .set(ENVIRONMENT_REF.STATUS, ref.status().name())
                 .set(ENVIRONMENT_REF.LAST_REVISION, ref.lastRevision().value())
+                .set(ENVIRONMENT_REF.PROJECT_ID, ref.projectId().uuid())
                 .set(ENVIRONMENT_REF.CONSISTENT, true)
                 .onConflict(ENVIRONMENT_REF.ID)
                 .doUpdate()

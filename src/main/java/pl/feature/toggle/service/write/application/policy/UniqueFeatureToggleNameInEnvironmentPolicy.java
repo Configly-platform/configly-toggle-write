@@ -12,8 +12,8 @@ class UniqueFeatureToggleNameInEnvironmentPolicy {
     private final FeatureToggleQueryRepository repo;
 
     void ensure(FeatureToggleName name, EnvironmentId environmentId) {
-        var nameIsUnique = repo.exists(name, environmentId);
-        if (!nameIsUnique) {
+        var nameIsNotUnique = repo.exists(name, environmentId);
+        if (nameIsNotUnique) {
             throw new FeatureToggleAlreadyExistsException(name);
         }
     }

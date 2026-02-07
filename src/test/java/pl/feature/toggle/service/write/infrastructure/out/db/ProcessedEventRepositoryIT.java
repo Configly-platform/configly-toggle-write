@@ -1,10 +1,10 @@
 package pl.feature.toggle.service.write.infrastructure.out.db;
 
-import pl.feature.toggle.service.write.AbstractITTest;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.contracts.shared.EventId;
+import pl.feature.toggle.service.event.processing.api.ProcessedEventRepository;
+import pl.feature.toggle.service.write.AbstractITTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,44 +14,32 @@ class ProcessedEventRepositoryIT extends AbstractITTest {
     ProcessedEventRepository sut;
 
     @Test
-    @DisplayName("Should mark as processed given event")
-    void test01() {
+    void should_mark_event_as_processed_only_once() {
         // given
         var eventId = EventId.create();
 
         // when
-        sut.markProcessed(eventId);
+        var first = sut.tryMarkProcessed(eventId);
+        var second = sut.tryMarkProcessed(eventId);
 
         // then
-        var result = sut.alreadyProcessed(eventId);
-        assertThat(result).isTrue();
+        assertThat(first).isTrue();
+        assertThat(second).isFalse();
     }
 
     @Test
-    @DisplayName("Should return true if event was already processed")
-    void test02() {
+    void should_mark_each_distinct_event_as_processed() {
         // given
-        var eventId = EventId.create();
-        sut.markProcessed(eventId);
+        var eventId1 = EventId.create();
+        var eventId2 = EventId.create();
 
         // when
-        var result = sut.alreadyProcessed(eventId);
+        var first = sut.tryMarkProcessed(eventId1);
+        var second = sut.tryMarkProcessed(eventId2);
 
         // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("Should return false if event was not processed yet")
-    void test03() {
-        // given
-        var eventId = EventId.create();
-
-        // when
-        var result = sut.alreadyProcessed(eventId);
-
-        // then
-        assertThat(result).isFalse();
+        assertThat(first).isTrue();
+        assertThat(second).isTrue();
     }
 
 }

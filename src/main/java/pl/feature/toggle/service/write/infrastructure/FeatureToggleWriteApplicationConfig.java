@@ -20,16 +20,16 @@ class FeatureToggleWriteApplicationConfig {
     CreateFeatureToggleUseCase createFeatureToggleUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureTogglePolicyFacade featureTogglePolicyFacade,
-            ProjectRefRepository projectRefRepository,
-            EnvironmentRefRepository environmentRefRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter,
             ActorProvider actorProvider,
             CorrelationProvider correlationProvider
     ) {
         return FeatureToggleHandlerFacade.createFeatureToggleUseCase(featureToggleCommandRepository,
                 featureTogglePolicyFacade,
-                projectRefRepository,
-                environmentRefRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
                 outboxWriter,
                 actorProvider,
                 correlationProvider);
@@ -40,8 +40,8 @@ class FeatureToggleWriteApplicationConfig {
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureToggleQueryRepository featureToggleQueryRepository,
             FeatureTogglePolicyFacade featureTogglePolicyFacade,
-            ProjectRefRepository projectRefRepository,
-            EnvironmentRefRepository environmentRefRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter,
             ActorProvider actorProvider,
             CorrelationProvider correlationProvider
@@ -49,8 +49,8 @@ class FeatureToggleWriteApplicationConfig {
         return FeatureToggleHandlerFacade.updateFeatureToggleUseCase(featureToggleCommandRepository,
                 featureToggleQueryRepository,
                 featureTogglePolicyFacade,
-                projectRefRepository,
-                environmentRefRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
                 outboxWriter,
                 actorProvider,
                 correlationProvider);
@@ -60,16 +60,16 @@ class FeatureToggleWriteApplicationConfig {
     ChangeFeatureToggleStatusUseCase changeFeatureToggleStatusUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureToggleQueryRepository featureToggleQueryRepository,
-            ProjectRefRepository projectRefRepository,
-            EnvironmentRefRepository environmentRefRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter,
             ActorProvider actorProvider,
             CorrelationProvider correlationProvider
     ) {
         return FeatureToggleHandlerFacade.changeFeatureToggleStatusUseCase(featureToggleCommandRepository,
                 featureToggleQueryRepository,
-                projectRefRepository,
-                environmentRefRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
                 outboxWriter,
                 actorProvider,
                 correlationProvider
@@ -80,16 +80,16 @@ class FeatureToggleWriteApplicationConfig {
     ChangeFeatureToggleValueUseCase changeFeatureToggleValueUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureToggleQueryRepository featureToggleQueryRepository,
-            ProjectRefRepository projectRefRepository,
-            EnvironmentRefRepository environmentRefRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter,
             ActorProvider actorProvider,
             CorrelationProvider correlationProvider
     ) {
         return FeatureToggleHandlerFacade.changeFeatureToggleValueUseCase(featureToggleCommandRepository,
                 featureToggleQueryRepository,
-                projectRefRepository,
-                environmentRefRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
                 outboxWriter,
                 actorProvider,
                 correlationProvider);

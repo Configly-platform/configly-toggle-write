@@ -1,4 +1,4 @@
-package pl.feature.toggle.service.write.infrastructure;
+package pl.feature.toggle.service.write;
 
 import pl.feature.toggle.service.model.security.actor.Actor;
 import pl.feature.toggle.service.model.security.actor.ActorProvider;
