@@ -94,6 +94,10 @@ public record FeatureToggle(
         var changeSet = createChangeSet();
         changeSet.addIfChanged(VALUE, value, newFeatureToggleValue);
 
+        if (changeSet.isEmpty()) {
+            return noChanges(this);
+        }
+
         var featureToggle = new FeatureToggle(
                 id,
                 environmentId,

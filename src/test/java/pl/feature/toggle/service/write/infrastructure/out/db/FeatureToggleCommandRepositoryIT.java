@@ -117,7 +117,7 @@ class FeatureToggleCommandRepositoryIT extends AbstractITTest {
                 .build();
         sut.save(original);
 
-        var updateResult = original.changeValue(new FeatureToggleRawValue("TRUE"));
+        var updateResult = original.changeValue(new FeatureToggleRawValue("FALSE"));
 
         // when
         sut.update(updateResult);
