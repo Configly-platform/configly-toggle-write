@@ -64,6 +64,7 @@ public abstract class AbstractUnitTest {
     protected FeatureTogglePolicyFacade featureTogglePolicyFacade;
     protected ProjectRefConsistencySpy projectRefConsistencySpy;
     protected EnvironmentRefConsistencySpy environmentRefConsistencySpy;
+    protected ApplicationEventPublishedSpy applicationEventPublishedSpy;
 
     @BeforeEach
     void setUp() {
@@ -79,6 +80,7 @@ public abstract class AbstractUnitTest {
         fakeInMemoryProjectRefRepository = new FakeInMemoryProjectRefRepository();
         featureTogglePolicyFacade = FeatureTogglePolicyFacade.create(featureToggleQueryRepositoryStub);
         projectRefConsistencySpy = new ProjectRefConsistencySpy();
+        applicationEventPublishedSpy = new ApplicationEventPublishedSpy();
         environmentRefConsistencySpy = new EnvironmentRefConsistencySpy();
     }
 
@@ -90,6 +92,7 @@ public abstract class AbstractUnitTest {
         featureToggleQueryRepositoryStub.reset();
         projectRefRepositoryStubSpy.reset();
         fakeInMemoryProjectRefRepository.reset();
+        applicationEventPublishedSpy.reset();
     }
 
     protected void assertContainsEventOfType(String topic, Class<?> eventClass) {

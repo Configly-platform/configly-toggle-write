@@ -61,28 +61,11 @@ class Mapper {
                 record.getConsistent());
     }
 
-    static EnvironmentRefRecord toRecord(EnvironmentRef environmentRef) {
-        return new EnvironmentRefRecord(
-                environmentRef.environmentId().uuid(),
-                environmentRef.status().name(),
-                environmentRef.projectId().uuid(),
-                environmentRef.lastRevision().value(),
-                environmentRef.consistent());
-    }
-
     static ProjectRef toReference(ProjectRefRecord record) {
         return new ProjectRef(
                 ProjectId.create(record.getId()),
                 ProjectStatus.valueOf(record.getStatus()),
                 Revision.from(record.getLastRevision()),
                 record.getConsistent());
-    }
-
-    static ProjectRefRecord toRecord(ProjectRef projectRef) {
-        return new ProjectRefRecord(
-                projectRef.projectId().uuid(),
-                projectRef.status().name(),
-                projectRef.lastRevision().value(),
-                projectRef.consistent());
     }
 }

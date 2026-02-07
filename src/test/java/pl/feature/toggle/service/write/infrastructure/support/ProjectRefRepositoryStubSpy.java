@@ -48,6 +48,10 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
     private final List<ProjectId> markedInconsistent = new ArrayList<>();
 
     private boolean failOnAnyCall;
+    private boolean noUpdates;
+    private boolean noInserts;
+    private boolean noUpserts;
+    private boolean noConsistent;
 
     public void expectNoCalls() {
         failOnAnyCall = true;
@@ -64,6 +68,10 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
         markedInconsistent.clear();
 
         failOnAnyCall = false;
+        noUpdates = false;
+        noInserts = false;
+        noUpserts = false;
+        noConsistent = false;
     }
 
     @Override
@@ -78,7 +86,7 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
 
     @Override
     public void insert(ProjectRef ref) {
-        if (failOnAnyCall) {
+        if (failOnAnyCall || noInserts) {
             throw new AssertionError("insert should not be called");
         }
         inserted.add(ref);
@@ -86,7 +94,7 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
 
     @Override
     public void update(ProjectRef ref) {
-        if (failOnAnyCall) {
+        if (failOnAnyCall || noUpdates) {
             throw new AssertionError("update should not be called");
         }
         updated.add(ref);
@@ -94,7 +102,7 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
 
     @Override
     public void upsert(ProjectRef ref) {
-        if (failOnAnyCall) {
+        if (failOnAnyCall || noUpserts) {
             throw new AssertionError("upsert should not be called");
         }
         upserted.add(ref);
@@ -102,7 +110,7 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
 
     @Override
     public boolean markInconsistentIfNotMarked(ProjectId projectId) {
-        if (failOnAnyCall) {
+        if (failOnAnyCall || noConsistent) {
             throw new AssertionError("markInconsistentIfNotMarked should not be called");
         }
         markedInconsistent.add(projectId);
@@ -113,13 +121,31 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
         return upserted.isEmpty() ? null : upserted.getLast();
     }
 
-    public int upsertCalls() {
-        return upserted.size();
+    public ProjectRef lastInserted() {
+        return inserted.isEmpty() ? null : inserted.getLast();
     }
 
-    public int markInconsistentCalls() {
-        return markedInconsistent.size();
+    public ProjectRef lastUpdated() {
+        return updated.isEmpty() ? null : updated.getLast();
     }
+
+    public void expectNoUpdates() {
+        noUpdates = true;
+    }
+
+    public void expectNoUpserts() {
+        noUpserts = true;
+    }
+
+    public void expectNoInserts() {
+        noInserts = true;
+    }
+
+    public void expectNoMarkInconsistent() {
+        noConsistent = true;
+    }
+
+
 
     public ProjectId lastMarkedInconsistent() {
         return markedInconsistent.isEmpty() ? null : markedInconsistent.getLast();

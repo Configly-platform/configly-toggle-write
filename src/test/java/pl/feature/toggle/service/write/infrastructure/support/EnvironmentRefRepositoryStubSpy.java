@@ -52,6 +52,10 @@ public class EnvironmentRefRepositoryStubSpy implements EnvironmentRefRepository
     private final List<EnvironmentId> markedInconsistent = new ArrayList<>();
 
     private boolean failOnAnyCall;
+    private boolean noUpdates;
+    private boolean noInserts;
+    private boolean noUpserts;
+    private boolean noConsistent;
 
     public void expectNoCalls() {
         failOnAnyCall = true;
@@ -68,6 +72,10 @@ public class EnvironmentRefRepositoryStubSpy implements EnvironmentRefRepository
         markedInconsistent.clear();
 
         failOnAnyCall = false;
+        noUpdates = false;
+        noInserts = false;
+        noUpserts = false;
+        noConsistent = false;
     }
 
     @Override
@@ -82,7 +90,7 @@ public class EnvironmentRefRepositoryStubSpy implements EnvironmentRefRepository
 
     @Override
     public void insert(EnvironmentRef ref) {
-        if (failOnAnyCall) {
+        if (failOnAnyCall || noInserts) {
             throw new AssertionError("insert should not be called");
         }
         inserted.add(ref);
@@ -90,7 +98,7 @@ public class EnvironmentRefRepositoryStubSpy implements EnvironmentRefRepository
 
     @Override
     public void update(EnvironmentRef ref) {
-        if (failOnAnyCall) {
+        if (failOnAnyCall || noUpdates) {
             throw new AssertionError("update should not be called");
         }
         updated.add(ref);
@@ -98,7 +106,7 @@ public class EnvironmentRefRepositoryStubSpy implements EnvironmentRefRepository
 
     @Override
     public void upsert(EnvironmentRef ref) {
-        if (failOnAnyCall) {
+        if (failOnAnyCall || noUpserts) {
             throw new AssertionError("upsert should not be called");
         }
         upserted.add(ref);
@@ -106,7 +114,7 @@ public class EnvironmentRefRepositoryStubSpy implements EnvironmentRefRepository
 
     @Override
     public boolean markInconsistentIfNotMarked(EnvironmentId environmentId) {
-        if (failOnAnyCall) {
+        if (failOnAnyCall || noConsistent) {
             throw new AssertionError("markInconsistentIfNotMarked should not be called");
         }
         markedInconsistent.add(environmentId);
@@ -125,24 +133,28 @@ public class EnvironmentRefRepositoryStubSpy implements EnvironmentRefRepository
         return upserted.isEmpty() ? null : upserted.getLast();
     }
 
-    public int insertCalls() {
-        return inserted.size();
-    }
-
-    public int updateCalls() {
-        return updated.size();
-    }
-
-    public int upsertCalls() {
-        return upserted.size();
-    }
-
     public int markInconsistentCalls() {
         return markedInconsistent.size();
     }
 
     public EnvironmentId lastMarkedInconsistent() {
         return markedInconsistent.isEmpty() ? null : markedInconsistent.getLast();
+    }
+
+    public void expectNoUpdates() {
+        noUpdates = true;
+    }
+
+    public void expectNoUpserts() {
+        noUpserts = true;
+    }
+
+    public void expectNoInserts() {
+        noInserts = true;
+    }
+
+    public void expectNoMarkInconsistent() {
+        noConsistent = true;
     }
 
 }

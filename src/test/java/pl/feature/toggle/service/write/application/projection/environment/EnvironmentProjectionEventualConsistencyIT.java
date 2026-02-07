@@ -1,0 +1,132 @@
+package pl.feature.toggle.service.write.application.projection.environment;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.support.TransactionTemplate;
+import pl.feature.toggle.service.model.Revision;
+import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.write.AbstractITTest;
+import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
+import pl.feature.toggle.service.write.application.port.out.ConfigurationClient;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
+import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
+import pl.feature.toggle.service.write.domain.reference.ProjectRef;
+import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
+
+import java.time.Duration;
+import java.util.concurrent.Executor;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME;
+import static pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated.environmentCreatedEventBuilder;
+import static pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged.environmentStatusChangedEventBuilder;
+
+@Import(EnvironmentProjectionEventualConsistencyIT.SyncAsyncConfig.class)
+class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
+
+    @Autowired
+    private EnvironmentProjection sut;
+
+    @Autowired
+    private EnvironmentRefRepository environmentRefRepository;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
+    @Autowired
+    private ProjectRefRepository projectRefRepository;
+
+    @MockitoBean
+    private ConfigurationClient configurationClient;
+
+    @TestConfiguration
+    static class SyncAsyncConfig {
+
+        @Bean(name = APPLICATION_TASK_EXECUTOR_BEAN_NAME)
+        public Executor taskExecutor() {
+            return new SyncTaskExecutor();
+        }
+    }
+
+    @Test
+    void should_rebuild_environment_ref_after_commit_when_gap_detected() {
+        // given
+        var projectId = ProjectId.create();
+        var envId = EnvironmentId.create();
+        var projectRef = ProjectRef.from(projectId, ProjectStatus.ACTIVE, Revision.initialRevision());
+        projectRefRepository.insert(projectRef);
+
+        var existing = EnvironmentRef.from(projectId, envId, EnvironmentStatus.ACTIVE, Revision.from(2));
+        environmentRefRepository.insert(existing);
+
+        var rebuilt = EnvironmentRef.from(projectId, envId, EnvironmentStatus.ARCHIVED, Revision.from(5));
+        given(configurationClient.fetchEnvironment(projectId, envId)).willReturn(rebuilt);
+
+        var gapEvent = environmentStatusChangedEventBuilder()
+                .projectId(projectId.uuid())
+                .environmentId(envId.uuid())
+                .status(EnvironmentStatus.ARCHIVED.name())
+                .revision(5)
+                .build();
+
+        // when
+        transactionTemplate.executeWithoutResult(x -> sut.handle(gapEvent));
+
+        // then
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    var actual = environmentRefRepository.find(projectId, envId).orElseThrow();
+                    assertThat(actual.lastRevision()).isEqualTo(Revision.from(5));
+                    assertThat(actual.status()).isEqualTo(EnvironmentStatus.ARCHIVED);
+                    assertThat(actual.consistent()).isTrue();
+                });
+    }
+
+    @Test
+    void should_create_projection_when_status_changed_arrives_before_created() {
+        // given
+        var projectId = ProjectId.create();
+        var envId = EnvironmentId.create();
+        var projectRef = ProjectRef.from(projectId, ProjectStatus.ACTIVE, Revision.initialRevision());
+        projectRefRepository.insert(projectRef);
+
+        var statusChangedFirst = environmentStatusChangedEventBuilder()
+                .projectId(projectId.uuid())
+                .environmentId(envId.uuid())
+                .status(EnvironmentStatus.ARCHIVED.name())
+                .revision(Revision.initialRevision().value())
+                .build();
+
+        var createdLater = environmentCreatedEventBuilder()
+                .projectId(projectId.uuid())
+                .environmentId(envId.uuid())
+                .environmentName("test")
+                .status(EnvironmentStatus.ACTIVE.name())
+                .revision(Revision.initialRevision().value())
+                .build();
+
+        // when
+        sut.handle(statusChangedFirst);
+        sut.handle(createdLater);
+
+        // then
+        var actual = environmentRefRepository.find(projectId, envId).orElseThrow();
+        assertThat(actual.environmentId()).isEqualTo(envId);
+        assertThat(actual.projectId()).isEqualTo(projectId);
+
+        assertThat(actual.status()).isEqualTo(EnvironmentStatus.ARCHIVED);
+        assertThat(actual.lastRevision()).isEqualTo(Revision.initialRevision());
+        assertThat(actual.consistent()).isTrue();
+    }
+}

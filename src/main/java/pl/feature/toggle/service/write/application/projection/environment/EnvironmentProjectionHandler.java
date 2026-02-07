@@ -2,6 +2,7 @@ package pl.feature.toggle.service.write.application.projection.environment;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated;
 import pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged;
 import pl.feature.toggle.service.model.Revision;
@@ -24,11 +25,13 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
     private final RevisionProjectionApplier<EnvironmentRef> projectionRevisionApplier = new RevisionProjectionApplier<>();
 
     @Override
+    @Transactional
     public void handle(EnvironmentCreated event) {
         apply(event.revision(), event.projectId(), event.environmentId(), event.status());
     }
 
     @Override
+    @Transactional
     public void handle(EnvironmentStatusChanged event) {
         apply(event.revision(), event.projectId(), event.environmentId(), event.status());
     }

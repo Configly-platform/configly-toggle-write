@@ -1,7 +1,6 @@
 package pl.feature.toggle.service.write.application.projection.project;
 
 import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.application.port.in.ProjectRefConsistency;
 import pl.feature.toggle.service.write.application.port.out.ConfigurationClient;
@@ -21,7 +20,6 @@ class DefaultProjectRefConsistency implements ProjectRefConsistency {
     }
 
     @Override
-    @Transactional
     public void rebuild(ProjectId projectId) {
         fetchAndSaveProjectRef(projectId);
     }
