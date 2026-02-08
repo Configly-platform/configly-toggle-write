@@ -3,6 +3,8 @@ package pl.feature.toggle.service.write;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import pl.feature.toggle.service.contracts.shared.IntegrationEvent;
+import pl.feature.toggle.service.event.processing.api.RevisionProjectionApplier;
+import pl.feature.toggle.service.event.processing.internal.DefaultRevisionProjectionApplier;
 import pl.feature.toggle.service.outbox.FakeOutboxWriter;
 import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
@@ -52,11 +54,13 @@ public abstract class AbstractUnitTest {
             .build();
 
     protected ConfigurationClientStub configurationClientStub;
-    protected EnvironmentRefRepositoryStubSpy environmentRefRepositoryStubSpy;
+    protected EnvironmentRefProjectionRepositorySpy environmentRefRepositoryStubSpy;
     protected FeatureToggleCommandRepositorySpy featureToggleCommandRepositorySpy;
     protected FeatureToggleQueryRepositoryStub featureToggleQueryRepositoryStub;
-    protected ProjectRefRepositoryStubSpy projectRefRepositoryStubSpy;
+    protected ProjectRefProjectionRepositorySpy projectRefRepositoryStubSpy;
     protected FakeInMemoryProjectRefRepository fakeInMemoryProjectRefRepository;
+    protected ProjectRefQueryRepositoryStub projectRefQueryRepositoryStub;
+    protected EnvironmentRefQueryRepositoryStub environmentRefQueryRepositoryStub;
     protected FakeOutboxWriter outboxWriter;
     protected FakeCorrelationProvider correlationProvider;
     protected FakeActorProvider actorProvider;
@@ -65,6 +69,7 @@ public abstract class AbstractUnitTest {
     protected ProjectRefConsistencySpy projectRefConsistencySpy;
     protected EnvironmentRefConsistencySpy environmentRefConsistencySpy;
     protected ApplicationEventPublishedSpy applicationEventPublishedSpy;
+    protected RevisionProjectionApplier revisionProjectionApplier;
 
     @BeforeEach
     void setUp() {
@@ -73,15 +78,18 @@ public abstract class AbstractUnitTest {
         correlationProvider = new FakeCorrelationProvider();
         acknowledgment = new FakeAcknowledgment();
         configurationClientStub = new ConfigurationClientStub();
-        environmentRefRepositoryStubSpy = new EnvironmentRefRepositoryStubSpy();
+        environmentRefRepositoryStubSpy = new EnvironmentRefProjectionRepositorySpy();
         featureToggleCommandRepositorySpy = new FeatureToggleCommandRepositorySpy();
         featureToggleQueryRepositoryStub = new FeatureToggleQueryRepositoryStub();
-        projectRefRepositoryStubSpy = new ProjectRefRepositoryStubSpy();
+        projectRefRepositoryStubSpy = new ProjectRefProjectionRepositorySpy();
         fakeInMemoryProjectRefRepository = new FakeInMemoryProjectRefRepository();
         featureTogglePolicyFacade = FeatureTogglePolicyFacade.create(featureToggleQueryRepositoryStub);
         projectRefConsistencySpy = new ProjectRefConsistencySpy();
         applicationEventPublishedSpy = new ApplicationEventPublishedSpy();
         environmentRefConsistencySpy = new EnvironmentRefConsistencySpy();
+        projectRefQueryRepositoryStub = new ProjectRefQueryRepositoryStub();
+        environmentRefQueryRepositoryStub = new EnvironmentRefQueryRepositoryStub();
+        revisionProjectionApplier = DefaultRevisionProjectionApplier.create();
     }
 
     @AfterEach
@@ -92,6 +100,8 @@ public abstract class AbstractUnitTest {
         featureToggleQueryRepositoryStub.reset();
         projectRefRepositoryStubSpy.reset();
         fakeInMemoryProjectRefRepository.reset();
+        projectRefQueryRepositoryStub.reset();
+        environmentRefQueryRepositoryStub.reset();
         applicationEventPublishedSpy.reset();
     }
 

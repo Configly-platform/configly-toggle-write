@@ -6,10 +6,10 @@ import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.AbstractITTest;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
@@ -31,10 +31,10 @@ class FeatureToggleQueryRepositoryIT extends AbstractITTest {
     private FeatureToggleCommandRepository commandRepository;
 
     @Autowired
-    private EnvironmentRefRepository environmentRefRepository;
+    private EnvironmentRefProjectionRepository environmentRefProjectionRepository;
 
     @Autowired
-    private ProjectRefRepository projectRefRepository;
+    private ProjectRefProjectionRepository projectRefProjectionRepository;
 
     @Test
     void should_get_feature_toggle_or_throw_when_exists() {
@@ -127,7 +127,7 @@ class FeatureToggleQueryRepositoryIT extends AbstractITTest {
                 .projectId(projectId)
                 .status(environmentStatus)
                 .build();
-        environmentRefRepository.insert(environmentRef);
+        environmentRefProjectionRepository.insert(environmentRef);
         return environmentRef;
     }
 
@@ -135,7 +135,7 @@ class FeatureToggleQueryRepositoryIT extends AbstractITTest {
         var projectRef = fakeProjectRefBuilder()
                 .status(projectStatus)
                 .build();
-        projectRefRepository.insert(projectRef);
+        projectRefProjectionRepository.insert(projectRef);
         return projectRef;
     }
 

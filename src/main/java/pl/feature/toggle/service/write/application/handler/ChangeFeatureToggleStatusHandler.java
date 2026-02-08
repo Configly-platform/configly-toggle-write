@@ -9,10 +9,8 @@ import pl.feature.toggle.service.write.application.port.in.ChangeFeatureToggleSt
 import pl.feature.toggle.service.write.application.port.in.EnvironmentRefConsistency;
 import pl.feature.toggle.service.write.application.port.in.ProjectRefConsistency;
 import pl.feature.toggle.service.write.application.port.in.command.ChangeFeatureToggleStatusCommand;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;

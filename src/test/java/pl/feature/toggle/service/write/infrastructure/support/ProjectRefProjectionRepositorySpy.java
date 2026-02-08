@@ -2,40 +2,21 @@ package pl.feature.toggle.service.write.infrastructure.support;
 
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.StubSupport;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static pl.feature.toggle.service.write.StubSupport.forMethod;
 
-public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
+public class ProjectRefProjectionRepositorySpy implements ProjectRefProjectionRepository {
 
-    private final StubSupport<Optional<ProjectRef>> find = forMethod("find(ProjectId)");
-    private final StubSupport<Optional<ProjectRef>> findConsistent = forMethod("findConsistent(ProjectId)");
     private final StubSupport<Boolean> markInconsistentIfNotMarked =
             forMethod("markInconsistentIfNotMarked(ProjectId)");
 
-    public void findReturns(ProjectRef value) {
-        find.willReturn(Optional.ofNullable(value));
-    }
-
-    public void findConsistentReturns(ProjectRef value) {
-        findConsistent.willReturn(Optional.ofNullable(value));
-    }
-
     public void markInconsistentIfNotMarkedReturns(boolean value) {
         markInconsistentIfNotMarked.willReturn(value);
-    }
-
-    public void findThrows(RuntimeException ex) {
-        find.willThrow(ex);
-    }
-
-    public void findConsistentThrows(RuntimeException ex) {
-        findConsistent.willThrow(ex);
     }
 
     public void markInconsistentIfNotMarkedThrows(RuntimeException ex) {
@@ -58,8 +39,6 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
     }
 
     public void reset() {
-        find.reset();
-        findConsistent.reset();
         markInconsistentIfNotMarked.reset();
 
         inserted.clear();
@@ -72,16 +51,6 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
         noInserts = false;
         noUpserts = false;
         noConsistent = false;
-    }
-
-    @Override
-    public Optional<ProjectRef> find(ProjectId projectId) {
-        return find.get();
-    }
-
-    @Override
-    public Optional<ProjectRef> findConsistent(ProjectId projectId) {
-        return findConsistent.get();
     }
 
     @Override
@@ -144,7 +113,6 @@ public class ProjectRefRepositoryStubSpy implements ProjectRefRepository {
     public void expectNoMarkInconsistent() {
         noConsistent = true;
     }
-
 
 
     public ProjectId lastMarkedInconsistent() {

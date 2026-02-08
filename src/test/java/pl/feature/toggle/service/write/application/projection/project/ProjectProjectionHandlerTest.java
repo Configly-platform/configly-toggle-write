@@ -22,14 +22,16 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
     void setUp() {
         sut = ProjectProjectionFacade.projectProjection(
                 projectRefRepositoryStubSpy,
-                applicationEventPublishedSpy
+                projectRefQueryRepositoryStub,
+                applicationEventPublishedSpy,
+                revisionProjectionApplier
         );
     }
 
     @Test
     void should_insert_new_project_when_project_not_exists() {
         // given
-        projectRefRepositoryStubSpy.findReturns(null);
+        projectRefQueryRepositoryStub.findReturns(null);
         projectRefRepositoryStubSpy.expectNoUpdates();
         projectRefRepositoryStubSpy.expectNoUpserts();
         projectRefRepositoryStubSpy.expectNoMarkInconsistent();
@@ -60,7 +62,7 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
                 .status(ProjectStatus.ACTIVE)
                 .build();
 
-        projectRefRepositoryStubSpy.findReturns(existing);
+        projectRefQueryRepositoryStub.findReturns(existing);
         projectRefRepositoryStubSpy.expectNoInserts();
         projectRefRepositoryStubSpy.expectNoUpserts();
         projectRefRepositoryStubSpy.expectNoMarkInconsistent();
@@ -87,7 +89,7 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
                 .lastRevision(Revision.from(2))
                 .build();
 
-        projectRefRepositoryStubSpy.findReturns(existing);
+        projectRefQueryRepositoryStub.findReturns(existing);
         projectRefRepositoryStubSpy.expectNoInserts();
         projectRefRepositoryStubSpy.expectNoUpserts();
         projectRefRepositoryStubSpy.expectNoUpdates();

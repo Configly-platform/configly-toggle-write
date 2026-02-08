@@ -11,9 +11,7 @@ import pl.feature.toggle.service.write.application.port.in.CreateFeatureToggleUs
 import pl.feature.toggle.service.write.application.port.in.EnvironmentRefConsistency;
 import pl.feature.toggle.service.write.application.port.in.ProjectRefConsistency;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 
 import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;

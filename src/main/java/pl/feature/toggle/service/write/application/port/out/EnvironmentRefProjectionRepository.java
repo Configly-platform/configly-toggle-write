@@ -6,12 +6,7 @@ import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
 import java.util.Optional;
 
-public interface EnvironmentRefRepository {
-
-    Optional<EnvironmentRef> find(ProjectId projectId, EnvironmentId environmentId);
-
-    Optional<EnvironmentRef> findConsistent(ProjectId projectId, EnvironmentId environmentId);
-
+public interface EnvironmentRefProjectionRepository {
     void insert(EnvironmentRef ref);
 
     void update(EnvironmentRef ref);

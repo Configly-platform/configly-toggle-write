@@ -4,16 +4,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.write.AbstractITTest;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefQueryRepository;
 import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.feature.toggle.service.write.builder.FakeProjectRefBuilder.fakeProjectRefBuilder;
 
-class ProjectRefRepositoryIT extends AbstractITTest {
+class ProjectRefProjectionRepositoryIT extends AbstractITTest {
 
     @Autowired
-    private ProjectRefRepository sut;
+    private ProjectRefProjectionRepository sut;
+
+    @Autowired
+    private ProjectRefQueryRepository queryRepository;
 
     @Test
     void should_save_project_ref() {
@@ -24,51 +28,8 @@ class ProjectRefRepositoryIT extends AbstractITTest {
         sut.insert(projectRef);
 
         // then
-        var actual = sut.find(projectRef.projectId()).orElseThrow();
+        var actual = queryRepository.find(projectRef.projectId()).orElseThrow();
         assertThat(actual).isEqualTo(projectRef);
-    }
-
-    @Test
-    void should_find_project_ref() {
-        // given
-        var projectRef = fakeProjectRefBuilder().build();
-        sut.insert(projectRef);
-
-        // when
-        var result = sut.find(projectRef.projectId()).orElseThrow();
-
-        // then
-        assertThat(result).isEqualTo(projectRef);
-    }
-
-    @Test
-    void should_find_consistent_project_ref_when_consistent() {
-        // given
-        var projectRef = fakeProjectRefBuilder()
-                .consistent(true)
-                .build();
-        sut.insert(projectRef);
-
-        // when
-        var result = sut.findConsistent(projectRef.projectId());
-
-        // then
-        assertThat(result).contains(projectRef);
-    }
-
-    @Test
-    void should_not_find_project_ref_when_inconsistent() {
-        // given
-        var projectRef = fakeProjectRefBuilder()
-                .consistent(false)
-                .build();
-        sut.insert(projectRef);
-
-        // when
-        var result = sut.findConsistent(projectRef.projectId());
-
-        // then
-        assertThat(result).isEmpty();
     }
 
     @Test
@@ -85,7 +46,7 @@ class ProjectRefRepositoryIT extends AbstractITTest {
         sut.update(updated);
 
         // then
-        var actual = sut.find(original.projectId()).orElseThrow();
+        var actual = queryRepository.find(original.projectId()).orElseThrow();
         assertThat(actual).isEqualTo(updated);
     }
 
@@ -98,7 +59,7 @@ class ProjectRefRepositoryIT extends AbstractITTest {
         sut.upsert(projectRef);
 
         // then
-        var actual = sut.find(projectRef.projectId()).orElseThrow();
+        var actual = queryRepository.find(projectRef.projectId()).orElseThrow();
         assertThat(actual).isEqualTo(projectRef);
     }
 
@@ -116,7 +77,7 @@ class ProjectRefRepositoryIT extends AbstractITTest {
         sut.upsert(updated);
 
         // then
-        var actual = sut.find(original.projectId()).orElseThrow();
+        var actual = queryRepository.find(original.projectId()).orElseThrow();
         assertThat(actual).isEqualTo(updated);
     }
 
@@ -133,7 +94,7 @@ class ProjectRefRepositoryIT extends AbstractITTest {
 
         // then
         assertThat(result).isTrue();
-        assertThat(sut.findConsistent(projectRef.projectId())).isEmpty();
+        assertThat(queryRepository.findConsistent(projectRef.projectId())).isEmpty();
     }
 
     @Test

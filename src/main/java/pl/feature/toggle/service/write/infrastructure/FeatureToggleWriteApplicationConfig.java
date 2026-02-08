@@ -1,17 +1,18 @@
 package pl.feature.toggle.service.write.infrastructure;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import pl.feature.toggle.service.event.processing.api.RevisionProjectionApplier;
 import pl.feature.toggle.service.model.security.actor.ActorProvider;
 import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
+import pl.feature.toggle.service.outbox.api.OutboxWriter;
 import pl.feature.toggle.service.write.application.handler.FeatureToggleHandlerFacade;
+import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
+import pl.feature.toggle.service.write.application.port.in.*;
 import pl.feature.toggle.service.write.application.port.out.*;
 import pl.feature.toggle.service.write.application.projection.environment.EnvironmentProjectionFacade;
 import pl.feature.toggle.service.write.application.projection.project.ProjectProjectionFacade;
-import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
-import pl.feature.toggle.service.write.application.port.in.*;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import pl.feature.toggle.service.outbox.api.OutboxWriter;
 
 @Configuration
 class FeatureToggleWriteApplicationConfig {
@@ -97,34 +98,50 @@ class FeatureToggleWriteApplicationConfig {
 
     @Bean
     ProjectProjection projectProjection(
-            ProjectRefRepository projectRefRepository,
+            ProjectRefProjectionRepository projectRefProjectionRepository,
+            ProjectRefQueryRepository projectRefQueryRepository,
+            RevisionProjectionApplier revisionProjectionApplier,
             ApplicationEventPublisher applicationEventPublisher
     ) {
-        return ProjectProjectionFacade.projectProjection(projectRefRepository, applicationEventPublisher);
+        return ProjectProjectionFacade.projectProjection(projectRefProjectionRepository,
+                projectRefQueryRepository,
+                applicationEventPublisher,
+                revisionProjectionApplier);
     }
 
     @Bean
     EnvironmentProjection environmentProjection(
-            EnvironmentRefRepository environmentRefRepository,
+            EnvironmentRefProjectionRepository environmentRefProjectionRepository,
+            EnvironmentRefQueryRepository environmentRefQueryRepository,
+            RevisionProjectionApplier revisionProjectionApplier,
             ApplicationEventPublisher applicationEventPublisher
     ) {
-        return EnvironmentProjectionFacade.environmentProjection(environmentRefRepository, applicationEventPublisher);
+        return EnvironmentProjectionFacade.environmentProjection(environmentRefProjectionRepository,
+                environmentRefQueryRepository,
+                revisionProjectionApplier,
+                applicationEventPublisher);
     }
 
     @Bean
     EnvironmentRefConsistency environmentRefConsistency(
             ConfigurationClient configurationClient,
-            EnvironmentRefRepository environmentRefRepository
+            EnvironmentRefProjectionRepository environmentRefProjectionRepository,
+            EnvironmentRefQueryRepository environmentRefQueryRepository
     ) {
-        return EnvironmentProjectionFacade.environmentRefConsistency(configurationClient, environmentRefRepository);
+        return EnvironmentProjectionFacade.environmentRefConsistency(configurationClient,
+                environmentRefProjectionRepository,
+                environmentRefQueryRepository);
     }
 
     @Bean
     ProjectRefConsistency projectRefConsistency(
             ConfigurationClient configurationClient,
-            ProjectRefRepository projectRefRepository
+            ProjectRefProjectionRepository projectRefProjectionRepository,
+            ProjectRefQueryRepository projectRefQueryRepository
     ) {
-        return ProjectProjectionFacade.projectRefResolver(configurationClient, projectRefRepository);
+        return ProjectProjectionFacade.projectRefResolver(configurationClient,
+                projectRefProjectionRepository,
+                projectRefQueryRepository);
     }
 
 }

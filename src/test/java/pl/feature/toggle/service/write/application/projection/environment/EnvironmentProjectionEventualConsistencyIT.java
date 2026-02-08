@@ -14,8 +14,9 @@ import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
 import pl.feature.toggle.service.write.application.port.out.ConfigurationClient;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
@@ -38,13 +39,16 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
     private EnvironmentProjection sut;
 
     @Autowired
-    private EnvironmentRefRepository environmentRefRepository;
+    private EnvironmentRefProjectionRepository environmentRefProjectionRepository;
+
+    @Autowired
+    private EnvironmentRefQueryRepository  environmentRefQueryRepository;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
 
     @Autowired
-    private ProjectRefRepository projectRefRepository;
+    private ProjectRefProjectionRepository projectRefProjectionRepository;
 
     @MockitoBean
     private ConfigurationClient configurationClient;
@@ -64,10 +68,10 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
         var projectId = ProjectId.create();
         var envId = EnvironmentId.create();
         var projectRef = ProjectRef.from(projectId, ProjectStatus.ACTIVE, Revision.initialRevision());
-        projectRefRepository.insert(projectRef);
+        projectRefProjectionRepository.insert(projectRef);
 
         var existing = EnvironmentRef.from(projectId, envId, EnvironmentStatus.ACTIVE, Revision.from(2));
-        environmentRefRepository.insert(existing);
+        environmentRefProjectionRepository.insert(existing);
 
         var rebuilt = EnvironmentRef.from(projectId, envId, EnvironmentStatus.ARCHIVED, Revision.from(5));
         given(configurationClient.fetchEnvironment(projectId, envId)).willReturn(rebuilt);
@@ -86,7 +90,7 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
         await()
                 .atMost(Duration.ofSeconds(3))
                 .untilAsserted(() -> {
-                    var actual = environmentRefRepository.find(projectId, envId).orElseThrow();
+                    var actual = environmentRefQueryRepository.find(projectId, envId).orElseThrow();
                     assertThat(actual.lastRevision()).isEqualTo(Revision.from(5));
                     assertThat(actual.status()).isEqualTo(EnvironmentStatus.ARCHIVED);
                     assertThat(actual.consistent()).isTrue();
@@ -99,7 +103,7 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
         var projectId = ProjectId.create();
         var envId = EnvironmentId.create();
         var projectRef = ProjectRef.from(projectId, ProjectStatus.ACTIVE, Revision.initialRevision());
-        projectRefRepository.insert(projectRef);
+        projectRefProjectionRepository.insert(projectRef);
 
         var statusChangedFirst = environmentStatusChangedEventBuilder()
                 .projectId(projectId.uuid())
@@ -121,7 +125,7 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
         sut.handle(createdLater);
 
         // then
-        var actual = environmentRefRepository.find(projectId, envId).orElseThrow();
+        var actual = environmentRefQueryRepository.find(projectId, envId).orElseThrow();
         assertThat(actual.environmentId()).isEqualTo(envId);
         assertThat(actual.projectId()).isEqualTo(projectId);
 

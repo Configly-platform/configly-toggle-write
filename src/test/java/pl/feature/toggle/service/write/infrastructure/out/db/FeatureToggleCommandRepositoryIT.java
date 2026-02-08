@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
 import pl.feature.toggle.service.write.AbstractITTest;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleUpdateFailedException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
@@ -16,7 +16,6 @@ import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
-import static github.saqie.ftaas.jooq.tables.EnvironmentRef.ENVIRONMENT_REF;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static pl.feature.toggle.service.write.builder.FakeEnvironmentRefBuilder.fakeEnvironmentRefBuilder;
@@ -29,10 +28,10 @@ class FeatureToggleCommandRepositoryIT extends AbstractITTest {
     private FeatureToggleCommandRepository sut;
 
     @Autowired
-    private EnvironmentRefRepository environmentRefRepository;
+    private EnvironmentRefProjectionRepository environmentRefProjectionRepository;
 
     @Autowired
-    private ProjectRefRepository projectRefRepository;
+    private ProjectRefProjectionRepository projectRefProjectionRepository;
 
     @Autowired
     private FeatureToggleQueryRepository queryRepository;
@@ -132,7 +131,7 @@ class FeatureToggleCommandRepositoryIT extends AbstractITTest {
                 .projectId(projectId)
                 .status(environmentStatus)
                 .build();
-        environmentRefRepository.insert(environmentRef);
+        environmentRefProjectionRepository.insert(environmentRef);
         return environmentRef;
     }
 
@@ -140,7 +139,7 @@ class FeatureToggleCommandRepositoryIT extends AbstractITTest {
         var projectRef = fakeProjectRefBuilder()
                 .status(projectStatus)
                 .build();
-        projectRefRepository.insert(projectRef);
+        projectRefProjectionRepository.insert(projectRef);
         return projectRef;
     }
 }

@@ -23,6 +23,8 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
     void setUp() {
         sut = EnvironmentProjectionFacade.environmentProjection(
                 environmentRefRepositoryStubSpy,
+                environmentRefQueryRepositoryStub,
+                revisionProjectionApplier,
                 applicationEventPublishedSpy
         );
     }
@@ -30,7 +32,7 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
     @Test
     void should_insert_new_environment_when_environment_not_exists() {
         // given
-        environmentRefRepositoryStubSpy.findReturns(null);
+        environmentRefQueryRepositoryStub.findReturns(null);
         environmentRefRepositoryStubSpy.expectNoUpdates();
         environmentRefRepositoryStubSpy.expectNoUpserts();
         environmentRefRepositoryStubSpy.expectNoMarkInconsistent();
@@ -61,12 +63,12 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
 
     @Test
     void should_update_environment_when_exists() {
-        // given (to jest tylko wiring: czy update path jest okablowany i mapuje status)
+        // given
         var existingEnv = fakeEnvironmentRefBuilder()
                 .status(EnvironmentStatus.ACTIVE)
                 .build();
 
-        environmentRefRepositoryStubSpy.findReturns(existingEnv);
+        environmentRefQueryRepositoryStub.findReturns(existingEnv);
         environmentRefRepositoryStubSpy.expectNoInserts();
         environmentRefRepositoryStubSpy.expectNoUpserts();
         environmentRefRepositoryStubSpy.expectNoMarkInconsistent();
@@ -94,7 +96,7 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
                 .lastRevision(Revision.from(2))
                 .build();
 
-        environmentRefRepositoryStubSpy.findReturns(existing);
+        environmentRefQueryRepositoryStub.findReturns(existing);
         environmentRefRepositoryStubSpy.expectNoInserts();
         environmentRefRepositoryStubSpy.expectNoUpserts();
         environmentRefRepositoryStubSpy.expectNoUpdates();

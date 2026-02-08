@@ -13,7 +13,8 @@ import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
 import pl.feature.toggle.service.write.application.port.out.ConfigurationClient;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefQueryRepository;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
@@ -34,7 +35,10 @@ class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
     private ProjectProjection sut;
 
     @Autowired
-    private ProjectRefRepository projectRefRepository;
+    private ProjectRefProjectionRepository projectRefProjectionRepository;
+
+    @Autowired
+    private ProjectRefQueryRepository queryRepository;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -57,7 +61,7 @@ class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
         var projectId = ProjectId.create();
 
         var existing = ProjectRef.from(projectId, ProjectStatus.ACTIVE, Revision.from(2));
-        projectRefRepository.insert(existing);
+        projectRefProjectionRepository.insert(existing);
 
         var rebuilt = ProjectRef.from(projectId, ProjectStatus.ARCHIVED, Revision.from(5));
         given(configurationClient.fetchProject(projectId)).willReturn(rebuilt);
@@ -75,7 +79,7 @@ class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
         await()
                 .atMost(Duration.ofSeconds(3))
                 .untilAsserted(() -> {
-                    var actual = projectRefRepository.find(projectId).orElseThrow();
+                    var actual = queryRepository.find(projectId).orElseThrow();
                     assertThat(actual.lastRevision()).isEqualTo(Revision.from(5));
                     assertThat(actual.status()).isEqualTo(ProjectStatus.ARCHIVED);
                     assertThat(actual.consistent()).isTrue();
@@ -104,7 +108,7 @@ class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
         sut.handle(createdLater);
 
         // then
-        var actual = projectRefRepository.find(projectId).orElseThrow();
+        var actual = queryRepository.find(projectId).orElseThrow();
         assertThat(actual.projectId()).isEqualTo(projectId);
 
         assertThat(actual.status()).isEqualTo(ProjectStatus.ARCHIVED);

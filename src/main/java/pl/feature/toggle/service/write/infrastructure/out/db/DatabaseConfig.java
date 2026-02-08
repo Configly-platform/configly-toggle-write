@@ -10,15 +10,12 @@ import org.jooq.impl.DefaultConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.feature.toggle.service.event.processing.api.ProcessedEventRepository;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
-import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
-import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.*;
 
 import javax.sql.DataSource;
 
 @Configuration("databaseConfig")
-class Config {
+class DatabaseConfig {
 
     @Bean
     DefaultConfiguration jooqConfiguration(DataSource ds) {
@@ -45,18 +42,29 @@ class Config {
     }
 
     @Bean
-    ProjectRefRepository projectRepository(DSLContext dslContext) {
-        return new ProjectRefJooqRepository(dslContext);
+    ProjectRefProjectionRepository projectRefProjectionRepository(DSLContext dslContext) {
+        return new ProjectRefProjectionJooqRepository(dslContext);
     }
 
     @Bean
-    EnvironmentRefRepository environmentRepository(DSLContext dslContext) {
-        return new EnvironmentRefJooqRepository(dslContext);
+    EnvironmentRefProjectionRepository environmentRefProjectionRepository(DSLContext dslContext) {
+        return new EnvironmentRefProjectionJooqRepository(dslContext);
     }
 
     @Bean
     ProcessedEventRepository processedEventRepository(DSLContext dslContext) {
         return new ProcessedEventJooqRepository(dslContext);
     }
+
+    @Bean
+    EnvironmentRefQueryRepository environmentRefQueryRepository(DSLContext dslContext) {
+        return new EnvironmentRefQueryJooqRepository(dslContext);
+    }
+
+    @Bean
+    ProjectRefQueryRepository projectRefQueryRepository(DSLContext dslContext) {
+        return new ProjectRefQueryJooqRepository(dslContext);
+    }
+
 
 }

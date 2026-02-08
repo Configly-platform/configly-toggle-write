@@ -2,14 +2,15 @@ package pl.feature.toggle.service.write.infrastructure.support;
 
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FakeInMemoryEnvironmentRefRepository implements EnvironmentRefRepository {
+public class FakeInMemoryEnvironmentRefRepository implements EnvironmentRefProjectionRepository, EnvironmentRefQueryRepository {
 
     private final Map<EnvironmentId, EnvironmentRef> storage = new ConcurrentHashMap<>();
 

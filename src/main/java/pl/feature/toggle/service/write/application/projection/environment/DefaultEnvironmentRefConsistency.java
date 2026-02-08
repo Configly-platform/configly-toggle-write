@@ -5,19 +5,21 @@ import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentRefConsistency;
 import pl.feature.toggle.service.write.application.port.out.ConfigurationClient;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
 @AllArgsConstructor
 class DefaultEnvironmentRefConsistency implements EnvironmentRefConsistency {
 
     private final ConfigurationClient configurationClient;
-    private final EnvironmentRefRepository repository;
+    private final EnvironmentRefProjectionRepository projectionRepository;
+    private final EnvironmentRefQueryRepository queryRepository;
 
 
     @Override
     public EnvironmentRef getTrusted(ProjectId projectId, EnvironmentId environmentId) {
-        return repository.findConsistent(projectId, environmentId)
+        return queryRepository.findConsistent(projectId, environmentId)
                 .orElseGet(() -> fetchAndSaveEnvironmentRef(projectId, environmentId));
     }
 
@@ -28,7 +30,7 @@ class DefaultEnvironmentRefConsistency implements EnvironmentRefConsistency {
 
     private EnvironmentRef fetchAndSaveEnvironmentRef(ProjectId projectId, EnvironmentId environmentId) {
         var environmentRef = configurationClient.fetchEnvironment(projectId, environmentId);
-        repository.upsert(environmentRef);
+        projectionRepository.upsert(environmentRef);
         return environmentRef;
     }
 }

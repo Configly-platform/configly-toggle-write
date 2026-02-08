@@ -1,15 +1,15 @@
 package pl.feature.toggle.service.write.infrastructure.support;
 
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefQueryRepository;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FakeInMemoryProjectRefRepository implements ProjectRefRepository {
+public class FakeInMemoryProjectRefRepository implements ProjectRefProjectionRepository, ProjectRefQueryRepository {
 
     private final Map<ProjectId, ProjectRef> storage = new ConcurrentHashMap<>();
 

@@ -4,18 +4,20 @@ import lombok.AllArgsConstructor;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.application.port.in.ProjectRefConsistency;
 import pl.feature.toggle.service.write.application.port.out.ConfigurationClient;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefQueryRepository;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 
 @AllArgsConstructor
 class DefaultProjectRefConsistency implements ProjectRefConsistency {
 
     private final ConfigurationClient configurationClient;
-    private final ProjectRefRepository repository;
+    private final ProjectRefProjectionRepository projectionRepository;
+    private final ProjectRefQueryRepository queryRepository;
 
     @Override
     public ProjectRef getTrusted(ProjectId projectId) {
-        return repository.findConsistent(projectId)
+        return queryRepository.findConsistent(projectId)
                 .orElseGet(() -> fetchAndSaveProjectRef(projectId));
     }
 
@@ -26,7 +28,7 @@ class DefaultProjectRefConsistency implements ProjectRefConsistency {
 
     private ProjectRef fetchAndSaveProjectRef(ProjectId projectId) {
         var projectRef = configurationClient.fetchProject(projectId);
-        repository.upsert(projectRef);
+        projectionRepository.upsert(projectRef);
         return projectRef;
     }
 

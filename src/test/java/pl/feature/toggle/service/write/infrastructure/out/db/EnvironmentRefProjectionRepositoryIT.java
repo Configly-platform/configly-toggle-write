@@ -5,8 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.write.AbstractITTest;
-import pl.feature.toggle.service.write.application.port.out.EnvironmentRefRepository;
-import pl.feature.toggle.service.write.application.port.out.ProjectRefRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
+import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;
+import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
@@ -15,13 +16,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static pl.feature.toggle.service.write.builder.FakeEnvironmentRefBuilder.fakeEnvironmentRefBuilder;
 import static pl.feature.toggle.service.write.builder.FakeProjectRefBuilder.fakeProjectRefBuilder;
 
-class EnvironmentRefRepositoryIT extends AbstractITTest {
+class EnvironmentRefProjectionRepositoryIT extends AbstractITTest {
 
     @Autowired
-    private EnvironmentRefRepository sut;
+    private EnvironmentRefProjectionRepository sut;
 
     @Autowired
-    private ProjectRefRepository projectRefRepository;
+    private EnvironmentRefQueryRepository queryRepository;
+
+    @Autowired
+    private ProjectRefProjectionRepository projectRefProjectionRepository;
 
     private ProjectRef projectRef;
 
@@ -36,12 +40,12 @@ class EnvironmentRefRepositoryIT extends AbstractITTest {
         var environmentRef = fakeEnvironmentRefBuilder()
                 .projectId(projectRef.projectId())
                 .build();
-        sut.upsert(environmentRef);
 
         // when
-        var result = sut.find(environmentRef.projectId(), environmentRef.environmentId());
+        sut.upsert(environmentRef);
 
         // then
+        var result = queryRepository.find(environmentRef.projectId(), environmentRef.environmentId());
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(environmentRef);
     }
@@ -57,39 +61,7 @@ class EnvironmentRefRepositoryIT extends AbstractITTest {
         sut.insert(ref);
 
         // then
-        assertThat(sut.find(ref.projectId(), ref.environmentId())).contains(ref);
-    }
-
-    @Test
-    void should_find_consistent_environment_ref_when_consistent() {
-        // given
-        var ref = fakeEnvironmentRefBuilder()
-                .projectId(projectRef.projectId())
-                .consistent(true)
-                .build();
-        sut.insert(ref);
-
-        // when
-        var result = sut.findConsistent(ref.projectId(), ref.environmentId());
-
-        // then
-        assertThat(result).contains(ref);
-    }
-
-    @Test
-    void should_not_find_consistent_environment_ref_when_inconsistent() {
-        // given
-        var ref = fakeEnvironmentRefBuilder()
-                .projectId(projectRef.projectId())
-                .consistent(false)
-                .build();
-        sut.insert(ref);
-
-        // when
-        var result = sut.findConsistent(ref.projectId(), ref.environmentId());
-
-        // then
-        assertThat(result).isEmpty();
+        assertThat(queryRepository.find(ref.projectId(), ref.environmentId())).contains(ref);
     }
 
     @Test
@@ -107,7 +79,7 @@ class EnvironmentRefRepositoryIT extends AbstractITTest {
         sut.update(updated);
 
         // then
-        assertThat(sut.find(original.projectId(), original.environmentId()))
+        assertThat(queryRepository.find(original.projectId(), original.environmentId()))
                 .contains(updated);
     }
 
@@ -122,7 +94,7 @@ class EnvironmentRefRepositoryIT extends AbstractITTest {
         sut.upsert(ref);
 
         // then
-        assertThat(sut.find(ref.projectId(), ref.environmentId())).contains(ref);
+        assertThat(queryRepository.find(ref.projectId(), ref.environmentId())).contains(ref);
     }
 
     @Test
@@ -140,7 +112,7 @@ class EnvironmentRefRepositoryIT extends AbstractITTest {
         sut.upsert(updated);
 
         // then
-        assertThat(sut.find(original.projectId(), original.environmentId()))
+        assertThat(queryRepository.find(original.projectId(), original.environmentId()))
                 .contains(updated);
     }
 
@@ -158,7 +130,7 @@ class EnvironmentRefRepositoryIT extends AbstractITTest {
 
         // then
         assertThat(result).isTrue();
-        assertThat(sut.findConsistent(ref.projectId(), ref.environmentId())).isEmpty();
+        assertThat(queryRepository.findConsistent(ref.projectId(), ref.environmentId())).isEmpty();
     }
 
     @Test
@@ -182,7 +154,7 @@ class EnvironmentRefRepositoryIT extends AbstractITTest {
         var projectRef = fakeProjectRefBuilder()
                 .status(projectStatus)
                 .build();
-        projectRefRepository.insert(projectRef);
+        projectRefProjectionRepository.insert(projectRef);
         return projectRef;
     }
 }
