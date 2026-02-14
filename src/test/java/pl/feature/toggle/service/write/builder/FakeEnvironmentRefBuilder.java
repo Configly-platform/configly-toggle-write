@@ -2,9 +2,9 @@ package pl.feature.toggle.service.write.builder;
 
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 
 public class FakeEnvironmentRefBuilder {
     private EnvironmentId environmentId;

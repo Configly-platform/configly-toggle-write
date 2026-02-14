@@ -9,10 +9,10 @@ import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.write.AbstractUnitTest;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleField;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
 
 import java.util.List;
@@ -74,10 +74,8 @@ class EventMapperTest extends AbstractUnitTest {
         assertThat(event.id()).isEqualTo(featureToggle.id().uuid());
         assertThat(event.name()).isEqualTo(featureToggle.name().value());
         assertThat(event.description()).isEqualTo(featureToggle.description().value());
-        assertThat(event.type()).isEqualTo(featureToggle.value().typeName());
         assertThat(event.environmentId()).isEqualTo(featureToggle.environmentId().uuid());
         assertThat(event.projectId()).isEqualTo(environmentRef.projectId().uuid());
-        assertThat(event.value()).isEqualTo(featureToggle.value().asText());
         assertThat(event.createdAt()).isEqualTo(featureToggle.createdAt().toLocalDateTime());
         assertThat(event.updatedAt()).isEqualTo(featureToggle.updatedAt().toLocalDateTime());
         assertThat(event.eventId()).isNotNull();

@@ -4,11 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.AbstractUnitTest;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
 import pl.feature.toggle.service.write.application.projection.environment.event.RebuildEnvironmentRefRequested;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated.environmentCreatedEventBuilder;
@@ -22,7 +22,7 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
     @BeforeEach
     void setUp() {
         sut = EnvironmentProjectionFacade.environmentProjection(
-                environmentRefRepositoryStubSpy,
+                environmentRefRepositorySpy,
                 environmentRefQueryRepositoryStub,
                 revisionProjectionApplier,
                 applicationEventPublishedSpy
@@ -33,9 +33,9 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
     void should_insert_new_environment_when_environment_not_exists() {
         // given
         environmentRefQueryRepositoryStub.findReturns(null);
-        environmentRefRepositoryStubSpy.expectNoUpdates();
-        environmentRefRepositoryStubSpy.expectNoUpserts();
-        environmentRefRepositoryStubSpy.expectNoMarkInconsistent();
+        environmentRefRepositorySpy.expectNoUpdates();
+        environmentRefRepositorySpy.expectNoUpserts();
+        environmentRefRepositorySpy.expectNoMarkInconsistent();
         applicationEventPublishedSpy.expectNoEvents();
 
         var projectId = ProjectId.create();
@@ -53,7 +53,7 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
         sut.handle(event);
 
         // then
-        var actual = environmentRefRepositoryStubSpy.lastInserted();
+        var actual = environmentRefRepositorySpy.lastInserted();
         assertThat(actual.projectId()).isEqualTo(projectId);
         assertThat(actual.environmentId()).isEqualTo(envId);
         assertThat(actual.status()).isEqualTo(EnvironmentStatus.ACTIVE);
@@ -69,9 +69,9 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
                 .build();
 
         environmentRefQueryRepositoryStub.findReturns(existingEnv);
-        environmentRefRepositoryStubSpy.expectNoInserts();
-        environmentRefRepositoryStubSpy.expectNoUpserts();
-        environmentRefRepositoryStubSpy.expectNoMarkInconsistent();
+        environmentRefRepositorySpy.expectNoInserts();
+        environmentRefRepositorySpy.expectNoUpdates();
+        environmentRefRepositorySpy.expectNoMarkInconsistent();
         applicationEventPublishedSpy.expectNoEvents();
 
         var event = environmentStatusChangedEventBuilder()
@@ -85,7 +85,7 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
         sut.handle(event);
 
         // then
-        var updated = environmentRefRepositoryStubSpy.lastUpdated();
+        var updated = environmentRefRepositorySpy.lastUpserted();
         assertThat(updated.status()).isEqualTo(EnvironmentStatus.ARCHIVED);
         assertThat(updated.lastRevision()).isEqualTo(existingEnv.lastRevision().next());
     }
@@ -97,10 +97,10 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
                 .build();
 
         environmentRefQueryRepositoryStub.findReturns(existing);
-        environmentRefRepositoryStubSpy.expectNoInserts();
-        environmentRefRepositoryStubSpy.expectNoUpserts();
-        environmentRefRepositoryStubSpy.expectNoUpdates();
-        environmentRefRepositoryStubSpy.markInconsistentIfNotMarkedReturns(true);
+        environmentRefRepositorySpy.expectNoInserts();
+        environmentRefRepositorySpy.expectNoUpserts();
+        environmentRefRepositorySpy.expectNoUpdates();
+        environmentRefRepositorySpy.markInconsistentIfNotMarkedReturns(true);
 
         var event = environmentStatusChangedEventBuilder()
                 .projectId(existing.projectId().uuid())

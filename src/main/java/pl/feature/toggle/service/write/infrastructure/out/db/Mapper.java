@@ -7,19 +7,19 @@ import pl.feature.toggle.service.model.CreatedAt;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.UpdatedAt;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.value.FeatureToggleValueType;
 import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 class Mapper {
 

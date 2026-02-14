@@ -7,10 +7,10 @@ import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.value.FeatureToggleValue;
 import pl.feature.toggle.service.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus;
 
 public class FakeFeatureToggleBuilder {
     private FeatureToggleId id;

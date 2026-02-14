@@ -51,12 +51,12 @@ class EnvironmentRefProjectionJooqRepository implements EnvironmentRefProjection
                 .set(ENVIRONMENT_REF.STATUS, ref.status().name())
                 .set(ENVIRONMENT_REF.LAST_REVISION, ref.lastRevision().value())
                 .set(ENVIRONMENT_REF.PROJECT_ID, ref.projectId().uuid())
-                .set(ENVIRONMENT_REF.CONSISTENT, true)
+                .set(ENVIRONMENT_REF.CONSISTENT, ref.consistent())
                 .onConflict(ENVIRONMENT_REF.ID)
                 .doUpdate()
                 .set(ENVIRONMENT_REF.STATUS, ref.status().name())
                 .set(ENVIRONMENT_REF.LAST_REVISION, ref.lastRevision().value())
-                .set(ENVIRONMENT_REF.CONSISTENT, true)
+                .set(ENVIRONMENT_REF.CONSISTENT, ref.consistent())
                 .execute();
     }
 

@@ -2,6 +2,7 @@ package pl.feature.toggle.service.write.domain.reference;
 
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.write.domain.reference.exception.CannotOperateOnArchivedProjectException;
 
 import java.util.UUID;
@@ -28,7 +29,7 @@ public record ProjectRef(
     }
 
     public ProjectRef apply(ProjectStatus newStatus, Revision newRevision) {
-        return new ProjectRef(projectId, newStatus, newRevision, true);
+        return new ProjectRef(projectId, newStatus, newRevision, this.consistent);
     }
 
     public boolean isActive() {

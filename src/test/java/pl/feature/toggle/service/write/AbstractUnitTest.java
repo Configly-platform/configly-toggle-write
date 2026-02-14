@@ -5,14 +5,14 @@ import org.junit.jupiter.api.BeforeEach;
 import pl.feature.toggle.service.contracts.shared.IntegrationEvent;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionApplier;
 import pl.feature.toggle.service.event.processing.internal.DefaultRevisionProjectionApplier;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.outbox.FakeOutboxWriter;
 import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 import pl.feature.toggle.service.write.infrastructure.support.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,10 +54,10 @@ public abstract class AbstractUnitTest {
             .build();
 
     protected ConfigurationClientStub configurationClientStub;
-    protected EnvironmentRefProjectionRepositorySpy environmentRefRepositoryStubSpy;
+    protected EnvironmentRefProjectionRepositorySpy environmentRefRepositorySpy;
     protected FeatureToggleCommandRepositorySpy featureToggleCommandRepositorySpy;
     protected FeatureToggleQueryRepositoryStub featureToggleQueryRepositoryStub;
-    protected ProjectRefProjectionRepositorySpy projectRefRepositoryStubSpy;
+    protected ProjectRefProjectionRepositorySpy projectRefRepositorySpy;
     protected FakeInMemoryProjectRefRepository fakeInMemoryProjectRefRepository;
     protected ProjectRefQueryRepositoryStub projectRefQueryRepositoryStub;
     protected EnvironmentRefQueryRepositoryStub environmentRefQueryRepositoryStub;
@@ -78,10 +78,10 @@ public abstract class AbstractUnitTest {
         correlationProvider = new FakeCorrelationProvider();
         acknowledgment = new FakeAcknowledgment();
         configurationClientStub = new ConfigurationClientStub();
-        environmentRefRepositoryStubSpy = new EnvironmentRefProjectionRepositorySpy();
+        environmentRefRepositorySpy = new EnvironmentRefProjectionRepositorySpy();
         featureToggleCommandRepositorySpy = new FeatureToggleCommandRepositorySpy();
         featureToggleQueryRepositoryStub = new FeatureToggleQueryRepositoryStub();
-        projectRefRepositoryStubSpy = new ProjectRefProjectionRepositorySpy();
+        projectRefRepositorySpy = new ProjectRefProjectionRepositorySpy();
         fakeInMemoryProjectRefRepository = new FakeInMemoryProjectRefRepository();
         featureTogglePolicyFacade = FeatureTogglePolicyFacade.create(featureToggleQueryRepositoryStub);
         projectRefConsistencySpy = new ProjectRefConsistencySpy();
@@ -95,10 +95,10 @@ public abstract class AbstractUnitTest {
     @AfterEach
     void tearDown() {
         configurationClientStub.reset();
-        environmentRefRepositoryStubSpy.reset();
+        environmentRefRepositorySpy.reset();
         featureToggleCommandRepositorySpy.reset();
         featureToggleQueryRepositoryStub.reset();
-        projectRefRepositoryStubSpy.reset();
+        projectRefRepositorySpy.reset();
         fakeInMemoryProjectRefRepository.reset();
         projectRefQueryRepositoryStub.reset();
         environmentRefQueryRepositoryStub.reset();

@@ -4,13 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.model.Revision;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.feature.toggle.service.write.builder.FakeEnvironmentRefBuilder.fakeEnvironmentRefBuilder;

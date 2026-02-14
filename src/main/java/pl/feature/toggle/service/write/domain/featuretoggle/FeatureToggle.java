@@ -7,6 +7,7 @@ import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.value.FeatureToggleValue;
 import pl.feature.toggle.service.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
@@ -14,9 +15,9 @@ import pl.feature.toggle.service.write.application.port.in.command.CreateFeature
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.CannotOperateOnArchivedFeatureToggleException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
+import static pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus.ACTIVE;
+import static pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus.ARCHIVED;
 import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleField.*;
-import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus.ACTIVE;
-import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus.ARCHIVED;
 import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.ChangeSet.createChangeSet;
 import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.FeatureToggleFieldChange.fieldChange;
 import static pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult.noChanges;
@@ -141,7 +142,7 @@ public record FeatureToggle(
     }
 
     public boolean isActive() {
-        return FeatureToggleStatus.ACTIVE == status;
+        return ACTIVE == status;
     }
 
 

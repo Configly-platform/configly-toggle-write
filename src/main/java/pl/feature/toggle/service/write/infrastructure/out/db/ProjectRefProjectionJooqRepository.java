@@ -47,12 +47,12 @@ class ProjectRefProjectionJooqRepository implements ProjectRefProjectionReposito
                 .set(PROJECT_REF.ID, ref.projectId().uuid())
                 .set(PROJECT_REF.STATUS, ref.status().name())
                 .set(PROJECT_REF.LAST_REVISION, ref.lastRevision().value())
-                .set(PROJECT_REF.CONSISTENT, true)
+                .set(PROJECT_REF.CONSISTENT, ref.consistent())
                 .onConflict(PROJECT_REF.ID)
                 .doUpdate()
                 .set(PROJECT_REF.STATUS, ref.status().name())
                 .set(PROJECT_REF.LAST_REVISION, ref.lastRevision().value())
-                .set(PROJECT_REF.CONSISTENT, true)
+                .set(PROJECT_REF.CONSISTENT, ref.consistent())
                 .execute();
     }
 

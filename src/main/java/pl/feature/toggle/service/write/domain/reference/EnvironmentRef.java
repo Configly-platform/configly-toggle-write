@@ -2,6 +2,7 @@ package pl.feature.toggle.service.write.domain.reference;
 
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.domain.reference.exception.CannotOperateOnArchivedEnvironmentException;
 
@@ -40,7 +41,7 @@ public record EnvironmentRef(
     }
 
     public EnvironmentRef apply(EnvironmentStatus newStatus, Revision newRevision) {
-        return new EnvironmentRef(environmentId, projectId, newStatus, newRevision, true);
+        return new EnvironmentRef(environmentId, projectId, newStatus, newRevision, this.consistent);
     }
 
     public boolean isActive() {

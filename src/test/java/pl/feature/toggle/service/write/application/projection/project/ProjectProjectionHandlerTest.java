@@ -4,10 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.write.AbstractUnitTest;
 import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
 import pl.feature.toggle.service.write.application.projection.project.event.RebuildProjectRefRequested;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.feature.toggle.service.contracts.event.project.ProjectCreated.projectCreatedEventBuilder;
@@ -21,7 +21,7 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
     @BeforeEach
     void setUp() {
         sut = ProjectProjectionFacade.projectProjection(
-                projectRefRepositoryStubSpy,
+                projectRefRepositorySpy,
                 projectRefQueryRepositoryStub,
                 applicationEventPublishedSpy,
                 revisionProjectionApplier
@@ -32,9 +32,9 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
     void should_insert_new_project_when_project_not_exists() {
         // given
         projectRefQueryRepositoryStub.findReturns(null);
-        projectRefRepositoryStubSpy.expectNoUpdates();
-        projectRefRepositoryStubSpy.expectNoUpserts();
-        projectRefRepositoryStubSpy.expectNoMarkInconsistent();
+        projectRefRepositorySpy.expectNoUpdates();
+        projectRefRepositorySpy.expectNoUpserts();
+        projectRefRepositorySpy.expectNoMarkInconsistent();
         applicationEventPublishedSpy.expectNoEvents();
 
         var projectId = ProjectId.create();
@@ -49,7 +49,7 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
         sut.handle(event);
 
         // then
-        var actual = projectRefRepositoryStubSpy.lastInserted();
+        var actual = projectRefRepositorySpy.lastInserted();
         assertThat(actual.projectId()).isEqualTo(projectId);
         assertThat(actual.status()).isEqualTo(ProjectStatus.ACTIVE);
         assertThat(actual.lastRevision()).isEqualTo(Revision.initialRevision());
@@ -63,9 +63,9 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
                 .build();
 
         projectRefQueryRepositoryStub.findReturns(existing);
-        projectRefRepositoryStubSpy.expectNoInserts();
-        projectRefRepositoryStubSpy.expectNoUpserts();
-        projectRefRepositoryStubSpy.expectNoMarkInconsistent();
+        projectRefRepositorySpy.expectNoInserts();
+        projectRefRepositorySpy.expectNoUpdates();
+        projectRefRepositorySpy.expectNoMarkInconsistent();
         applicationEventPublishedSpy.expectNoEvents();
 
         var event = projectStatusChangedEventBuilder()
@@ -78,7 +78,7 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
         sut.handle(event);
 
         // then
-        var updated = projectRefRepositoryStubSpy.lastUpdated();
+        var updated = projectRefRepositorySpy.lastUpserted();
         assertThat(updated.status()).isEqualTo(ProjectStatus.ARCHIVED);
         assertThat(updated.lastRevision()).isEqualTo(existing.lastRevision().next());
     }
@@ -90,15 +90,15 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
                 .build();
 
         projectRefQueryRepositoryStub.findReturns(existing);
-        projectRefRepositoryStubSpy.expectNoInserts();
-        projectRefRepositoryStubSpy.expectNoUpserts();
-        projectRefRepositoryStubSpy.expectNoUpdates();
-        projectRefRepositoryStubSpy.markInconsistentIfNotMarkedReturns(true);
+        projectRefRepositorySpy.expectNoInserts();
+        projectRefRepositorySpy.expectNoUpserts();
+        projectRefRepositorySpy.expectNoUpdates();
+        projectRefRepositorySpy.markInconsistentIfNotMarkedReturns(true);
 
         var event = projectStatusChangedEventBuilder()
                 .projectId(existing.projectId().uuid())
                 .status(ProjectStatus.ARCHIVED.name())
-                .revision(5) // gap
+                .revision(5)
                 .build();
 
         // when

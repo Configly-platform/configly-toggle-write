@@ -9,12 +9,12 @@ import pl.feature.toggle.service.contracts.shared.Metadata;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.security.actor.Actor;
 import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.value.FeatureToggleValue;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleField;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
@@ -86,8 +86,6 @@ final class EventMapper {
                 .id(featureToggle.id().uuid())
                 .createdAt(featureToggle.createdAt().toLocalDateTime())
                 .updatedAt(featureToggle.updatedAt().toLocalDateTime())
-                .type(featureToggle.value().typeName())
-                .value(featureToggle.value().asText())
                 .name(featureToggle.name().value())
                 .description(featureToggle.description().value())
                 .environmentId(featureToggle.environmentId().uuid())

@@ -10,13 +10,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
 import pl.feature.toggle.service.write.application.port.out.ConfigurationClient;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefQueryRepository;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 import java.time.Duration;
 import java.util.concurrent.Executor;
@@ -94,7 +94,7 @@ class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
         var statusChangedFirst = projectStatusChangedEventBuilder()
                 .projectId(projectId.uuid())
                 .status(ProjectStatus.ARCHIVED.name())
-                .revision(Revision.initialRevision().value())
+                .revision(Revision.from(2).value())
                 .build();
 
         var createdLater = projectCreatedEventBuilder()
@@ -112,7 +112,7 @@ class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
         assertThat(actual.projectId()).isEqualTo(projectId);
 
         assertThat(actual.status()).isEqualTo(ProjectStatus.ARCHIVED);
-        assertThat(actual.lastRevision()).isEqualTo(Revision.initialRevision());
+        assertThat(actual.lastRevision()).isEqualTo(Revision.from(2));
         assertThat(actual.consistent()).isTrue();
     }
 }

@@ -2,6 +2,7 @@ package pl.feature.toggle.service.write.application.handler;
 
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.security.actor.ActorProvider;
 import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
@@ -12,7 +13,6 @@ import pl.feature.toggle.service.write.application.port.in.command.ChangeFeature
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
 
 import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;

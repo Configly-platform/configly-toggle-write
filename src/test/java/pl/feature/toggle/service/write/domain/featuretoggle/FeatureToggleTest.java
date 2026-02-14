@@ -3,14 +3,15 @@ package pl.feature.toggle.service.write.domain.featuretoggle;
 import org.junit.jupiter.api.Test;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.CannotOperateOnArchivedFeatureToggleException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;

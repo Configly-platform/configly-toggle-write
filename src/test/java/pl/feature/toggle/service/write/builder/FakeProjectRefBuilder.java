@@ -2,8 +2,8 @@ package pl.feature.toggle.service.write.builder;
 
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 public class FakeProjectRefBuilder {
     private ProjectId projectId;

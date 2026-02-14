@@ -2,7 +2,9 @@ package pl.feature.toggle.service.write.infrastructure.out.db;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
@@ -12,9 +14,7 @@ import pl.feature.toggle.service.write.application.port.out.ProjectRefProjection
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleUpdateFailedException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

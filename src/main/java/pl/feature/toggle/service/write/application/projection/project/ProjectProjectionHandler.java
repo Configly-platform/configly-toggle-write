@@ -9,14 +9,15 @@ import pl.feature.toggle.service.event.processing.api.RevisionProjectionApplier;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionPlan;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefQueryRepository;
 import pl.feature.toggle.service.write.application.projection.project.event.RebuildProjectRefRequested;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
-import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 @AllArgsConstructor
 class ProjectProjectionHandler implements ProjectProjection {
@@ -29,39 +30,69 @@ class ProjectProjectionHandler implements ProjectProjection {
     @Transactional
     @Override
     public void handle(ProjectCreated event) {
-        apply(event.revision(), event.projectId(), event.status());
+        applyCreate(event);
     }
 
     @Transactional
     @Override
     public void handle(ProjectStatusChanged event) {
-        apply(event.revision(), event.projectId(), event.status());
+        var projectId = ProjectId.create(event.projectId());
+        var incoming = Revision.from(event.revision());
+        var newStatus = ProjectStatus.valueOf(event.status());
+
+        var snapshot = ProjectRef.from(projectId, newStatus, incoming);
+        applyUpdateSnapshot(incoming, projectId, snapshot);
     }
 
-    private void apply(long revision, UUID projectIdRaw, String status) {
-        var incomingRevision = Revision.from(revision);
-        var projectId = ProjectId.create(projectIdRaw);
-        var projectStatus = ProjectStatus.valueOf(status);
-        var projectRef = ProjectRef.from(projectId, projectStatus, incomingRevision);
-        var internalEvent = new RebuildProjectRefRequested(projectId);
+    private void applyCreate(ProjectCreated event) {
+        var projectId = ProjectId.create(event.projectId());
+        var incoming = Revision.from(event.revision());
+        var status = ProjectStatus.valueOf(event.status());
+
+        var view = ProjectRef.from(projectId, status, incoming);
+        var rebuildEvent = new RebuildProjectRefRequested(projectId);
+
         revisionProjectionApplier.apply(
-                RevisionProjectionPlan.<ProjectRef>forIncoming(incomingRevision)
+                RevisionProjectionPlan.<ProjectRef>forIncoming(incoming)
                         .findCurrentUsing(() -> projectRefQueryRepository.find(projectId))
-                        .insertWhenMissing(() -> projectRefProjectionRepository.insert(projectRef))
+                        .onMissing(() -> projectRefProjectionRepository.insert(view))
                         .extractCurrentRevisionUsing(ProjectRef::lastRevision)
                         .applyUpdateWhenApplicable(current ->
-                                projectRefProjectionRepository.update(current.apply(projectStatus, incomingRevision))
+                                projectRefProjectionRepository.upsert(view)
                         )
                         .markInconsistentWhenGapDetectedIfNotMarked(
                                 () -> projectRefProjectionRepository.markInconsistentIfNotMarked(projectId)
                         )
                         .publishRebuildWhenGapDetected(
-                                () -> eventPublisher.publishEvent(internalEvent)
+                                () -> eventPublisher.publishEvent(rebuildEvent)
                         )
                         .build()
         );
     }
 
+    private void applyUpdateSnapshot(
+            Revision incoming,
+            ProjectId projectId,
+            ProjectRef snapshot
+    ) {
+        var rebuildEvent = new RebuildProjectRefRequested(projectId);
 
+        revisionProjectionApplier.apply(
+                RevisionProjectionPlan.<ProjectRef>forIncoming(incoming)
+                        .findCurrentUsing(() -> projectRefQueryRepository.find(projectId))
+                        .onMissing(() -> projectRefProjectionRepository.upsert(snapshot))
+                        .extractCurrentRevisionUsing(ProjectRef::lastRevision)
+                        .applyUpdateWhenApplicable(current ->
+                                projectRefProjectionRepository.upsert(snapshot)
+                        )
+                        .markInconsistentWhenGapDetectedIfNotMarked(
+                                () -> projectRefProjectionRepository.markInconsistentIfNotMarked(projectId)
+                        )
+                        .publishRebuildWhenGapDetected(
+                                () -> eventPublisher.publishEvent(rebuildEvent)
+                        )
+                        .build()
+        );
+    }
 }
 

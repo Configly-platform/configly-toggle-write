@@ -10,7 +10,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.support.TransactionTemplate;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
+import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
 import pl.feature.toggle.service.write.application.port.out.ConfigurationClient;
@@ -18,9 +20,7 @@ import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjec
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentStatus;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-import pl.feature.toggle.service.write.domain.reference.ProjectStatus;
 
 import java.time.Duration;
 import java.util.concurrent.Executor;
@@ -109,7 +109,7 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
                 .projectId(projectId.uuid())
                 .environmentId(envId.uuid())
                 .status(EnvironmentStatus.ARCHIVED.name())
-                .revision(Revision.initialRevision().value())
+                .revision(Revision.from(2).value())
                 .build();
 
         var createdLater = environmentCreatedEventBuilder()
@@ -130,7 +130,7 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
         assertThat(actual.projectId()).isEqualTo(projectId);
 
         assertThat(actual.status()).isEqualTo(EnvironmentStatus.ARCHIVED);
-        assertThat(actual.lastRevision()).isEqualTo(Revision.initialRevision());
+        assertThat(actual.lastRevision()).isEqualTo(Revision.from(2));
         assertThat(actual.consistent()).isTrue();
     }
 }

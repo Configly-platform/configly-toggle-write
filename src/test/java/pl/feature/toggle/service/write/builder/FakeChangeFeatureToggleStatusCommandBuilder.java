@@ -2,11 +2,9 @@ package pl.feature.toggle.service.write.builder;
 
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
 import pl.feature.toggle.service.write.application.port.in.command.ChangeFeatureToggleStatusCommand;
-import pl.feature.toggle.service.write.application.port.in.command.ChangeFeatureToggleValueCommand;
-import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleStatus;
 
 public class FakeChangeFeatureToggleStatusCommandBuilder {
 
