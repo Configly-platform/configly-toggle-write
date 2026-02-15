@@ -15,7 +15,7 @@ import pl.feature.toggle.service.contracts.event.project.ProjectCreated;
 
 @Slf4j
 @AllArgsConstructor
-@KafkaListener(topics = "${topics.project-env-events}")
+@KafkaListener(topics = "${topics.feature-toggle-configuration-events}")
 class KafkaEventConsumer {
 
     private final ProjectProjection projectProjection;

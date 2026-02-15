@@ -4,7 +4,7 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   datasource:
-    url: jdbc:postgresql://localhost:5433/togglewrite
+    url: jdbc:postgresql://localhost:5433/feature_toggle_write
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
@@ -13,7 +13,7 @@ spring:
       group-id: feature-toggle-write
 
 topics: # Topic do konsumowania
-  project-env-events: project-env-events
+  feature-toggle-configuration-events: feature-toggle-configuration-events
 
 outbox:
   batch-size: 100
