@@ -1,5 +1,6 @@
 package pl.feature.toggle.service.write.infrastructure.in.kafka;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -32,6 +33,7 @@ import static org.springframework.kafka.listener.ContainerProperties.AckMode.MAN
 
 @Configuration("kafkaConfig")
 @ConditionalOnProperty(name = "outbox.kafka.enabled", havingValue = "true")
+@Slf4j
 class Config {
 
     @Autowired
@@ -66,7 +68,14 @@ class Config {
         var backOff = new FixedBackOff(5000, 3);
 
         var errorHandler = new DefaultErrorHandler(recoverer, backOff);
-
+        errorHandler.setRetryListeners((record, ex, deliveryAttempt) -> {
+            log.error(
+                    "Kafka processing failed. attempt={} topic={} partition={} offset={} key={}",
+                    deliveryAttempt,
+                    record.topic(), record.partition(), record.offset(), record.key(),
+                    ex
+            );
+        });
         factory.setCommonErrorHandler(errorHandler);
 
         return factory;

@@ -57,7 +57,7 @@ class FeatureToggleController {
             @PathVariable String featureToggleId,
             @RequestBody @NotEmpty String status
     ) {
-        var command = ChangeFeatureToggleStatusCommand.create(featureToggleId, projectId, environmentId, status);
+        var command = ChangeFeatureToggleStatusCommand.create(projectId, environmentId, featureToggleId, status);
         changeFeatureToggleStatusUseCase.handle(command);
     }
 

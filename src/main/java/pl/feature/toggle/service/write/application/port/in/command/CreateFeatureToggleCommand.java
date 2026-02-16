@@ -24,7 +24,7 @@ public record CreateFeatureToggleCommand(
                 FeatureToggleName.create(dto.name()),
                 FeatureToggleDescription.create(dto.description()),
                 FeatureToggleRawValue.of(dto.value()),
-                FeatureToggleValueType.valueOf(dto.type())
+                FeatureToggleValueType.fromString(dto.type())
         );
     }
 }
