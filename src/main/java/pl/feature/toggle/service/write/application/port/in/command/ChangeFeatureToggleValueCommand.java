@@ -3,14 +3,14 @@ package pl.feature.toggle.service.write.application.port.in.command;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
+import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.infrastructure.in.rest.dto.ChangeFeatureToggleValueDto;
 
 public record ChangeFeatureToggleValueCommand(
         ProjectId projectId,
         EnvironmentId environmentId,
         FeatureToggleId featureToggleId,
-        FeatureToggleRawValue newValue
+        FeatureToggleValueSnapshot newValue
 ) {
 
     public static ChangeFeatureToggleValueCommand from(
@@ -23,7 +23,7 @@ public record ChangeFeatureToggleValueCommand(
                 ProjectId.create(projectId),
                 EnvironmentId.create(environmentId),
                 FeatureToggleId.create(featureToggleId),
-                FeatureToggleRawValue.of(dto.value())
+                FeatureToggleValueSnapshot.of(dto.value())
         );
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.model.project.ProjectStatus;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
+import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.AbstractITTest;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
@@ -66,7 +66,7 @@ class FeatureToggleCommandRepositoryIT extends AbstractITTest {
                 .build();
         sut.save(original);
 
-        var updateResult = original.changeValue(new FeatureToggleRawValue("FALSE"));
+        var updateResult = original.changeValue(new FeatureToggleValueSnapshot("FALSE"));
         assertThat(updateResult.wasUpdated()).isTrue();
 
         // when
@@ -88,7 +88,7 @@ class FeatureToggleCommandRepositoryIT extends AbstractITTest {
                 .build();
         sut.save(original);
 
-        var validUpdate = original.changeValue(new FeatureToggleRawValue("TRUE"));
+        var validUpdate = original.changeValue(new FeatureToggleValueSnapshot("TRUE"));
 
         var wrongExpectedRevision = validUpdate.expectedRevision().next();
         var invalidUpdate = FeatureToggleUpdateResult.of(
@@ -116,7 +116,7 @@ class FeatureToggleCommandRepositoryIT extends AbstractITTest {
                 .build();
         sut.save(original);
 
-        var updateResult = original.changeValue(new FeatureToggleRawValue("FALSE"));
+        var updateResult = original.changeValue(new FeatureToggleValueSnapshot("FALSE"));
 
         // when
         sut.update(updateResult);

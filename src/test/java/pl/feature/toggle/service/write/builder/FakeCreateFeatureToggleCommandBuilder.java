@@ -1,15 +1,12 @@
 package pl.feature.toggle.service.write.builder;
 
 import pl.feature.toggle.service.model.environment.EnvironmentId;
-import pl.feature.toggle.service.model.environment.EnvironmentName;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.value.FeatureToggleValueType;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
+import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
-
-import java.util.UUID;
 
 public class FakeCreateFeatureToggleCommandBuilder {
 
@@ -18,7 +15,7 @@ public class FakeCreateFeatureToggleCommandBuilder {
     private FeatureToggleName name;
     private FeatureToggleDescription description;
     private FeatureToggleValueType type;
-    private FeatureToggleRawValue value;
+    private FeatureToggleValueSnapshot value;
 
     private FakeCreateFeatureToggleCommandBuilder() {
         this.projectId = ProjectId.create();
@@ -26,7 +23,7 @@ public class FakeCreateFeatureToggleCommandBuilder {
         this.name = FeatureToggleName.create("name");
         this.description = FeatureToggleDescription.create("description");
         this.type = FeatureToggleValueType.BOOLEAN;
-        this.value = FeatureToggleRawValue.of(Boolean.TRUE.toString());
+        this.value = FeatureToggleValueSnapshot.of(Boolean.TRUE.toString());
     }
 
     public static FakeCreateFeatureToggleCommandBuilder fakeCreateFeatureToggleCommandBuilder() {
@@ -69,7 +66,7 @@ public class FakeCreateFeatureToggleCommandBuilder {
     }
 
     public FakeCreateFeatureToggleCommandBuilder withValue(String value) {
-        this.value = FeatureToggleRawValue.of(value);
+        this.value = FeatureToggleValueSnapshot.of(value);
         return this;
     }
 

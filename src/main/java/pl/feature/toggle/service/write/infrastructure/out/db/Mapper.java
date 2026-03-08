@@ -16,7 +16,7 @@ import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.value.FeatureToggleValueBuilder;
 import pl.feature.toggle.service.value.FeatureToggleValueType;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
+import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
@@ -29,7 +29,7 @@ class Mapper {
                 EnvironmentId.create(record.getEnvironmentId()),
                 FeatureToggleName.create(record.getName()),
                 FeatureToggleDescription.create(record.getDescription()),
-                FeatureToggleValueBuilder.from(FeatureToggleRawValue.of(record.getCurrentValue()), FeatureToggleValueType.fromString(record.getType())),
+                FeatureToggleValueBuilder.from(FeatureToggleValueSnapshot.of(record.getCurrentValue()), FeatureToggleValueType.fromString(record.getType())),
                 FeatureToggleStatus.valueOf(record.getStatus()),
                 CreatedAt.of(record.getCreatedAt()),
                 UpdatedAt.of(record.getUpdatedAt()),

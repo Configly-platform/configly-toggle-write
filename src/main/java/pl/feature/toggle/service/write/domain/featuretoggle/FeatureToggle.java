@@ -10,7 +10,7 @@ import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.value.FeatureToggleValue;
 import pl.feature.toggle.service.value.FeatureToggleValueBuilder;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
+import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.CannotOperateOnArchivedFeatureToggleException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
@@ -86,7 +86,7 @@ public record FeatureToggle(
         return updated(featureToggle, revision, fieldChange);
     }
 
-    public FeatureToggleUpdateResult changeValue(FeatureToggleRawValue newValue) {
+    public FeatureToggleUpdateResult changeValue(FeatureToggleValueSnapshot newValue) {
         if (isArchived()) {
             throw new CannotOperateOnArchivedFeatureToggleException(name);
         }

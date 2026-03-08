@@ -3,20 +3,20 @@ package pl.feature.toggle.service.write.builder;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
+import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.application.port.in.command.ChangeFeatureToggleValueCommand;
 
 public class FakeChangeFeatureToggleValueCommandBuilder {
     private ProjectId projectId;
     private EnvironmentId environmentId;
     private FeatureToggleId featureToggleId;
-    private FeatureToggleRawValue newValue;
+    private FeatureToggleValueSnapshot newValue;
 
     private FakeChangeFeatureToggleValueCommandBuilder() {
         this.projectId = ProjectId.create();
         this.environmentId = EnvironmentId.create();
         this.featureToggleId = FeatureToggleId.create();
-        this.newValue = FeatureToggleRawValue.of("TRUE");
+        this.newValue = FeatureToggleValueSnapshot.of("TRUE");
     }
 
     public static FakeChangeFeatureToggleValueCommandBuilder fakeChangeFeatureToggleValueCommandBuilder() {
@@ -39,7 +39,7 @@ public class FakeChangeFeatureToggleValueCommandBuilder {
     }
 
     public FakeChangeFeatureToggleValueCommandBuilder withNewValue(String newValue) {
-        this.newValue = FeatureToggleRawValue.of(newValue);
+        this.newValue = FeatureToggleValueSnapshot.of(newValue);
         return this;
     }
 

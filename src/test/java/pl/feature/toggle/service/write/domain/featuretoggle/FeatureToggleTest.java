@@ -9,7 +9,7 @@ import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.value.FeatureToggleValueBuilder;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
+import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.CannotOperateOnArchivedFeatureToggleException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
@@ -94,7 +94,7 @@ class FeatureToggleTest {
                 .build();
 
         // when
-        var result = toggle.changeValue(new FeatureToggleRawValue("TRUE"));
+        var result = toggle.changeValue(new FeatureToggleValueSnapshot("TRUE"));
 
         // then
         assertThat(result.wasUpdated()).isTrue();
@@ -112,7 +112,7 @@ class FeatureToggleTest {
                 .build();
 
         // when
-        var result = toggle.changeValue(new FeatureToggleRawValue("TRUE"));
+        var result = toggle.changeValue(new FeatureToggleValueSnapshot("TRUE"));
 
         // then
         assertThat(result.wasUpdated()).isFalse();
@@ -209,7 +209,7 @@ class FeatureToggleTest {
                 .build();
 
         // when
-        var ex = catchException(() -> toggle.changeValue(new FeatureToggleRawValue("TRUE")));
+        var ex = catchException(() -> toggle.changeValue(new FeatureToggleValueSnapshot("TRUE")));
 
         // then
         assertThat(ex).isInstanceOf(CannotOperateOnArchivedFeatureToggleException.class);

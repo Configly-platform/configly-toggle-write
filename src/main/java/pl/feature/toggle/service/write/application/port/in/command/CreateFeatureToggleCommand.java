@@ -5,7 +5,7 @@ import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.value.FeatureToggleValueType;
-import pl.feature.toggle.service.value.raw.FeatureToggleRawValue;
+import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.infrastructure.in.rest.dto.CreateFeatureToggleDto;
 
 public record CreateFeatureToggleCommand(
@@ -13,7 +13,7 @@ public record CreateFeatureToggleCommand(
         EnvironmentId environmentId,
         FeatureToggleName name,
         FeatureToggleDescription description,
-        FeatureToggleRawValue rawValue,
+        FeatureToggleValueSnapshot rawValue,
         FeatureToggleValueType valueType
 ) {
 
@@ -23,7 +23,7 @@ public record CreateFeatureToggleCommand(
                 EnvironmentId.create(environmentId),
                 FeatureToggleName.create(dto.name()),
                 FeatureToggleDescription.create(dto.description()),
-                FeatureToggleRawValue.of(dto.value()),
+                FeatureToggleValueSnapshot.of(dto.value()),
                 FeatureToggleValueType.fromString(dto.type())
         );
     }
