@@ -7,6 +7,8 @@ import pl.feature.toggle.service.write.StubSupport;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 
+import java.util.List;
+
 import static pl.feature.toggle.service.write.StubSupport.forMethod;
 
 public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepository {
@@ -14,6 +16,8 @@ public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepos
             forMethod("getOrThrow(FeatureToggleId)");
     private final StubSupport<Boolean> exists =
             forMethod("exists(FeatureToggleName, EnvironmentId)");
+    private final StubSupport<List<FeatureToggle>> finByEnvironmentId =
+            forMethod("findByEnvironmentId(EnvironmentId)");
 
     private boolean failOnAnyCall = false;
 
@@ -33,6 +37,14 @@ public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepos
         exists.willThrow(ex);
     }
 
+    public void findByEnvironmentIdReturns(List<FeatureToggle> featureToggles) {
+        finByEnvironmentId.willReturn(featureToggles);
+    }
+
+    public void findByEnvironmentIdThrows(RuntimeException ex) {
+        finByEnvironmentId.willThrow(ex);
+    }
+
     public void expectNoCalls() {
         failOnAnyCall = true;
     }
@@ -40,6 +52,7 @@ public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepos
     public void reset() {
         getOrThrow.reset();
         exists.reset();
+        finByEnvironmentId.reset();
     }
 
     @Override
@@ -56,5 +69,13 @@ public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepos
             throw new AssertionError("exists should not be called");
         }
         return exists.get();
+    }
+
+    @Override
+    public List<FeatureToggle> findByEnvironmentId(EnvironmentId environmentId) {
+        if (failOnAnyCall) {
+            throw new AssertionError("findByEnvironmentId should not be called");
+        }
+        return finByEnvironmentId.get();
     }
 }

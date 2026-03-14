@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static pl.feature.toggle.service.write.builder.FakeEnvironmentRefBuilder.fakeEnvironmentRefBuilder;
 import static pl.feature.toggle.service.write.builder.FakeFeatureToggleBuilder.fakeFeatureToggleBuilder;
 
 class EventMapperTest extends AbstractUnitTest {
@@ -28,10 +27,9 @@ class EventMapperTest extends AbstractUnitTest {
     void should_map_to_feature_toggle_created_event() {
         // given
         var featureToggle = fakeFeatureToggleBuilder().build();
-        var environmentRef = fakeEnvironmentRefBuilder().build();
 
         // when
-        var featureToggleCreatedEvent = EventMapper.createFeatureToggleCreatedEvent(featureToggle, environmentRef, actorProvider.current(), correlationProvider.current());
+        var featureToggleCreatedEvent = EventMapper.createFeatureToggleCreatedEvent(featureToggle, actorProvider.current(), correlationProvider.current());
 
         // then
         assertThat(featureToggleCreatedEvent.id()).isEqualTo(featureToggle.id().uuid());
@@ -39,7 +37,6 @@ class EventMapperTest extends AbstractUnitTest {
         assertThat(featureToggleCreatedEvent.description()).isEqualTo(featureToggle.description().value());
         assertThat(featureToggleCreatedEvent.type()).isEqualTo(featureToggle.value().typeName());
         assertThat(featureToggleCreatedEvent.environmentId()).isEqualTo(featureToggle.environmentId().uuid());
-        assertThat(featureToggleCreatedEvent.projectId()).isEqualTo(environmentRef.projectId().uuid());
         assertThat(featureToggleCreatedEvent.value()).isEqualTo(featureToggle.value().asText());
         assertThat(featureToggleCreatedEvent.eventId()).isNotNull();
         assertThat(featureToggleCreatedEvent.createdAt()).isNotNull();
@@ -50,7 +47,6 @@ class EventMapperTest extends AbstractUnitTest {
     void should_map_to_feature_toggle_updated_event() {
         // given
         var featureToggle = fakeFeatureToggleBuilder().build();
-        var environmentRef = fakeEnvironmentRefBuilder().build();
 
         var updateResult = new FeatureToggleUpdateResult(
                 featureToggle,
@@ -65,7 +61,6 @@ class EventMapperTest extends AbstractUnitTest {
         // when
         var event = EventMapper.createFeatureToggleUpdatedEvent(
                 updateResult,
-                environmentRef,
                 actorProvider.current(),
                 correlationProvider.current()
         );
@@ -75,7 +70,6 @@ class EventMapperTest extends AbstractUnitTest {
         assertThat(event.name()).isEqualTo(featureToggle.name().value());
         assertThat(event.description()).isEqualTo(featureToggle.description().value());
         assertThat(event.environmentId()).isEqualTo(featureToggle.environmentId().uuid());
-        assertThat(event.projectId()).isEqualTo(environmentRef.projectId().uuid());
         assertThat(event.createdAt()).isEqualTo(featureToggle.createdAt().toLocalDateTime());
         assertThat(event.updatedAt()).isEqualTo(featureToggle.updatedAt().toLocalDateTime());
         assertThat(event.eventId()).isNotNull();
@@ -91,7 +85,6 @@ class EventMapperTest extends AbstractUnitTest {
     void should_map_to_feature_toggle_status_changed_event() {
         // given
         var featureToggle = fakeFeatureToggleBuilder().build();
-        var environmentRef = fakeEnvironmentRefBuilder().build();
 
         var updateResult = new FeatureToggleUpdateResult(
                 featureToggle,
@@ -106,7 +99,6 @@ class EventMapperTest extends AbstractUnitTest {
         // when
         var event = EventMapper.createFeatureToggleStatusChangedEvent(
                 updateResult,
-                environmentRef,
                 actorProvider.current(),
                 correlationProvider.current()
         );
@@ -115,7 +107,6 @@ class EventMapperTest extends AbstractUnitTest {
         assertThat(event.id()).isEqualTo(featureToggle.id().uuid());
         assertThat(event.status()).isEqualTo(featureToggle.status().name());
         assertThat(event.environmentId()).isEqualTo(featureToggle.environmentId().uuid());
-        assertThat(event.projectId()).isEqualTo(environmentRef.projectId().uuid());
         assertThat(event.eventId()).isNotNull();
 
         assertThat(event.changes().changes()).hasSize(1);
@@ -129,7 +120,6 @@ class EventMapperTest extends AbstractUnitTest {
     void should_map_to_feature_toggle_value_changed_event() {
         // given
         var featureToggle = fakeFeatureToggleBuilder().build();
-        var environmentRef = fakeEnvironmentRefBuilder().build();
 
         var before = FeatureToggleValueBuilder.bool(true);
         var after = FeatureToggleValueBuilder.text("abc");
@@ -147,7 +137,6 @@ class EventMapperTest extends AbstractUnitTest {
         // when
         var event = EventMapper.createFeatureToggleValueChangedEvent(
                 updateResult,
-                environmentRef,
                 actorProvider.current(),
                 correlationProvider.current()
         );
@@ -156,9 +145,8 @@ class EventMapperTest extends AbstractUnitTest {
         assertThat(event.id()).isEqualTo(featureToggle.id().uuid());
         assertThat(event.type()).isEqualTo(featureToggle.value().typeName());
         assertThat(event.value()).isEqualTo(featureToggle.value().asText());
-        assertThat(event.projectId()).isEqualTo(environmentRef.projectId().uuid());
 
-        assertThat(event.environmentId()).isEqualTo(environmentRef.environmentId().uuid());
+        assertThat(event.environmentId()).isEqualTo(featureToggle.environmentId().uuid());
         assertThat(event.eventId()).isNotNull();
 
         assertThat(event.changes().changes()).hasSize(1);
@@ -180,7 +168,6 @@ class EventMapperTest extends AbstractUnitTest {
     ) {
         // given
         var featureToggle = fakeFeatureToggleBuilder().build();
-        var environmentRef = fakeEnvironmentRefBuilder().build();
         var updateResult = new FeatureToggleUpdateResult(
                 featureToggle,
                 Revision.initialRevision(),
@@ -190,7 +177,6 @@ class EventMapperTest extends AbstractUnitTest {
         // when
         var event = EventMapper.createFeatureToggleUpdatedEvent(
                 updateResult,
-                environmentRef,
                 actorProvider.current(),
                 correlationProvider.current()
         );

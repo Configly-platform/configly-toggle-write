@@ -3,6 +3,7 @@ package pl.feature.toggle.service.write.infrastructure.in.kafka;
 import org.springframework.kafka.support.Acknowledgment;
 import pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged;
 import pl.feature.toggle.service.contracts.event.project.ProjectStatusChanged;
+import pl.feature.toggle.service.contracts.event.project.ProjectUpdated;
 import pl.feature.toggle.service.event.processing.api.EventProcessor;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
 import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
@@ -56,6 +57,12 @@ class KafkaEventConsumer {
                 projectProjection::handle,
                 acknowledgment::acknowledge
         );
+    }
+
+    @KafkaHandler
+    void ignore(ProjectUpdated event, Acknowledgment acknowledgment) {
+        log.debug("Ignoring ProjectUpdated event, because project name changes are irrelevant for write-service");
+        acknowledgment.acknowledge();
     }
 
 }

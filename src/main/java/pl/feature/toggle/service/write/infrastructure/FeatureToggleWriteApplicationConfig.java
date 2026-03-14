@@ -144,4 +144,15 @@ class FeatureToggleWriteApplicationConfig {
                 projectRefQueryRepository);
     }
 
+    @Bean
+    ArchiveFeatureTogglesByEnvironmentUseCase archiveFeatureTogglesByEnvironmentUseCase(
+            FeatureToggleCommandRepository featureToggleCommandRepository,
+            FeatureToggleQueryRepository featureToggleQueryRepository,
+            OutboxWriter outboxWriter
+    ) {
+        return FeatureToggleHandlerFacade.archiveFeatureTogglesByEnvironmentUseCase(
+                featureToggleCommandRepository, featureToggleQueryRepository, outboxWriter
+        );
+    }
+
 }

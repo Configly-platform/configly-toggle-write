@@ -7,6 +7,7 @@ import pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated;
 import pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionApplier;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionPlan;
+import pl.feature.toggle.service.event.processing.internal.RevisionApplierResult;
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.environment.EnvironmentStatus;
@@ -14,11 +15,9 @@ import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;
+import pl.feature.toggle.service.write.application.projection.environment.event.EnvironmentArchivedCascadeRequest;
 import pl.feature.toggle.service.write.application.projection.environment.event.RebuildEnvironmentRefRequested;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
-
-import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 
 @AllArgsConstructor
 class EnvironmentProjectionHandler implements EnvironmentProjection {
@@ -44,7 +43,11 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
 
         var snapshot = EnvironmentRef.from(projectId, environmentId, newStatus, incoming);
 
-        applyUpdateSnapshot(incoming, projectId, environmentId, snapshot);
+        var result = applyUpdateSnapshot(incoming, projectId, environmentId, snapshot);
+
+        if (result.wasApplied() && newStatus.isArchived()) {
+            eventPublisher.publishEvent(EnvironmentArchivedCascadeRequest.create(environmentId, event.metadata()));
+        }
     }
 
     private void applyCreate(EnvironmentCreated event) {
@@ -73,7 +76,7 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
         );
     }
 
-    private void applyUpdateSnapshot(
+    private RevisionApplierResult applyUpdateSnapshot(
             Revision incoming,
             ProjectId projectId,
             EnvironmentId environmentId,
@@ -81,7 +84,7 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
     ) {
         var rebuildEvent = new RebuildEnvironmentRefRequested(projectId, environmentId);
 
-        revisionProjectionApplier.apply(
+        return revisionProjectionApplier.apply(
                 RevisionProjectionPlan.<EnvironmentRef>forIncoming(incoming)
                         .findCurrentUsing(() -> environmentRefQueryRepository.find(projectId, environmentId))
                         .onMissing(() -> environmentRefProjectionRepository.upsert(snapshot))

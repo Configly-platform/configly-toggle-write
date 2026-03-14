@@ -46,7 +46,6 @@ class ChangeFeatureToggleStatusHandler implements ChangeFeatureToggleStatusUseCa
         toggleCommandRepository.update(updateResult);
 
         var event = createFeatureToggleStatusChangedEvent(updateResult,
-                environmentRef,
                 actorProvider.current(),
                 correlationProvider.current());
 

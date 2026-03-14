@@ -47,7 +47,6 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
         toggleCommandRepository.update(updateResult);
 
         var event = createFeatureToggleUpdatedEvent(updateResult,
-                environmentRef,
                 actorProvider.current(),
                 correlationProvider.current());
         outboxWriter.write(event, FEATURE_TOGGLE.topic());

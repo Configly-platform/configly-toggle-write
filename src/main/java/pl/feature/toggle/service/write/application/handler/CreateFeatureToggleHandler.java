@@ -43,7 +43,6 @@ class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {
 
         var event = createFeatureToggleCreatedEvent(
                 featureToggle,
-                environmentRef,
                 actorProvider.current(),
                 correlationProvider.current());
 

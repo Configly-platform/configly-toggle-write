@@ -54,4 +54,8 @@ public class FeatureToggleCommandRepositorySpy implements FeatureToggleCommandRe
     public FeatureToggleUpdateResult lastUpdated() {
         return updated.isEmpty() ? null : updated.getLast();
     }
+
+    public List<FeatureToggleUpdateResult> allUpdated() {
+        return updated;
+    }
 }

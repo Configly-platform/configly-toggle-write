@@ -2,6 +2,7 @@ package pl.feature.toggle.service.write.infrastructure.in.internal;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pl.feature.toggle.service.write.application.port.in.ArchiveFeatureTogglesByEnvironmentUseCase;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentRefConsistency;
 import pl.feature.toggle.service.write.application.port.in.ProjectRefConsistency;
 
@@ -16,5 +17,10 @@ class InternalInboundConfig {
     @Bean
     EnvironmentRefRebuildListener environmentRefRebuildListener(EnvironmentRefConsistency environmentRefConsistency) {
         return new EnvironmentRefRebuildListener(environmentRefConsistency);
+    }
+
+    @Bean
+    EnvironmentArchivedCascadeListener environmentArchivedCascadeListener(ArchiveFeatureTogglesByEnvironmentUseCase archiveFeatureTogglesByEnvironmentUseCase) {
+        return new EnvironmentArchivedCascadeListener(archiveFeatureTogglesByEnvironmentUseCase);
     }
 }

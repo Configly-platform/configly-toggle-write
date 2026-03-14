@@ -26,6 +26,24 @@ public class ApplicationEventPublishedSpy implements ApplicationEventPublisher {
         return publishedEvents.getLast();
     }
 
+    public <T> T getEvent(Class<T> eventType) {
+        for (Object event : publishedEvents) {
+            if (eventType.isInstance(event)) {
+                return eventType.cast(event);
+            }
+        }
+        throw new AssertionError("Event was not send");
+    }
+
+    public <T> boolean notContainsEventOfType(Class<T> eventType) {
+        for (Object event : publishedEvents) {
+            if (eventType.isInstance(event)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public <T> T getLastEvent(Class<T> eventClass) {
         var event = publishedEvents.getLast();
         return eventClass.cast(event);

@@ -117,5 +117,13 @@ public abstract class AbstractUnitTest {
         return outboxWriter.lastEventOfType(topic, eventClass);
     }
 
+    protected void assertDoesNotContainEventOfType(String topic, Class<?> eventClass) {
+        assertThat(outboxWriter.containsEventOfType(topic, eventClass)).isFalse();
+    }
+
+    protected void assertHasEventCountOfType(String topic, Class<?> eventClass, int eventCount) {
+        assertThat(outboxWriter.hasEventTypeCountForTopic(topic, eventClass, eventCount)).isTrue();
+    }
+
 
 }

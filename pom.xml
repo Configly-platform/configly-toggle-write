@@ -114,6 +114,13 @@
             <artifactId>spring-boot-testcontainers</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>pl.feature.toggle.service</groupId>
+            <artifactId>feature-toggle-contracts</artifactId>
+            <version>${contracts.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

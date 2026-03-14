@@ -26,7 +26,6 @@ import static pl.feature.toggle.service.contracts.event.featuretoggle.FeatureTog
 final class EventMapper {
 
     static FeatureToggleCreated createFeatureToggleCreatedEvent(FeatureToggle featureToggle,
-                                                                EnvironmentRef environmentRef,
                                                                 Actor actor,
                                                                 CorrelationId correlationId) {
         return featureToggleCreatedEventBuilder()
@@ -40,20 +39,17 @@ final class EventMapper {
                 .status(featureToggle.status().name())
                 .description(featureToggle.description().value())
                 .environmentId(featureToggle.environmentId().uuid())
-                .projectId(environmentRef.projectId().uuid())
                 .metadata(Metadata.create(actor.idAsString(), actor.usernameAsString(), correlationId.value()))
                 .build();
     }
 
     static FeatureToggleStatusChanged createFeatureToggleStatusChangedEvent(FeatureToggleUpdateResult updateResult,
-                                                                            EnvironmentRef environmentRef,
                                                                             Actor actor,
                                                                             CorrelationId correlationId) {
         var featureToggle = updateResult.featureToggle();
         return featureToggleStatusChangedBuilder()
                 .id(featureToggle.id().uuid())
                 .status(featureToggle.status().name())
-                .projectId(environmentRef.projectId().uuid())
                 .revision(featureToggle.revision().value())
                 .environmentId(featureToggle.environmentId().uuid())
                 .metadata(Metadata.create(actor.idAsString(), actor.usernameAsString(), correlationId.value()))
@@ -62,7 +58,6 @@ final class EventMapper {
     }
 
     static FeatureToggleValueChanged createFeatureToggleValueChangedEvent(FeatureToggleUpdateResult updateResult,
-                                                                          EnvironmentRef environmentRef,
                                                                           Actor actor,
                                                                           CorrelationId correlationId) {
         var featureToggle = updateResult.featureToggle();
@@ -71,8 +66,7 @@ final class EventMapper {
                 .type(featureToggle.value().typeName())
                 .revision(featureToggle.revision().value())
                 .value(featureToggle.value().asText())
-                .projectId(environmentRef.projectId().uuid())
-                .environmentId(environmentRef.environmentId().uuid())
+                .environmentId(updateResult.featureToggle().environmentId().uuid())
                 .changes(buildChanges(updateResult))
                 .metadata(Metadata.create(actor.idAsString(), actor.usernameAsString(), correlationId.value()))
                 .build();
@@ -80,7 +74,6 @@ final class EventMapper {
 
 
     static FeatureToggleUpdated createFeatureToggleUpdatedEvent(FeatureToggleUpdateResult updateResult,
-                                                                EnvironmentRef environmentRef,
                                                                 Actor actor,
                                                                 CorrelationId correlationId) {
         var featureToggle = updateResult.featureToggle();
@@ -94,7 +87,6 @@ final class EventMapper {
                 .name(featureToggle.name().value())
                 .description(featureToggle.description().value())
                 .environmentId(featureToggle.environmentId().uuid())
-                .projectId(environmentRef.projectId().uuid())
                 .metadata(Metadata.create(actor.idAsString(), actor.usernameAsString(), correlationId.value()))
                 .changes(changes)
                 .build();

@@ -62,13 +62,13 @@ class FeatureToggleController {
     }
 
     @PutMapping("/{featureToggleId}/value")
-    void changeType(
+    void changeValue(
             @PathVariable String projectId,
             @PathVariable String environmentId,
             @PathVariable String featureToggleId,
             @RequestBody @Valid ChangeFeatureToggleValueDto dto
     ) {
-        var command = ChangeFeatureToggleValueCommand.from(featureToggleId, projectId, environmentId, dto);
+        var command = ChangeFeatureToggleValueCommand.from(projectId, environmentId, featureToggleId, dto);
         changeFeatureToggleValueUseCase.handle(command);
     }
 

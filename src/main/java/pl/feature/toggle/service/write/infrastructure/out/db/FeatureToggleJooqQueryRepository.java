@@ -9,6 +9,8 @@ import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRe
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
 
+import java.util.List;
+
 import static github.saqie.ftaas.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
 
 
@@ -36,5 +38,12 @@ class FeatureToggleJooqQueryRepository implements FeatureToggleQueryRepository {
         );
     }
 
+    @Override
+    public List<FeatureToggle> findByEnvironmentId(EnvironmentId environmentId) {
+        return dslContext.selectFrom(FEATURE_TOGGLE)
+                .where(FEATURE_TOGGLE.ENVIRONMENT_ID.eq(environmentId.uuid()))
+                .fetch()
+                .map(Mapper::toDomain);
+    }
 
 }

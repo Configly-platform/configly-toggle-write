@@ -88,4 +88,12 @@ public final class FeatureToggleHandlerFacade {
                 correlationProvider
         );
     }
+
+    public static ArchiveFeatureTogglesByEnvironmentUseCase archiveFeatureTogglesByEnvironmentUseCase(
+            FeatureToggleCommandRepository featureToggleCommandRepository,
+            FeatureToggleQueryRepository featureToggleQueryRepository,
+            OutboxWriter outboxWriter
+    ) {
+        return new ArchiveFeatureTogglesByEnvironmentHandler(featureToggleQueryRepository, featureToggleCommandRepository, outboxWriter);
+    }
 }

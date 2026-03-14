@@ -43,7 +43,6 @@ class ChangeFeatureToggleValueHandler implements ChangeFeatureToggleValueUseCase
         toggleCommandRepository.update(updateResult);
 
         var event = createFeatureToggleValueChangedEvent(updateResult,
-                environmentRef,
                 actorProvider.current(),
                 correlationProvider.current());
 

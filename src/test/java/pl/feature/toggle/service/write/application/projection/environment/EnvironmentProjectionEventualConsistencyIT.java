@@ -31,6 +31,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME;
 import static pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated.environmentCreatedEventBuilder;
 import static pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged.environmentStatusChangedEventBuilder;
+import static pl.feature.toggle.service.contracts.fake.event.FakeEnvironmentStatusChangedBuilder.fakeEnvironmentStatusChangedBuilder;
 
 @Import(EnvironmentProjectionEventualConsistencyIT.SyncAsyncConfig.class)
 class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
@@ -105,11 +106,11 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
         var projectRef = ProjectRef.from(projectId, ProjectStatus.ACTIVE, Revision.initialRevision());
         projectRefProjectionRepository.insert(projectRef);
 
-        var statusChangedFirst = environmentStatusChangedEventBuilder()
-                .projectId(projectId.uuid())
-                .environmentId(envId.uuid())
-                .status(EnvironmentStatus.ARCHIVED.name())
-                .revision(Revision.from(2).value())
+        var statusChangedFirst = fakeEnvironmentStatusChangedBuilder()
+                .withProjectId(projectId.uuid())
+                .withEnvironmentId(envId.uuid())
+                .withStatus(EnvironmentStatus.ARCHIVED.name())
+                .withRevision(Revision.from(2).value())
                 .build();
 
         var createdLater = environmentCreatedEventBuilder()
