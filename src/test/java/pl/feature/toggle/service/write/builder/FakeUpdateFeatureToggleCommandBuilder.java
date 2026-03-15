@@ -5,6 +5,8 @@ import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.security.actor.Actor;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.write.application.port.in.command.UpdateFeatureToggleCommand;
 
 import java.util.UUID;
@@ -16,6 +18,8 @@ public class FakeUpdateFeatureToggleCommandBuilder {
     private EnvironmentId environmentId;
     private FeatureToggleName name;
     private FeatureToggleDescription description;
+    private Actor actor;
+    private CorrelationId correlationId;
 
     private FakeUpdateFeatureToggleCommandBuilder() {
         this.featureToggleId = FeatureToggleId.create();
@@ -23,6 +27,8 @@ public class FakeUpdateFeatureToggleCommandBuilder {
         this.environmentId = EnvironmentId.create();
         this.name = FeatureToggleName.create("name");
         this.description = FeatureToggleDescription.create("description");
+        this.actor = Actor.system();
+        this.correlationId = CorrelationId.generate();
     }
 
     public static FakeUpdateFeatureToggleCommandBuilder fakeUpdateFeatureToggleCommandBuilder() {
@@ -41,6 +47,16 @@ public class FakeUpdateFeatureToggleCommandBuilder {
 
     public FakeUpdateFeatureToggleCommandBuilder withEnvironmentId(String environmentId) {
         this.environmentId = EnvironmentId.create(environmentId);
+        return this;
+    }
+
+    public FakeUpdateFeatureToggleCommandBuilder withActor(Actor actor) {
+        this.actor = actor;
+        return this;
+    }
+
+    public FakeUpdateFeatureToggleCommandBuilder withCorrelationId(String correlationId) {
+        this.correlationId = CorrelationId.of(correlationId);
         return this;
     }
 
@@ -75,7 +91,7 @@ public class FakeUpdateFeatureToggleCommandBuilder {
     }
 
     public UpdateFeatureToggleCommand build() {
-        return new UpdateFeatureToggleCommand(featureToggleId, projectId, environmentId, name, description);
+        return new UpdateFeatureToggleCommand(featureToggleId, projectId, environmentId, name, description, actor, correlationId);
     }
 
 }

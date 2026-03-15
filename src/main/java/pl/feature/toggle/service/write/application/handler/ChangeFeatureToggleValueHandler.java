@@ -25,8 +25,6 @@ class ChangeFeatureToggleValueHandler implements ChangeFeatureToggleValueUseCase
     private final ProjectRefConsistency projectRefConsistency;
     private final EnvironmentRefConsistency environmentRefConsistency;
     private final OutboxWriter outboxWriter;
-    private final ActorProvider actorProvider;
-    private final CorrelationProvider correlationProvider;
 
     @Override
     @Transactional
@@ -44,9 +42,11 @@ class ChangeFeatureToggleValueHandler implements ChangeFeatureToggleValueUseCase
 
         toggleCommandRepository.update(updateResult);
 
-        var event = createFeatureToggleValueChangedEvent(updateResult,
-                actorProvider.current(),
-                correlationProvider.current());
+        var event = createFeatureToggleValueChangedEvent(
+                updateResult,
+                command.actor(),
+                command.correlationId()
+        );
 
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
         log.info("Feature-Toggle value changed: id={}, newValue={}", featureToggle.id().uuid(), featureToggle.value().asText());

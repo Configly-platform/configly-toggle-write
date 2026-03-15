@@ -4,6 +4,8 @@ import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.security.actor.Actor;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.write.application.port.in.command.ChangeFeatureToggleStatusCommand;
 
 public class FakeChangeFeatureToggleStatusCommandBuilder {
@@ -12,12 +14,16 @@ public class FakeChangeFeatureToggleStatusCommandBuilder {
     private EnvironmentId environmentId;
     private FeatureToggleId featureToggleId;
     private FeatureToggleStatus newStatus;
+    private Actor actor;
+    private CorrelationId correlationId;
 
     private FakeChangeFeatureToggleStatusCommandBuilder() {
         this.projectId = ProjectId.create();
         this.environmentId = EnvironmentId.create();
         this.featureToggleId = FeatureToggleId.create();
         this.newStatus = FeatureToggleStatus.ACTIVE;
+        this.actor = Actor.system();
+        this.correlationId = CorrelationId.generate();
     }
 
     public static FakeChangeFeatureToggleStatusCommandBuilder fakeChangeFeatureToggleStatusCommandBuilder() {
@@ -36,6 +42,16 @@ public class FakeChangeFeatureToggleStatusCommandBuilder {
 
     public FakeChangeFeatureToggleStatusCommandBuilder withFeatureToggleId(String featureToggleId) {
         this.featureToggleId = FeatureToggleId.create(featureToggleId);
+        return this;
+    }
+
+    public FakeChangeFeatureToggleStatusCommandBuilder withActor(Actor actor) {
+        this.actor = actor;
+        return this;
+    }
+
+    public FakeChangeFeatureToggleStatusCommandBuilder withCorrelationId(String correlationId) {
+        this.correlationId = CorrelationId.of(correlationId);
         return this;
     }
 
@@ -60,6 +76,6 @@ public class FakeChangeFeatureToggleStatusCommandBuilder {
     }
 
     public ChangeFeatureToggleStatusCommand build() {
-        return new ChangeFeatureToggleStatusCommand(projectId, environmentId, featureToggleId, newStatus);
+        return new ChangeFeatureToggleStatusCommand(projectId, environmentId, featureToggleId, newStatus, actor, correlationId);
     }
 }

@@ -5,6 +5,8 @@ import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.security.actor.Actor;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.write.infrastructure.in.rest.dto.UpdateFeatureToggleDto;
 
 public record UpdateFeatureToggleCommand(
@@ -12,20 +14,28 @@ public record UpdateFeatureToggleCommand(
         ProjectId projectId,
         EnvironmentId environmentId,
         FeatureToggleName name,
-        FeatureToggleDescription description
+        FeatureToggleDescription description,
+        Actor actor,
+        CorrelationId correlationId
 ) {
 
     public static UpdateFeatureToggleCommand from(
             String featureToggleId,
             String projectId,
             String environmentId,
-            UpdateFeatureToggleDto dto) {
+            UpdateFeatureToggleDto dto,
+            Actor actor,
+            CorrelationId correlationId
+    ) {
         return new UpdateFeatureToggleCommand(
                 FeatureToggleId.create(featureToggleId),
                 ProjectId.create(projectId),
                 EnvironmentId.create(environmentId),
                 FeatureToggleName.create(dto.name()),
-                FeatureToggleDescription.create(dto.description()));
+                FeatureToggleDescription.create(dto.description()),
+                actor,
+                correlationId
+        );
     }
 
 }

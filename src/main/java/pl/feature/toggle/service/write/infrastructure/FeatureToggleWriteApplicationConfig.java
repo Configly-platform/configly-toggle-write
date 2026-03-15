@@ -23,17 +23,13 @@ class FeatureToggleWriteApplicationConfig {
             FeatureTogglePolicyFacade featureTogglePolicyFacade,
             ProjectRefConsistency projectRefConsistency,
             EnvironmentRefConsistency environmentRefConsistency,
-            OutboxWriter outboxWriter,
-            ActorProvider actorProvider,
-            CorrelationProvider correlationProvider
+            OutboxWriter outboxWriter
     ) {
         return FeatureToggleHandlerFacade.createFeatureToggleUseCase(featureToggleCommandRepository,
                 featureTogglePolicyFacade,
                 projectRefConsistency,
                 environmentRefConsistency,
-                outboxWriter,
-                actorProvider,
-                correlationProvider);
+                outboxWriter);
     }
 
     @Bean
@@ -43,18 +39,14 @@ class FeatureToggleWriteApplicationConfig {
             FeatureTogglePolicyFacade featureTogglePolicyFacade,
             ProjectRefConsistency projectRefConsistency,
             EnvironmentRefConsistency environmentRefConsistency,
-            OutboxWriter outboxWriter,
-            ActorProvider actorProvider,
-            CorrelationProvider correlationProvider
+            OutboxWriter outboxWriter
     ) {
         return FeatureToggleHandlerFacade.updateFeatureToggleUseCase(featureToggleCommandRepository,
                 featureToggleQueryRepository,
                 featureTogglePolicyFacade,
                 projectRefConsistency,
                 environmentRefConsistency,
-                outboxWriter,
-                actorProvider,
-                correlationProvider);
+                outboxWriter);
     }
 
     @Bean
@@ -63,17 +55,13 @@ class FeatureToggleWriteApplicationConfig {
             FeatureToggleQueryRepository featureToggleQueryRepository,
             ProjectRefConsistency projectRefConsistency,
             EnvironmentRefConsistency environmentRefConsistency,
-            OutboxWriter outboxWriter,
-            ActorProvider actorProvider,
-            CorrelationProvider correlationProvider
+            OutboxWriter outboxWriter
     ) {
         return FeatureToggleHandlerFacade.changeFeatureToggleStatusUseCase(featureToggleCommandRepository,
                 featureToggleQueryRepository,
                 projectRefConsistency,
                 environmentRefConsistency,
-                outboxWriter,
-                actorProvider,
-                correlationProvider
+                outboxWriter
         );
     }
 
@@ -83,17 +71,13 @@ class FeatureToggleWriteApplicationConfig {
             FeatureToggleQueryRepository featureToggleQueryRepository,
             ProjectRefConsistency projectRefConsistency,
             EnvironmentRefConsistency environmentRefConsistency,
-            OutboxWriter outboxWriter,
-            ActorProvider actorProvider,
-            CorrelationProvider correlationProvider
+            OutboxWriter outboxWriter
     ) {
         return FeatureToggleHandlerFacade.changeFeatureToggleValueUseCase(featureToggleCommandRepository,
                 featureToggleQueryRepository,
                 projectRefConsistency,
                 environmentRefConsistency,
-                outboxWriter,
-                actorProvider,
-                correlationProvider);
+                outboxWriter);
     }
 
     @Bean

@@ -3,6 +3,8 @@ package pl.feature.toggle.service.write.builder;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.security.actor.Actor;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.application.port.in.command.ChangeFeatureToggleValueCommand;
 
@@ -11,12 +13,16 @@ public class FakeChangeFeatureToggleValueCommandBuilder {
     private EnvironmentId environmentId;
     private FeatureToggleId featureToggleId;
     private FeatureToggleValueSnapshot newValue;
+    private Actor actor;
+    private CorrelationId correlationId;
 
     private FakeChangeFeatureToggleValueCommandBuilder() {
         this.projectId = ProjectId.create();
         this.environmentId = EnvironmentId.create();
         this.featureToggleId = FeatureToggleId.create();
         this.newValue = FeatureToggleValueSnapshot.of("TRUE");
+        this.actor = Actor.system();
+        this.correlationId = CorrelationId.generate();
     }
 
     public static FakeChangeFeatureToggleValueCommandBuilder fakeChangeFeatureToggleValueCommandBuilder() {
@@ -38,12 +44,22 @@ public class FakeChangeFeatureToggleValueCommandBuilder {
         return this;
     }
 
+    public FakeChangeFeatureToggleValueCommandBuilder withActor(Actor actor) {
+        this.actor = actor;
+        return this;
+    }
+
+    public FakeChangeFeatureToggleValueCommandBuilder withCorrelationId(String correlationId) {
+        this.correlationId = CorrelationId.of(correlationId);
+        return this;
+    }
+
     public FakeChangeFeatureToggleValueCommandBuilder withNewValue(String newValue) {
         this.newValue = FeatureToggleValueSnapshot.of(newValue);
         return this;
     }
 
     public ChangeFeatureToggleValueCommand build() {
-        return new ChangeFeatureToggleValueCommand(projectId, environmentId, featureToggleId, newValue);
+        return new ChangeFeatureToggleValueCommand(projectId, environmentId, featureToggleId, newValue, actor, correlationId);
     }
 }

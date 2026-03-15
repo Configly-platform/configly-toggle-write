@@ -4,6 +4,8 @@ import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.security.actor.Actor;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.value.FeatureToggleValueType;
 import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.infrastructure.in.rest.dto.CreateFeatureToggleDto;
@@ -14,17 +16,22 @@ public record CreateFeatureToggleCommand(
         FeatureToggleName name,
         FeatureToggleDescription description,
         FeatureToggleValueSnapshot rawValue,
-        FeatureToggleValueType valueType
+        FeatureToggleValueType valueType,
+        Actor actor,
+        CorrelationId correlationId
 ) {
 
-    public static CreateFeatureToggleCommand from(String projectId, String environmentId, CreateFeatureToggleDto dto) {
+    public static CreateFeatureToggleCommand from(String projectId, String environmentId, CreateFeatureToggleDto dto,
+                                                  Actor actor, CorrelationId correlationId) {
         return new CreateFeatureToggleCommand(
                 ProjectId.create(projectId),
                 EnvironmentId.create(environmentId),
                 FeatureToggleName.create(dto.name()),
                 FeatureToggleDescription.create(dto.description()),
                 FeatureToggleValueSnapshot.of(dto.value()),
-                FeatureToggleValueType.fromString(dto.type())
+                FeatureToggleValueType.fromString(dto.type()),
+                actor,
+                correlationId
         );
     }
 }

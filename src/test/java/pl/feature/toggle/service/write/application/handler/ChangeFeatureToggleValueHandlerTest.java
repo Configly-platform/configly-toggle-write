@@ -31,9 +31,7 @@ class ChangeFeatureToggleValueHandlerTest extends AbstractUnitTest {
                 featureToggleQueryRepositoryStub,
                 projectRefConsistencySpy,
                 environmentRefConsistencySpy,
-                outboxWriter,
-                actorProvider,
-                correlationProvider
+                outboxWriter
         );
     }
 

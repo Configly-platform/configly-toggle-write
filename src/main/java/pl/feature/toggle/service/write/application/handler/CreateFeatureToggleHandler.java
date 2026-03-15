@@ -27,8 +27,6 @@ class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {
     private final ProjectRefConsistency projectRefConsistency;
     private final EnvironmentRefConsistency environmentRefConsistency;
     private final OutboxWriter outboxWriter;
-    private final ActorProvider actorProvider;
-    private final CorrelationProvider correlationProvider;
 
     @Override
     @Transactional
@@ -45,8 +43,9 @@ class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {
 
         var event = createFeatureToggleCreatedEvent(
                 featureToggle,
-                actorProvider.current(),
-                correlationProvider.current());
+                command.actor(),
+                command.correlationId()
+        );
 
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
 

@@ -28,8 +28,6 @@ class ChangeFeatureToggleStatusHandler implements ChangeFeatureToggleStatusUseCa
     private final ProjectRefConsistency projectRefConsistency;
     private final EnvironmentRefConsistency environmentRefConsistency;
     private final OutboxWriter outboxWriter;
-    private final ActorProvider actorProvider;
-    private final CorrelationProvider correlationProvider;
 
     @Override
     @Transactional
@@ -47,9 +45,10 @@ class ChangeFeatureToggleStatusHandler implements ChangeFeatureToggleStatusUseCa
 
         toggleCommandRepository.update(updateResult);
 
-        var event = createFeatureToggleStatusChangedEvent(updateResult,
-                actorProvider.current(),
-                correlationProvider.current());
+        var event = createFeatureToggleStatusChangedEvent(
+                updateResult,
+                command.actor(),
+                command.correlationId());
 
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
         log.info("Feature-Toggle status changed: id={}, oldStatus={}, newStatus={}", featureToggle.id().uuid(),

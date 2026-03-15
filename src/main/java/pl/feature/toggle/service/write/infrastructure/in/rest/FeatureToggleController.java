@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import pl.feature.toggle.service.model.security.actor.ActorProvider;
+import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.write.application.port.in.ChangeFeatureToggleStatusUseCase;
 import pl.feature.toggle.service.write.application.port.in.ChangeFeatureToggleValueUseCase;
 import pl.feature.toggle.service.write.application.port.in.CreateFeatureToggleUseCase;
@@ -28,6 +30,8 @@ class FeatureToggleController {
     private final UpdateFeatureToggleUseCase updateFeatureToggleUseCase;
     private final ChangeFeatureToggleValueUseCase changeFeatureToggleValueUseCase;
     private final ChangeFeatureToggleStatusUseCase changeFeatureToggleStatusUseCase;
+    private final ActorProvider actorProvider;
+    private final CorrelationProvider correlationProvider;
 
     @PostMapping
     UUID create(
@@ -35,7 +39,8 @@ class FeatureToggleController {
             @PathVariable String environmentId,
             @RequestBody @Valid CreateFeatureToggleDto dto
     ) {
-        var command = CreateFeatureToggleCommand.from(projectId, environmentId, dto);
+        var command = CreateFeatureToggleCommand.from(projectId, environmentId, dto,
+                actorProvider.current(), correlationProvider.current());
         return createFeatureToggleUseCase.execute(command).uuid();
     }
 
@@ -46,7 +51,8 @@ class FeatureToggleController {
             @PathVariable String featureToggleId,
             @RequestBody @Valid UpdateFeatureToggleDto dto
     ) {
-        var command = UpdateFeatureToggleCommand.from(featureToggleId, projectId, environmentId, dto);
+        var command = UpdateFeatureToggleCommand.from(featureToggleId, projectId, environmentId, dto,
+                actorProvider.current(), correlationProvider.current());
         updateFeatureToggleUseCase.execute(command);
     }
 
@@ -57,7 +63,8 @@ class FeatureToggleController {
             @PathVariable String featureToggleId,
             @RequestBody @NotEmpty String status
     ) {
-        var command = ChangeFeatureToggleStatusCommand.create(projectId, environmentId, featureToggleId, status);
+        var command = ChangeFeatureToggleStatusCommand.create(projectId, environmentId, featureToggleId, status,
+                actorProvider.current(), correlationProvider.current());
         changeFeatureToggleStatusUseCase.handle(command);
     }
 
@@ -68,7 +75,8 @@ class FeatureToggleController {
             @PathVariable String featureToggleId,
             @RequestBody @Valid ChangeFeatureToggleValueDto dto
     ) {
-        var command = ChangeFeatureToggleValueCommand.from(projectId, environmentId, featureToggleId, dto);
+        var command = ChangeFeatureToggleValueCommand.from(projectId, environmentId, featureToggleId, dto,
+                actorProvider.current(), correlationProvider.current());
         changeFeatureToggleValueUseCase.handle(command);
     }
 

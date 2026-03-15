@@ -29,9 +29,8 @@ class CreateFeatureToggleHandlerTest extends AbstractUnitTest {
                 featureTogglePolicyFacade,
                 projectRefConsistencySpy,
                 environmentRefConsistencySpy,
-                outboxWriter,
-                actorProvider,
-                correlationProvider);
+                outboxWriter
+        );
     }
 
     @Test

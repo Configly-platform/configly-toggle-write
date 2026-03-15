@@ -27,8 +27,6 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
     private final ProjectRefConsistency projectRefConsistency;
     private final EnvironmentRefConsistency environmentRefConsistency;
     private final OutboxWriter outboxWriter;
-    private final ActorProvider actorProvider;
-    private final CorrelationProvider correlationProvider;
 
     @Override
     @Transactional
@@ -48,9 +46,11 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
 
         toggleCommandRepository.update(updateResult);
 
-        var event = createFeatureToggleUpdatedEvent(updateResult,
-                actorProvider.current(),
-                correlationProvider.current());
+        var event = createFeatureToggleUpdatedEvent(
+                updateResult,
+                command.actor(),
+                command.correlationId()
+        );
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
 
         log.info("Feature-Toggle updated: id={}, newName={}, newDescription={}", featureToggle.id().uuid(),

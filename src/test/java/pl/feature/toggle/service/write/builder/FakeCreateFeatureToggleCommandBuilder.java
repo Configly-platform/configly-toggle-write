@@ -4,8 +4,10 @@ import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.value.FeatureToggleValueType;
+import pl.feature.toggle.service.model.security.actor.Actor;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
+import pl.feature.toggle.service.value.FeatureToggleValueType;
 import pl.feature.toggle.service.write.application.port.in.command.CreateFeatureToggleCommand;
 
 public class FakeCreateFeatureToggleCommandBuilder {
@@ -16,6 +18,8 @@ public class FakeCreateFeatureToggleCommandBuilder {
     private FeatureToggleDescription description;
     private FeatureToggleValueType type;
     private FeatureToggleValueSnapshot value;
+    private Actor actor;
+    private CorrelationId correlationId;
 
     private FakeCreateFeatureToggleCommandBuilder() {
         this.projectId = ProjectId.create();
@@ -24,6 +28,8 @@ public class FakeCreateFeatureToggleCommandBuilder {
         this.description = FeatureToggleDescription.create("description");
         this.type = FeatureToggleValueType.BOOLEAN;
         this.value = FeatureToggleValueSnapshot.of(Boolean.TRUE.toString());
+        this.actor = Actor.system();
+        this.correlationId = CorrelationId.generate();
     }
 
     public static FakeCreateFeatureToggleCommandBuilder fakeCreateFeatureToggleCommandBuilder() {
@@ -42,6 +48,16 @@ public class FakeCreateFeatureToggleCommandBuilder {
 
     public FakeCreateFeatureToggleCommandBuilder withEnvironmentId(EnvironmentId environmentId) {
         this.environmentId = environmentId;
+        return this;
+    }
+
+    public FakeCreateFeatureToggleCommandBuilder withActor(Actor actor) {
+        this.actor = actor;
+        return this;
+    }
+
+    public FakeCreateFeatureToggleCommandBuilder withCorrelationId(String correlationId) {
+        this.correlationId = CorrelationId.of(correlationId);
         return this;
     }
 
@@ -71,7 +87,7 @@ public class FakeCreateFeatureToggleCommandBuilder {
     }
 
     public CreateFeatureToggleCommand build() {
-        return new CreateFeatureToggleCommand(projectId, environmentId, name, description, value, type);
+        return new CreateFeatureToggleCommand(projectId, environmentId, name, description, value, type, actor, correlationId);
     }
 
 }
