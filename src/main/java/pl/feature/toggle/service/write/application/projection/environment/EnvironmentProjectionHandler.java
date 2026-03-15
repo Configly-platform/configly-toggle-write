@@ -1,10 +1,12 @@
 package pl.feature.toggle.service.write.application.projection.environment;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated;
 import pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged;
+import pl.feature.toggle.service.contracts.shared.EventId;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionApplier;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionPlan;
 import pl.feature.toggle.service.event.processing.internal.RevisionApplierResult;
@@ -20,6 +22,7 @@ import pl.feature.toggle.service.write.application.projection.environment.event.
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
 @AllArgsConstructor
+@Slf4j
 class EnvironmentProjectionHandler implements EnvironmentProjection {
 
     private final EnvironmentRefProjectionRepository environmentRefProjectionRepository;
@@ -30,7 +33,11 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
     @Override
     @Transactional
     public void handle(EnvironmentCreated event) {
-        applyCreate(event);
+        var result = applyCreate(event);
+        if (result.wasApplied()) {
+            log.info("Environment-Projection created: environmentId={}, projectId={}, revision={}", event.environmentId(),
+                    event.projectId(), event.revision());
+        }
     }
 
     @Override
@@ -43,14 +50,16 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
 
         var snapshot = EnvironmentRef.from(projectId, environmentId, newStatus, incoming);
 
-        var result = applyUpdateSnapshot(incoming, projectId, environmentId, snapshot);
+        var result = applyUpdateSnapshot(event.eventId(),incoming, projectId, environmentId, snapshot);
 
         if (result.wasApplied() && newStatus.isArchived()) {
             eventPublisher.publishEvent(EnvironmentArchivedCascadeRequest.create(environmentId, event.metadata()));
+            log.info("Environment-Projection status changed: environmentId={}, projectId={}, newStatus={}, revision={}",
+                    event.environmentId(), event.projectId(), event.status(), event.revision());
         }
     }
 
-    private void applyCreate(EnvironmentCreated event) {
+    private RevisionApplierResult applyCreate(EnvironmentCreated event) {
         var projectId = ProjectId.create(event.projectId());
         var environmentId = EnvironmentId.create(event.environmentId());
         var incomingRevision = Revision.from(event.revision());
@@ -58,8 +67,9 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
         var view = EnvironmentRef.from(projectId, environmentId, status, incomingRevision);
         var rebuildEvent = new RebuildEnvironmentRefRequested(projectId, environmentId);
 
-        revisionProjectionApplier.apply(
+        return revisionProjectionApplier.apply(
                 RevisionProjectionPlan.<EnvironmentRef>forIncoming(incomingRevision)
+                        .eventId(event.eventId())
                         .findCurrentUsing(() -> environmentRefQueryRepository.find(projectId, environmentId))
                         .onMissing(() -> environmentRefProjectionRepository.insert(view))
                         .extractCurrentRevisionUsing(EnvironmentRef::lastRevision)
@@ -77,6 +87,7 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
     }
 
     private RevisionApplierResult applyUpdateSnapshot(
+            EventId eventId,
             Revision incoming,
             ProjectId projectId,
             EnvironmentId environmentId,
@@ -86,6 +97,7 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
 
         return revisionProjectionApplier.apply(
                 RevisionProjectionPlan.<EnvironmentRef>forIncoming(incoming)
+                        .eventId(eventId)
                         .findCurrentUsing(() -> environmentRefQueryRepository.find(projectId, environmentId))
                         .onMissing(() -> environmentRefProjectionRepository.upsert(snapshot))
                         .extractCurrentRevisionUsing(EnvironmentRef::lastRevision)

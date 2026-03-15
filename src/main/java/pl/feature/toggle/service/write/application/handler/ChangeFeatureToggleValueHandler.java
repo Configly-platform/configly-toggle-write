@@ -1,6 +1,7 @@
 package pl.feature.toggle.service.write.application.handler;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.model.security.actor.ActorProvider;
 import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
@@ -16,6 +17,7 @@ import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGL
 import static pl.feature.toggle.service.write.application.handler.EventMapper.createFeatureToggleValueChangedEvent;
 
 @AllArgsConstructor
+@Slf4j
 class ChangeFeatureToggleValueHandler implements ChangeFeatureToggleValueUseCase {
 
     private final FeatureToggleCommandRepository toggleCommandRepository;
@@ -47,5 +49,6 @@ class ChangeFeatureToggleValueHandler implements ChangeFeatureToggleValueUseCase
                 correlationProvider.current());
 
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
+        log.info("Feature-Toggle value changed: id={}, newValue={}", featureToggle.id().uuid(), featureToggle.value().asText());
     }
 }

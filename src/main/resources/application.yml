@@ -15,6 +15,10 @@ spring:
 topics: # Topic do konsumowania
   feature-toggle-configuration-events: feature-toggle-configuration-events
 
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([${spring.application.name:-app}]){green} %clr([%X{correlationId:--}]){yellow} %clr([%X{actor:--}]){cyan} %clr(%-5level) -> %msg%n"
+
 outbox:
   batch-size: 100
   pool-interval-ms: 10s

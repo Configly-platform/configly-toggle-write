@@ -1,5 +1,6 @@
 package pl.feature.toggle.service.write.application.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.feature.toggle.service.model.security.actor.ActorProvider;
 import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
@@ -17,6 +18,7 @@ import static pl.feature.toggle.service.write.application.handler.EventMapper.cr
 import static pl.feature.toggle.service.contracts.topic.KafkaTopic.FEATURE_TOGGLE;
 
 @AllArgsConstructor
+@Slf4j
 class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
 
     private final FeatureToggleCommandRepository toggleCommandRepository;
@@ -50,5 +52,8 @@ class UpdateFeatureToggleHandler implements UpdateFeatureToggleUseCase {
                 actorProvider.current(),
                 correlationProvider.current());
         outboxWriter.write(event, FEATURE_TOGGLE.topic());
+
+        log.info("Feature-Toggle updated: id={}, newName={}, newDescription={}", featureToggle.id().uuid(),
+                featureToggle.name().value(), featureToggle.description().value());
     }
 }
