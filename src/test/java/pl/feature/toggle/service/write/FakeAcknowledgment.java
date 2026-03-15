@@ -10,4 +10,8 @@ public class FakeAcknowledgment implements Acknowledgment {
     public void acknowledge() {
         ack = true;
     }
+
+    public boolean isAcknowledged() {
+        return ack;
+    }
 }
