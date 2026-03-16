@@ -19,9 +19,8 @@ class SecurityConfig {
     }
 
     @Bean
-    @RequestScope
-    CorrelationProvider correlationProvider(HttpServletRequest request) {
-        return new HttpCorrelationProvider(request);
+    CorrelationProvider correlationProvider() {
+        return new MDCCorrelationProvider();
     }
 
     @Bean

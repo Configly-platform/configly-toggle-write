@@ -9,6 +9,7 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.feature.toggle.service.model.security.actor.ActorProvider;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 
 import java.io.IOException;
@@ -17,7 +18,6 @@ import java.io.IOException;
 @AllArgsConstructor
 class LoggingContextFilter extends OncePerRequestFilter {
 
-    private final CorrelationProvider correlationProvider;
     private final ActorProvider actorProvider;
 
     @Override
@@ -27,8 +27,14 @@ class LoggingContextFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         try {
-            MDC.put("correlationId", correlationProvider.current().value());
-            MDC.put("actor", actorProvider.current().idAsString());
+            var value = request.getHeader(CorrelationId.headerName());
+            var correlation = CorrelationId.of(value);
+            MDC.put(CorrelationId.MDCName(), correlation.value());
+
+            var actor = actorProvider.current();
+            if (actor != null) {
+                MDC.put("actor", actor.idAsString());
+            }
             filterChain.doFilter(request, response);
         } finally {
             MDC.clear();
