@@ -14,6 +14,7 @@ import pl.feature.toggle.service.event.processing.internal.RevisionApplierResult
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.model.project.ProjectStatus;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefQueryRepository;
@@ -50,7 +51,7 @@ class ProjectProjectionHandler implements ProjectProjection {
         var newStatus = ProjectStatus.valueOf(event.status());
 
         var snapshot = ProjectRef.from(projectId, newStatus, incoming);
-        var result = applyUpdateSnapshot(event.eventId(), incoming, projectId, snapshot);
+        var result = applyUpdateSnapshot(event.correlationId(), event.eventId(), incoming, projectId, snapshot);
         if (result.wasApplied()) {
             log.info("Project-Projection status changed: projectId={}, newStatus={}, revision={}",
                     event.projectId(), newStatus, event.revision());
@@ -63,7 +64,8 @@ class ProjectProjectionHandler implements ProjectProjection {
         var status = ProjectStatus.valueOf(event.status());
 
         var view = ProjectRef.from(projectId, status, incoming);
-        var rebuildEvent = new RebuildProjectRefRequested(projectId);
+        var correlationId = CorrelationId.of(event.correlationId());
+        var rebuildEvent = new RebuildProjectRefRequested(projectId, correlationId);
 
         return revisionProjectionApplier.apply(
                 RevisionProjectionPlan.<ProjectRef>forIncoming(incoming)
@@ -85,12 +87,13 @@ class ProjectProjectionHandler implements ProjectProjection {
     }
 
     private RevisionApplierResult applyUpdateSnapshot(
+            String correlationId,
             EventId eventId,
             Revision incoming,
             ProjectId projectId,
             ProjectRef snapshot
     ) {
-        var rebuildEvent = new RebuildProjectRefRequested(projectId);
+        var rebuildEvent = new RebuildProjectRefRequested(projectId, CorrelationId.of(correlationId));
 
         return revisionProjectionApplier.apply(
                 RevisionProjectionPlan.<ProjectRef>forIncoming(incoming)

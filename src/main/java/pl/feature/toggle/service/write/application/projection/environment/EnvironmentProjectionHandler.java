@@ -14,6 +14,7 @@ import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
+import pl.feature.toggle.service.model.security.correlation.CorrelationId;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;
@@ -50,7 +51,7 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
 
         var snapshot = EnvironmentRef.from(projectId, environmentId, newStatus, incoming);
 
-        var result = applyUpdateSnapshot(event.eventId(),incoming, projectId, environmentId, snapshot);
+        var result = applyUpdateSnapshot(event.correlationId(), event.eventId(), incoming, projectId, environmentId, snapshot);
 
         if (result.wasApplied() && newStatus.isArchived()) {
             eventPublisher.publishEvent(EnvironmentArchivedCascadeRequest.create(environmentId, event.metadata()));
@@ -65,7 +66,8 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
         var incomingRevision = Revision.from(event.revision());
         var status = EnvironmentStatus.valueOf(event.status());
         var view = EnvironmentRef.from(projectId, environmentId, status, incomingRevision);
-        var rebuildEvent = new RebuildEnvironmentRefRequested(projectId, environmentId);
+        var correlationId = CorrelationId.of(event.correlationId());
+        var rebuildEvent = new RebuildEnvironmentRefRequested(projectId, environmentId, correlationId);
 
         return revisionProjectionApplier.apply(
                 RevisionProjectionPlan.<EnvironmentRef>forIncoming(incomingRevision)
@@ -87,13 +89,14 @@ class EnvironmentProjectionHandler implements EnvironmentProjection {
     }
 
     private RevisionApplierResult applyUpdateSnapshot(
+            String correlationId,
             EventId eventId,
             Revision incoming,
             ProjectId projectId,
             EnvironmentId environmentId,
             EnvironmentRef snapshot
     ) {
-        var rebuildEvent = new RebuildEnvironmentRefRequested(projectId, environmentId);
+        var rebuildEvent = new RebuildEnvironmentRefRequested(projectId, environmentId, CorrelationId.of(correlationId));
 
         return revisionProjectionApplier.apply(
                 RevisionProjectionPlan.<EnvironmentRef>forIncoming(incoming)

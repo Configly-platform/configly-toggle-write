@@ -21,7 +21,7 @@ logging:
 
 client:
   configuration:
-    base-url: http://localhost:8080
+    base-url: http://localhost:8081
 
 outbox:
   batch-size: 100
