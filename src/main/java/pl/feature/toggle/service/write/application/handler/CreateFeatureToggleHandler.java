@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
-import pl.feature.toggle.service.model.security.actor.ActorProvider;
-import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
-import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
 import pl.feature.toggle.service.write.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentRefConsistency;
 import pl.feature.toggle.service.write.application.port.in.ProjectRefConsistency;
@@ -23,7 +20,6 @@ import static pl.feature.toggle.service.write.application.handler.EventMapper.cr
 class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {
 
     private final FeatureToggleCommandRepository toggleCommandRepository;
-    private final FeatureTogglePolicyFacade togglePolicyFacade;
     private final ProjectRefConsistency projectRefConsistency;
     private final EnvironmentRefConsistency environmentRefConsistency;
     private final OutboxWriter outboxWriter;
@@ -37,7 +33,6 @@ class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {
         projectRef.assertIsActive();
 
         var featureToggle = FeatureToggle.create(command, environmentRef);
-        togglePolicyFacade.ensureCreateAllowed(featureToggle);
 
         toggleCommandRepository.save(featureToggle);
 

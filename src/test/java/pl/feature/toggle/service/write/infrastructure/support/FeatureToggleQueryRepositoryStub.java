@@ -14,8 +14,6 @@ import static pl.feature.toggle.service.write.StubSupport.forMethod;
 public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepository {
     private final StubSupport<FeatureToggle> getOrThrow =
             forMethod("getOrThrow(FeatureToggleId)");
-    private final StubSupport<Boolean> exists =
-            forMethod("exists(FeatureToggleName, EnvironmentId)");
     private final StubSupport<List<FeatureToggle>> finByEnvironmentId =
             forMethod("findByEnvironmentId(EnvironmentId)");
 
@@ -27,14 +25,6 @@ public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepos
 
     public void getOrThrowThrows(RuntimeException ex) {
         getOrThrow.willThrow(ex);
-    }
-
-    public void existsReturns(boolean value) {
-        exists.willReturn(value);
-    }
-
-    public void existsThrows(RuntimeException ex) {
-        exists.willThrow(ex);
     }
 
     public void findByEnvironmentIdReturns(List<FeatureToggle> featureToggles) {
@@ -51,7 +41,6 @@ public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepos
 
     public void reset() {
         getOrThrow.reset();
-        exists.reset();
         finByEnvironmentId.reset();
     }
 
@@ -61,14 +50,6 @@ public class FeatureToggleQueryRepositoryStub implements FeatureToggleQueryRepos
             throw new AssertionError("getOrThrow should not be called");
         }
         return getOrThrow.get();
-    }
-
-    @Override
-    public boolean exists(FeatureToggleName featureToggleName, EnvironmentId environmentId) {
-        if (failOnAnyCall) {
-            throw new AssertionError("exists should not be called");
-        }
-        return exists.get();
     }
 
     @Override

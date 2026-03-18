@@ -4,11 +4,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionApplier;
-import pl.feature.toggle.service.model.security.actor.ActorProvider;
-import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
 import pl.feature.toggle.service.write.application.handler.FeatureToggleHandlerFacade;
-import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
 import pl.feature.toggle.service.write.application.port.in.*;
 import pl.feature.toggle.service.write.application.port.out.*;
 import pl.feature.toggle.service.write.application.projection.environment.EnvironmentProjectionFacade;
@@ -20,13 +17,11 @@ class FeatureToggleWriteApplicationConfig {
     @Bean
     CreateFeatureToggleUseCase createFeatureToggleUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
-            FeatureTogglePolicyFacade featureTogglePolicyFacade,
             ProjectRefConsistency projectRefConsistency,
             EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter
     ) {
         return FeatureToggleHandlerFacade.createFeatureToggleUseCase(featureToggleCommandRepository,
-                featureTogglePolicyFacade,
                 projectRefConsistency,
                 environmentRefConsistency,
                 outboxWriter);
@@ -36,14 +31,12 @@ class FeatureToggleWriteApplicationConfig {
     UpdateFeatureToggleUseCase updateFeatureToggleUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureToggleQueryRepository featureToggleQueryRepository,
-            FeatureTogglePolicyFacade featureTogglePolicyFacade,
             ProjectRefConsistency projectRefConsistency,
             EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter
     ) {
         return FeatureToggleHandlerFacade.updateFeatureToggleUseCase(featureToggleCommandRepository,
                 featureToggleQueryRepository,
-                featureTogglePolicyFacade,
                 projectRefConsistency,
                 environmentRefConsistency,
                 outboxWriter);

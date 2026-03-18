@@ -12,6 +12,8 @@ import pl.feature.toggle.service.write.application.projection.project.event.Rebu
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.feature.toggle.service.contracts.event.project.ProjectCreated.projectCreatedEventBuilder;
 import static pl.feature.toggle.service.contracts.event.project.ProjectStatusChanged.projectStatusChangedEventBuilder;
+import static pl.feature.toggle.service.contracts.fake.event.FakeProjectCreatedBuilder.fakeProjectCreatedBuilder;
+import static pl.feature.toggle.service.contracts.fake.event.FakeProjectStatusChangedBuilder.fakeProjectStatusChangedBuilder;
 import static pl.feature.toggle.service.write.builder.FakeProjectRefBuilder.fakeProjectRefBuilder;
 
 class ProjectProjectionHandlerTest extends AbstractUnitTest {
@@ -39,10 +41,10 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
 
         var projectId = ProjectId.create();
 
-        var event = projectCreatedEventBuilder()
-                .projectId(projectId.uuid())
-                .status(ProjectStatus.ACTIVE.name())
-                .revision(Revision.initialRevision().value())
+        var event = fakeProjectCreatedBuilder()
+                .withProjectId(projectId.uuid())
+                .withStatus(ProjectStatus.ACTIVE.name())
+                .withRevision(Revision.initialRevision().value())
                 .build();
 
         // when
@@ -68,10 +70,10 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
         projectRefRepositorySpy.expectNoMarkInconsistent();
         applicationEventPublishedSpy.expectNoEvents();
 
-        var event = projectStatusChangedEventBuilder()
-                .projectId(existing.projectId().uuid())
-                .status(ProjectStatus.ARCHIVED.name())
-                .revision(existing.lastRevision().next().value())
+        var event = fakeProjectStatusChangedBuilder()
+                .withProjectId(existing.projectId().uuid())
+                .withStatus(ProjectStatus.ARCHIVED.name())
+                .withRevision(existing.lastRevision().next().value())
                 .build();
 
         // when
@@ -95,10 +97,10 @@ class ProjectProjectionHandlerTest extends AbstractUnitTest {
         projectRefRepositorySpy.expectNoUpdates();
         projectRefRepositorySpy.markInconsistentIfNotMarkedReturns(true);
 
-        var event = projectStatusChangedEventBuilder()
-                .projectId(existing.projectId().uuid())
-                .status(ProjectStatus.ARCHIVED.name())
-                .revision(5)
+        var event = fakeProjectStatusChangedBuilder()
+                .withProjectId(existing.projectId().uuid())
+                .withStatus(ProjectStatus.ARCHIVED.name())
+                .withRevision(5)
                 .build();
 
         // when

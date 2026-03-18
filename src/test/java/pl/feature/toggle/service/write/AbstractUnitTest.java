@@ -9,7 +9,6 @@ import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.outbox.FakeOutboxWriter;
-import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
@@ -65,7 +64,6 @@ public abstract class AbstractUnitTest {
     protected FakeCorrelationProvider correlationProvider;
     protected FakeActorProvider actorProvider;
     protected FakeAcknowledgment acknowledgment;
-    protected FeatureTogglePolicyFacade featureTogglePolicyFacade;
     protected ProjectRefConsistencySpy projectRefConsistencySpy;
     protected EnvironmentRefConsistencySpy environmentRefConsistencySpy;
     protected ApplicationEventPublishedSpy applicationEventPublishedSpy;
@@ -83,7 +81,6 @@ public abstract class AbstractUnitTest {
         featureToggleQueryRepositoryStub = new FeatureToggleQueryRepositoryStub();
         projectRefRepositorySpy = new ProjectRefProjectionRepositorySpy();
         fakeInMemoryProjectRefRepository = new FakeInMemoryProjectRefRepository();
-        featureTogglePolicyFacade = FeatureTogglePolicyFacade.create(featureToggleQueryRepositoryStub);
         projectRefConsistencySpy = new ProjectRefConsistencySpy();
         applicationEventPublishedSpy = new ApplicationEventPublishedSpy();
         environmentRefConsistencySpy = new EnvironmentRefConsistencySpy();

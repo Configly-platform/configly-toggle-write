@@ -13,7 +13,5 @@ public interface FeatureToggleQueryRepository {
 
     FeatureToggle getOrThrow(FeatureToggleId featureToggleId);
 
-    boolean exists(FeatureToggleName featureToggleName, EnvironmentId environmentId);
-
     List<FeatureToggle> findByEnvironmentId(EnvironmentId environmentId);
 }

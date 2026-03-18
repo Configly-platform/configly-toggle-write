@@ -31,6 +31,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME;
 import static pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated.environmentCreatedEventBuilder;
 import static pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged.environmentStatusChangedEventBuilder;
+import static pl.feature.toggle.service.contracts.fake.event.FakeEnvironmentCreatedBuilder.fakeEnvironmentCreatedBuilder;
 import static pl.feature.toggle.service.contracts.fake.event.FakeEnvironmentStatusChangedBuilder.fakeEnvironmentStatusChangedBuilder;
 
 @Import(EnvironmentProjectionEventualConsistencyIT.SyncAsyncConfig.class)
@@ -77,11 +78,11 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
         var rebuilt = EnvironmentRef.from(projectId, envId, EnvironmentStatus.ARCHIVED, Revision.from(5));
         given(configurationClient.fetchEnvironment(projectId, envId)).willReturn(rebuilt);
 
-        var gapEvent = environmentStatusChangedEventBuilder()
-                .projectId(projectId.uuid())
-                .environmentId(envId.uuid())
-                .status(EnvironmentStatus.ARCHIVED.name())
-                .revision(5)
+        var gapEvent = fakeEnvironmentStatusChangedBuilder()
+                .withProjectId(projectId.uuid())
+                .withEnvironmentId(envId.uuid())
+                .withStatus(EnvironmentStatus.ARCHIVED.name())
+                .withRevision(5)
                 .build();
 
         // when
@@ -113,12 +114,12 @@ class EnvironmentProjectionEventualConsistencyIT extends AbstractITTest {
                 .withRevision(Revision.from(2).value())
                 .build();
 
-        var createdLater = environmentCreatedEventBuilder()
-                .projectId(projectId.uuid())
-                .environmentId(envId.uuid())
-                .environmentName("test")
-                .status(EnvironmentStatus.ACTIVE.name())
-                .revision(Revision.initialRevision().value())
+        var createdLater = fakeEnvironmentCreatedBuilder()
+                .withProjectId(projectId.uuid())
+                .withEnvironmentId(envId.uuid())
+                .withEnvironmentName("test")
+                .withStatus(EnvironmentStatus.ACTIVE.name())
+                .withRevision(Revision.initialRevision().value())
                 .build();
 
         // when

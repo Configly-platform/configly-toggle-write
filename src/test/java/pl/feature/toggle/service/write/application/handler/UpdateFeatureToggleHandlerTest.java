@@ -6,7 +6,6 @@ import pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleUpda
 import pl.feature.toggle.service.write.AbstractUnitTest;
 import pl.feature.toggle.service.write.application.port.in.UpdateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.CannotOperateOnArchivedFeatureToggleException;
-import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleAlreadyExistsException;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
 import pl.feature.toggle.service.write.domain.reference.exception.CannotOperateOnArchivedEnvironmentException;
 import pl.feature.toggle.service.write.domain.reference.exception.CannotOperateOnArchivedProjectException;
@@ -27,7 +26,6 @@ class UpdateFeatureToggleHandlerTest extends AbstractUnitTest {
         sut = FeatureToggleHandlerFacade.updateFeatureToggleUseCase(
                 featureToggleCommandRepositorySpy,
                 featureToggleQueryRepositoryStub,
-                featureTogglePolicyFacade,
                 projectRefConsistencySpy,
                 environmentRefConsistencySpy,
                 outboxWriter
@@ -44,7 +42,6 @@ class UpdateFeatureToggleHandlerTest extends AbstractUnitTest {
                 .build();
         environmentRefConsistencySpy.getTrustedReturns(ACTIVE_ENVIRONMENT_WITH_ACTIVE_PROJECT);
         projectRefConsistencySpy.getTrustedReturns(ACTIVE_PROJECT);
-        featureToggleQueryRepositoryStub.existsReturns(false);
         featureToggleQueryRepositoryStub.getOrThrowReturns(ACTIVE_FEATURE_TOGGLE);
 
         // when
@@ -141,29 +138,6 @@ class UpdateFeatureToggleHandlerTest extends AbstractUnitTest {
         assertNoEventsHasBeenPublished();
     }
 
-
-    @Test
-    void should_not_update_feature_toggle_when_name_is_not_unique_for_environment() {
-        // given
-        var command = fakeUpdateFeatureToggleCommandBuilder()
-                .withEnvironmentId(ACTIVE_ENVIRONMENT_WITH_ACTIVE_PROJECT.environmentId())
-                .withProjectId(ACTIVE_ENVIRONMENT_WITH_ACTIVE_PROJECT.projectId())
-                .build();
-        environmentRefConsistencySpy.getTrustedReturns(ACTIVE_ENVIRONMENT_WITH_ACTIVE_PROJECT);
-        projectRefConsistencySpy.getTrustedReturns(ACTIVE_PROJECT);
-        featureToggleQueryRepositoryStub.existsReturns(true);
-        featureToggleQueryRepositoryStub.getOrThrowReturns(ACTIVE_FEATURE_TOGGLE);
-        featureToggleCommandRepositorySpy.expectNoCalls();
-
-
-        // when
-        var exception = catchException(() -> sut.execute(command));
-
-        // then
-        assertThat(exception).isInstanceOf(FeatureToggleAlreadyExistsException.class);
-        assertNoEventsHasBeenPublished();
-    }
-
     @Test
     void should_not_update_feature_toggle_when_toggle_is_archived() {
         // given
@@ -173,7 +147,6 @@ class UpdateFeatureToggleHandlerTest extends AbstractUnitTest {
                 .build();
         environmentRefConsistencySpy.getTrustedReturns(ACTIVE_ENVIRONMENT_WITH_ACTIVE_PROJECT);
         projectRefConsistencySpy.getTrustedReturns(ACTIVE_PROJECT);
-        featureToggleQueryRepositoryStub.existsReturns(false);
         featureToggleQueryRepositoryStub.getOrThrowReturns(ARCHIVED_FEATURE_TOGGLE);
 
 
@@ -196,7 +169,6 @@ class UpdateFeatureToggleHandlerTest extends AbstractUnitTest {
                 .build();
         environmentRefConsistencySpy.getTrustedReturns(ACTIVE_ENVIRONMENT_WITH_ACTIVE_PROJECT);
         projectRefConsistencySpy.getTrustedReturns(ACTIVE_PROJECT);
-        featureToggleQueryRepositoryStub.existsReturns(false);
         featureToggleQueryRepositoryStub.getOrThrowReturns(ACTIVE_FEATURE_TOGGLE);
         featureToggleCommandRepositorySpy.expectNoCalls();
 

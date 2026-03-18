@@ -31,14 +31,6 @@ class FeatureToggleJooqQueryRepository implements FeatureToggleQueryRepository {
     }
 
     @Override
-    public boolean exists(FeatureToggleName featureToggleName, EnvironmentId environmentId) {
-        return dslContext.fetchExists(FEATURE_TOGGLE,
-                FEATURE_TOGGLE.NAME.eq(featureToggleName.value()),
-                FEATURE_TOGGLE.ENVIRONMENT_ID.eq(environmentId.uuid())
-        );
-    }
-
-    @Override
     public List<FeatureToggle> findByEnvironmentId(EnvironmentId environmentId) {
         return dslContext.selectFrom(FEATURE_TOGGLE)
                 .where(FEATURE_TOGGLE.ENVIRONMENT_ID.eq(environmentId.uuid()))

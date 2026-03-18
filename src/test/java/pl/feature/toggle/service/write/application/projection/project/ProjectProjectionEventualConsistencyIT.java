@@ -27,6 +27,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME;
 import static pl.feature.toggle.service.contracts.event.project.ProjectCreated.projectCreatedEventBuilder;
 import static pl.feature.toggle.service.contracts.event.project.ProjectStatusChanged.projectStatusChangedEventBuilder;
+import static pl.feature.toggle.service.contracts.fake.event.FakeProjectCreatedBuilder.fakeProjectCreatedBuilder;
+import static pl.feature.toggle.service.contracts.fake.event.FakeProjectStatusChangedBuilder.fakeProjectStatusChangedBuilder;
 
 @Import(ProjectProjectionEventualConsistencyIT.SyncAsyncConfig.class)
 class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
@@ -66,10 +68,10 @@ class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
         var rebuilt = ProjectRef.from(projectId, ProjectStatus.ARCHIVED, Revision.from(5));
         given(configurationClient.fetchProject(projectId)).willReturn(rebuilt);
 
-        var gapEvent = projectStatusChangedEventBuilder()
-                .projectId(projectId.uuid())
-                .status(ProjectStatus.ARCHIVED.name())
-                .revision(5)
+        var gapEvent = fakeProjectStatusChangedBuilder()
+                .withProjectId(projectId.uuid())
+                .withStatus(ProjectStatus.ARCHIVED.name())
+                .withRevision(5)
                 .build();
 
         // when
@@ -91,16 +93,16 @@ class ProjectProjectionEventualConsistencyIT extends AbstractITTest {
         // given
         var projectId = ProjectId.create();
 
-        var statusChangedFirst = projectStatusChangedEventBuilder()
-                .projectId(projectId.uuid())
-                .status(ProjectStatus.ARCHIVED.name())
-                .revision(Revision.from(2).value())
+        var statusChangedFirst = fakeProjectStatusChangedBuilder()
+                .withProjectId(projectId.uuid())
+                .withStatus(ProjectStatus.ARCHIVED.name())
+                .withRevision(Revision.from(2).value())
                 .build();
 
-        var createdLater = projectCreatedEventBuilder()
-                .projectId(projectId.uuid())
-                .status(ProjectStatus.ACTIVE.name())
-                .revision(Revision.initialRevision().value())
+        var createdLater = fakeProjectCreatedBuilder()
+                .withProjectId(projectId.uuid())
+                .withStatus(ProjectStatus.ACTIVE.name())
+                .withRevision(Revision.initialRevision().value())
                 .build();
 
         // when

@@ -14,6 +14,7 @@ import pl.feature.toggle.service.write.application.projection.environment.event.
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.feature.toggle.service.contracts.event.environment.EnvironmentCreated.environmentCreatedEventBuilder;
 import static pl.feature.toggle.service.contracts.event.environment.EnvironmentStatusChanged.environmentStatusChangedEventBuilder;
+import static pl.feature.toggle.service.contracts.fake.event.FakeEnvironmentCreatedBuilder.fakeEnvironmentCreatedBuilder;
 import static pl.feature.toggle.service.contracts.fake.event.FakeEnvironmentStatusChangedBuilder.fakeEnvironmentStatusChangedBuilder;
 import static pl.feature.toggle.service.write.builder.FakeEnvironmentRefBuilder.fakeEnvironmentRefBuilder;
 
@@ -43,12 +44,12 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
         var projectId = ProjectId.create();
         var envId = EnvironmentId.create();
 
-        var event = environmentCreatedEventBuilder()
-                .projectId(projectId.uuid())
-                .environmentId(envId.uuid())
-                .environmentName("test")
-                .status(EnvironmentStatus.ACTIVE.name())
-                .revision(Revision.initialRevision().value())
+        var event = fakeEnvironmentCreatedBuilder()
+                .withProjectId(projectId.uuid())
+                .withEnvironmentId(envId.uuid())
+                .withEnvironmentName("test")
+                .withStatus(EnvironmentStatus.ACTIVE.name())
+                .withRevision(Revision.initialRevision().value())
                 .build();
 
         // when
@@ -107,11 +108,11 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
         environmentRefRepositorySpy.expectNoMarkInconsistent();
         applicationEventPublishedSpy.expectNoEvents();
 
-        var event = environmentStatusChangedEventBuilder()
-                .projectId(existingEnv.projectId().uuid())
-                .environmentId(existingEnv.environmentId().uuid())
-                .status(EnvironmentStatus.ACTIVE.name())
-                .revision(existingEnv.lastRevision().next().value())
+        var event = fakeEnvironmentStatusChangedBuilder()
+                .withProjectId(existingEnv.projectId().uuid())
+                .withEnvironmentId(existingEnv.environmentId().uuid())
+                .withStatus(EnvironmentStatus.ACTIVE.name())
+                .withRevision(existingEnv.lastRevision().next().value())
                 .build();
 
         // when
@@ -136,11 +137,11 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
         environmentRefRepositorySpy.expectNoUpdates();
         environmentRefRepositorySpy.markInconsistentIfNotMarkedReturns(true);
 
-        var event = environmentStatusChangedEventBuilder()
-                .projectId(existing.projectId().uuid())
-                .environmentId(existing.environmentId().uuid())
-                .status(EnvironmentStatus.ARCHIVED.name())
-                .revision(5)
+        var event = fakeEnvironmentStatusChangedBuilder()
+                .withProjectId(existing.projectId().uuid())
+                .withEnvironmentId(existing.environmentId().uuid())
+                .withStatus(EnvironmentStatus.ARCHIVED.name())
+                .withRevision(5)
                 .build();
 
         // when
@@ -166,11 +167,11 @@ class EnvironmentProjectionHandlerTest extends AbstractUnitTest {
         environmentRefRepositorySpy.expectNoUpdates();
         environmentRefRepositorySpy.markInconsistentIfNotMarkedReturns(true);
 
-        var event = environmentStatusChangedEventBuilder()
-                .projectId(existing.projectId().uuid())
-                .environmentId(existing.environmentId().uuid())
-                .status(EnvironmentStatus.ARCHIVED.name())
-                .revision(5)
+        var event = fakeEnvironmentStatusChangedBuilder()
+                .withProjectId(existing.projectId().uuid())
+                .withEnvironmentId(existing.environmentId().uuid())
+                .withStatus(EnvironmentStatus.ARCHIVED.name())
+                .withRevision(5)
                 .build();
 
         // when

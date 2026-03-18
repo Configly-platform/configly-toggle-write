@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
-import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.write.AbstractITTest;
@@ -63,63 +62,6 @@ class FeatureToggleQueryRepositoryIT extends AbstractITTest {
         // when / then
         assertThatThrownBy(() -> sut.getOrThrow(missingId))
                 .isInstanceOf(FeatureToggleNotFoundException.class);
-    }
-
-    @Test
-    void should_return_true_when_toggle_with_name_exists_in_environment() {
-        // given
-        var project = createProjectRef(ProjectStatus.ACTIVE);
-        var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
-
-        var toggle = fakeFeatureToggleBuilder()
-                .environmentId(env.environmentId())
-                .name(FeatureToggleName.create("my.toggle"))
-                .build();
-
-        commandRepository.save(toggle);
-
-        // when
-        var result = sut.exists(toggle.name(), env.environmentId());
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void should_return_false_when_toggle_name_exists_but_in_other_environment() {
-        // given
-        var project = createProjectRef(ProjectStatus.ACTIVE);
-
-        var env1 = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
-        var env2 = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
-
-        var name = FeatureToggleName.create("my.toggle");
-
-        var toggleInEnv1 = fakeFeatureToggleBuilder()
-                .environmentId(env1.environmentId())
-                .name(name)
-                .build();
-
-        commandRepository.save(toggleInEnv1);
-
-        // when
-        var result = sut.exists(name, env2.environmentId());
-
-        // then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    void should_return_false_when_toggle_does_not_exist() {
-        // given
-        var project = createProjectRef(ProjectStatus.ACTIVE);
-        var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
-
-        // when
-        var result = sut.exists(FeatureToggleName.create("missing.toggle"), env.environmentId());
-
-        // then
-        assertThat(result).isFalse();
     }
 
     private EnvironmentRef createEnvironmentRef(ProjectId projectId, EnvironmentStatus environmentStatus) {

@@ -2,10 +2,7 @@ package pl.feature.toggle.service.write.application.handler;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import pl.feature.toggle.service.model.security.actor.ActorProvider;
-import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
-import pl.feature.toggle.service.write.application.policy.FeatureTogglePolicyFacade;
 import pl.feature.toggle.service.write.application.port.in.*;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommandRepository;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
@@ -15,13 +12,11 @@ public final class FeatureToggleHandlerFacade {
 
     public static CreateFeatureToggleUseCase createFeatureToggleUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
-            FeatureTogglePolicyFacade featureTogglePolicyFacade,
             ProjectRefConsistency projectRefConsistency,
             EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter
     ) {
         return new CreateFeatureToggleHandler(featureToggleCommandRepository,
-                featureTogglePolicyFacade,
                 projectRefConsistency,
                 environmentRefConsistency,
                 outboxWriter);
@@ -30,14 +25,12 @@ public final class FeatureToggleHandlerFacade {
     public static UpdateFeatureToggleUseCase updateFeatureToggleUseCase(
             FeatureToggleCommandRepository featureToggleCommandRepository,
             FeatureToggleQueryRepository featureToggleQueryRepository,
-            FeatureTogglePolicyFacade featureTogglePolicyFacade,
             ProjectRefConsistency projectRefConsistency,
             EnvironmentRefConsistency environmentRefConsistency,
             OutboxWriter outboxWriter
     ) {
         return new UpdateFeatureToggleHandler(featureToggleCommandRepository,
                 featureToggleQueryRepository,
-                featureTogglePolicyFacade,
                 projectRefConsistency,
                 environmentRefConsistency,
                 outboxWriter);
