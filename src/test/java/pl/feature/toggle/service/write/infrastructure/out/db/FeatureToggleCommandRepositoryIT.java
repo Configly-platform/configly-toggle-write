@@ -2,7 +2,9 @@ package pl.feature.toggle.service.write.infrastructure.out.db;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentStatus;
+import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.model.project.ProjectStatus;
 import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
@@ -12,12 +14,12 @@ import pl.feature.toggle.service.write.application.port.out.FeatureToggleCommand
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
+import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleAlreadyExistsException;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleUpdateFailedException;
 import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static pl.feature.toggle.service.write.builder.FakeEnvironmentRefBuilder.fakeEnvironmentRefBuilder;
 import static pl.feature.toggle.service.write.builder.FakeFeatureToggleBuilder.fakeFeatureToggleBuilder;
 import static pl.feature.toggle.service.write.builder.FakeProjectRefBuilder.fakeProjectRefBuilder;
@@ -124,6 +126,50 @@ class FeatureToggleCommandRepositoryIT extends AbstractITTest {
         // then
         assertThatThrownBy(() -> sut.update(updateResult))
                 .isInstanceOf(FeatureToggleUpdateFailedException.class);
+    }
+
+    @Test
+    void should_throw_exception_when_create_and_feature_toggle_name_is_not_unique() {
+        // given
+        var project = createProjectRef(ProjectStatus.ACTIVE);
+        var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
+
+        var original = fakeFeatureToggleBuilder()
+                .environmentId(env.environmentId())
+                .build();
+        sut.save(original);
+
+        // when
+        var exception = catchException(() -> sut.save(original));
+
+        // then
+        assertThat(exception)
+                .isNotNull()
+                .isInstanceOf(FeatureToggleAlreadyExistsException.class);
+    }
+
+    @Test
+    void should_throw_exception_when_update_feature_toggle_and_name_is_not_unique() {
+        // given
+        var project = createProjectRef(ProjectStatus.ACTIVE);
+        var env = createEnvironmentRef(project.projectId(), EnvironmentStatus.ACTIVE);
+
+        var first = fakeFeatureToggleBuilder()
+                .environmentId(env.environmentId())
+                .build();
+        sut.save(first);
+        var second = fakeFeatureToggleBuilder()
+                .name(FeatureToggleName.create("XXXX"))
+                .environmentId(env.environmentId())
+                .build();
+        sut.save(second);
+        var updateResult = second.update(first.name(), first.description());
+
+        // when
+        var exception = catchException(() -> sut.update(updateResult));
+        assertThat(exception)
+                .isNotNull()
+                .isInstanceOf(FeatureToggleAlreadyExistsException.class);
     }
 
     private EnvironmentRef createEnvironmentRef(ProjectId projectId, EnvironmentStatus environmentStatus) {
