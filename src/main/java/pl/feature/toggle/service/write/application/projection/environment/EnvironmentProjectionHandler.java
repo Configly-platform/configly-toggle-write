@@ -14,7 +14,7 @@ import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.environment.EnvironmentStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.model.security.correlation.CorrelationId;
+import pl.feature.toggle.service.web.correlation.CorrelationId;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentProjection;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.EnvironmentRefQueryRepository;

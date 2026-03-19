@@ -4,8 +4,8 @@ import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.model.security.actor.Actor;
-import pl.feature.toggle.service.model.security.correlation.CorrelationId;
+import pl.feature.toggle.service.web.actor.Actor;
+import pl.feature.toggle.service.web.correlation.CorrelationId;
 
 public record ChangeFeatureToggleStatusCommand(
         ProjectId projectId,

@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.contracts.event.project.ProjectCreated;
 import pl.feature.toggle.service.contracts.event.project.ProjectStatusChanged;
-import pl.feature.toggle.service.contracts.event.project.ProjectUpdated;
 import pl.feature.toggle.service.contracts.shared.EventId;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionApplier;
 import pl.feature.toggle.service.event.processing.api.RevisionProjectionPlan;
@@ -14,15 +13,12 @@ import pl.feature.toggle.service.event.processing.internal.RevisionApplierResult
 import pl.feature.toggle.service.model.Revision;
 import pl.feature.toggle.service.model.project.ProjectId;
 import pl.feature.toggle.service.model.project.ProjectStatus;
-import pl.feature.toggle.service.model.security.correlation.CorrelationId;
+import pl.feature.toggle.service.web.correlation.CorrelationId;
 import pl.feature.toggle.service.write.application.port.in.ProjectProjection;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefProjectionRepository;
 import pl.feature.toggle.service.write.application.port.out.ProjectRefQueryRepository;
 import pl.feature.toggle.service.write.application.projection.project.event.RebuildProjectRefRequested;
 import pl.feature.toggle.service.write.domain.reference.ProjectRef;
-
-import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 
 @AllArgsConstructor
 @Slf4j

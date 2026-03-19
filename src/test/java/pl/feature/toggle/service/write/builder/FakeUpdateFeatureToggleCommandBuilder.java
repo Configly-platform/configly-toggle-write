@@ -5,11 +5,9 @@ import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.model.security.actor.Actor;
-import pl.feature.toggle.service.model.security.correlation.CorrelationId;
+import pl.feature.toggle.service.web.actor.Actor;
+import pl.feature.toggle.service.web.correlation.CorrelationId;
 import pl.feature.toggle.service.write.application.port.in.command.UpdateFeatureToggleCommand;
-
-import java.util.UUID;
 
 public class FakeUpdateFeatureToggleCommandBuilder {
 

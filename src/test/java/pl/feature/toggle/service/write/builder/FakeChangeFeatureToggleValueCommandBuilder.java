@@ -3,8 +3,8 @@ package pl.feature.toggle.service.write.builder;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
 import pl.feature.toggle.service.model.project.ProjectId;
-import pl.feature.toggle.service.model.security.actor.Actor;
-import pl.feature.toggle.service.model.security.correlation.CorrelationId;
+import pl.feature.toggle.service.web.actor.Actor;
+import pl.feature.toggle.service.web.correlation.CorrelationId;
 import pl.feature.toggle.service.value.FeatureToggleValueSnapshot;
 import pl.feature.toggle.service.write.application.port.in.command.ChangeFeatureToggleValueCommand;
 

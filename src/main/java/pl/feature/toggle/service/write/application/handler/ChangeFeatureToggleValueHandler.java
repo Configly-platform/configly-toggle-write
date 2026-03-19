@@ -3,8 +3,6 @@ package pl.feature.toggle.service.write.application.handler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
-import pl.feature.toggle.service.model.security.actor.ActorProvider;
-import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
 import pl.feature.toggle.service.write.application.port.in.ChangeFeatureToggleValueUseCase;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentRefConsistency;

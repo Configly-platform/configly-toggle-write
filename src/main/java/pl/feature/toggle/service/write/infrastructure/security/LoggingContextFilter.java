@@ -8,9 +8,8 @@ import lombok.AllArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pl.feature.toggle.service.model.security.actor.ActorProvider;
-import pl.feature.toggle.service.model.security.correlation.CorrelationId;
-import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
+import pl.feature.toggle.service.web.actor.ActorProvider;
+import pl.feature.toggle.service.web.correlation.CorrelationId;
 
 import java.io.IOException;
 

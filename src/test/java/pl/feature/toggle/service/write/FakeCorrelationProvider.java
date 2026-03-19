@@ -1,7 +1,7 @@
 package pl.feature.toggle.service.write;
 
-import pl.feature.toggle.service.model.security.correlation.CorrelationId;
-import pl.feature.toggle.service.model.security.correlation.CorrelationProvider;
+import pl.feature.toggle.service.web.correlation.CorrelationId;
+import pl.feature.toggle.service.web.correlation.CorrelationProvider;
 
 public class FakeCorrelationProvider implements CorrelationProvider {
     @Override

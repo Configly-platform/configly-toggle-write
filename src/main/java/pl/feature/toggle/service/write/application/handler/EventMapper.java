@@ -10,13 +10,12 @@ import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleDescription;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleStatus;
-import pl.feature.toggle.service.model.security.actor.Actor;
-import pl.feature.toggle.service.model.security.correlation.CorrelationId;
+import pl.feature.toggle.service.web.actor.Actor;
+import pl.feature.toggle.service.web.correlation.CorrelationId;
 import pl.feature.toggle.service.value.FeatureToggleValue;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleField;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggleUpdateResult;
-import pl.feature.toggle.service.write.domain.reference.EnvironmentRef;
 
 import static pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleCreated.featureToggleCreatedEventBuilder;
 import static pl.feature.toggle.service.contracts.event.featuretoggle.FeatureToggleStatusChanged.featureToggleStatusChangedBuilder;

@@ -21,6 +21,7 @@
         <model.version>1.0.0-SNAPSHOT</model.version>
         <value.version>1.0.0-SNAPSHOT</value.version>
         <event.processing.version>1.0.0-SNAPSHOT</event.processing.version>
+        <shared-web.version>1.0.0-SNAPSHOT</shared-web.version>
     </properties>
     <dependencies>
         <dependency>
@@ -120,6 +121,11 @@
             <version>${contracts.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.feature.toggle.service</groupId>
+            <artifactId>feature-toggle-shared-web</artifactId>
+            <version>${shared-web.version}</version>
         </dependency>
     </dependencies>
 
