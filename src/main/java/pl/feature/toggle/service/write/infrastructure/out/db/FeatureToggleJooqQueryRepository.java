@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
 import pl.feature.toggle.service.model.environment.EnvironmentId;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
-import pl.feature.toggle.service.model.featuretoggle.FeatureToggleName;
 import pl.feature.toggle.service.write.application.port.out.FeatureToggleQueryRepository;
 import pl.feature.toggle.service.write.domain.featuretoggle.FeatureToggle;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
