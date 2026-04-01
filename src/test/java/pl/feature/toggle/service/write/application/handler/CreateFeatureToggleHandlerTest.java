@@ -55,7 +55,7 @@ class CreateFeatureToggleHandlerTest extends AbstractUnitTest {
         assertThat(actual.description()).isEqualTo(command.description());
         assertThat(actual.environmentId()).isEqualTo(command.environmentId());
         assertThat(actual.revision()).isEqualTo(Revision.initialRevision());
-        assertContainsEventOfType(KafkaTopic.FEATURE_TOGGLE.topic(), FeatureToggleCreated.class);
+        assertContainsEventOfType(KafkaTopic.FEATURE_TOGGLE.topicName(), FeatureToggleCreated.class);
     }
 
     @Test

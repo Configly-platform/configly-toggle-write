@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import pl.feature.toggle.service.model.featuretoggle.FeatureToggleId;
+import pl.feature.toggle.service.outbox.api.OutboxEvent;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
 import pl.feature.toggle.service.write.application.port.in.CreateFeatureToggleUseCase;
 import pl.feature.toggle.service.write.application.port.in.EnvironmentRefConsistency;
@@ -42,7 +43,7 @@ class CreateFeatureToggleHandler implements CreateFeatureToggleUseCase {
                 command.correlationId()
         );
 
-        outboxWriter.write(event, FEATURE_TOGGLE.topic());
+        outboxWriter.write(OutboxEvent.of(projectRef.projectId().idAsString(), event, FEATURE_TOGGLE));
 
         log.info("Feature-Toggle created: id={}, projectId={}, environmentId={}", featureToggle.id().uuid(),
                 projectRef.projectId().uuid(), environmentRef.environmentId().uuid());

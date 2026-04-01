@@ -2,10 +2,9 @@ package pl.feature.toggle.service.write.infrastructure.in.rest;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.feature.toggle.service.web.ErrorCode;
 import pl.feature.toggle.service.web.ErrorResponse;
 import pl.feature.toggle.service.web.correlation.CorrelationProvider;
@@ -14,7 +13,7 @@ import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureTog
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleNotFoundException;
 import pl.feature.toggle.service.write.domain.featuretoggle.exception.FeatureToggleUpdateFailedException;
 
-@ControllerAdvice
+@RestControllerAdvice
 @AllArgsConstructor
 class FeatureToggleExceptionHandler {
 
@@ -46,7 +45,7 @@ class FeatureToggleExceptionHandler {
 
     @ExceptionHandler({FeatureToggleUpdateFailedException.class})
     ResponseEntity<ErrorResponse> handle(FeatureToggleUpdateFailedException exception) {
-        var errorResponse = createErrorResponse(ErrorCode.FEATURE_TOGGLE_UPDATE_CONFLICT, exception);
+        var errorResponse = createErrorResponse(ErrorCode.FEATURE_TOGGLE_WAS_MODIFIED_BY_ANOTHER_REQUEST, exception);
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(errorResponse);

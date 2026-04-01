@@ -57,8 +57,8 @@ class ChangeFeatureToggleValueHandlerTest extends AbstractUnitTest {
         var value = updated.featureToggle().value();
         assertThat(value.asText()).isEqualTo(expectedNewValue.asText());
         assertThat(value.typeName()).isEqualTo(FeatureToggleValueType.BOOLEAN.name());
-        assertContainsEventOfType(FEATURE_TOGGLE.topic(), FeatureToggleValueChanged.class);
-        var event = getLastPublishedEvent(FEATURE_TOGGLE.topic(), FeatureToggleValueChanged.class);
+        assertContainsEventOfType(FEATURE_TOGGLE.topicName(), FeatureToggleValueChanged.class);
+        var event = getLastPublishedEvent(FEATURE_TOGGLE.topicName(), FeatureToggleValueChanged.class);
         assertThat(event.value()).isEqualTo(expectedNewValue.asText());
     }
 

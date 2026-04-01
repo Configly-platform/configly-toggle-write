@@ -3,6 +3,7 @@ package pl.feature.toggle.service.write.application.handler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+import pl.feature.toggle.service.outbox.api.OutboxEvent;
 import pl.feature.toggle.service.web.actor.Actor;
 import pl.feature.toggle.service.web.correlation.CorrelationId;
 import pl.feature.toggle.service.outbox.api.OutboxWriter;
@@ -51,7 +52,7 @@ class ArchiveFeatureTogglesByEnvironmentHandler implements ArchiveFeatureToggles
 
     private void sendFeatureToggleStatusChangedEvent(FeatureToggleUpdateResult result, Actor actor, CorrelationId correlationId) {
         var event = createFeatureToggleStatusChangedEvent(result, actor, correlationId);
-        outboxWriter.write(event, FEATURE_TOGGLE.topic());
+        outboxWriter.write(OutboxEvent.generatedKey(event, FEATURE_TOGGLE));
     }
 
 

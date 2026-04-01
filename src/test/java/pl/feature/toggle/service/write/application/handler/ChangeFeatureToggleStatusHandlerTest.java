@@ -49,8 +49,8 @@ class ChangeFeatureToggleStatusHandlerTest extends AbstractUnitTest {
         var updated = featureToggleCommandRepositorySpy.lastUpdated();
         assertThat(updated.featureToggle().isArchived()).isTrue();
         assertThat(updated.featureToggle().isActive()).isFalse();
-        assertContainsEventOfType(FEATURE_TOGGLE.topic(), FeatureToggleStatusChanged.class);
-        var event = getLastPublishedEvent(FEATURE_TOGGLE.topic(), FeatureToggleStatusChanged.class);
+        assertContainsEventOfType(FEATURE_TOGGLE.topicName(), FeatureToggleStatusChanged.class);
+        var event = getLastPublishedEvent(FEATURE_TOGGLE.topicName(), FeatureToggleStatusChanged.class);
         assertThat(event.status()).isEqualTo(FeatureToggleStatus.ARCHIVED.name());
     }
 
@@ -71,8 +71,8 @@ class ChangeFeatureToggleStatusHandlerTest extends AbstractUnitTest {
         var updated = featureToggleCommandRepositorySpy.lastUpdated();
         assertThat(updated.featureToggle().isArchived()).isFalse();
         assertThat(updated.featureToggle().isActive()).isTrue();
-        assertContainsEventOfType(FEATURE_TOGGLE.topic(), FeatureToggleStatusChanged.class);
-        var event = getLastPublishedEvent(FEATURE_TOGGLE.topic(), FeatureToggleStatusChanged.class);
+        assertContainsEventOfType(FEATURE_TOGGLE.topicName(), FeatureToggleStatusChanged.class);
+        var event = getLastPublishedEvent(FEATURE_TOGGLE.topicName(), FeatureToggleStatusChanged.class);
         assertThat(event.status()).isEqualTo(FeatureToggleStatus.ACTIVE.name());
     }
 

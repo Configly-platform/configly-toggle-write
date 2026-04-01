@@ -51,7 +51,7 @@ class UpdateFeatureToggleHandlerTest extends AbstractUnitTest {
         var updated = featureToggleCommandRepositorySpy.lastUpdated();
         assertThat(updated.featureToggle().name()).isEqualTo(command.name());
         assertThat(updated.featureToggle().description()).isEqualTo(command.description());
-        assertContainsEventOfType(FEATURE_TOGGLE.topic(), FeatureToggleUpdated.class);
+        assertContainsEventOfType(FEATURE_TOGGLE.topicName(), FeatureToggleUpdated.class);
     }
 
     @Test

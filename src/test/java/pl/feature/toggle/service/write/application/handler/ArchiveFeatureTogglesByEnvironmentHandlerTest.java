@@ -61,7 +61,7 @@ class ArchiveFeatureTogglesByEnvironmentHandlerTest extends AbstractUnitTest {
                     assertThat(updateResult.featureToggle().isActive()).isFalse();
                 });
 
-        assertHasEventCountOfType(FEATURE_TOGGLE.topic(), FeatureToggleStatusChanged.class, 2);
+        assertHasEventCountOfType(FEATURE_TOGGLE.topicName(), FeatureToggleStatusChanged.class, 2);
     }
 
     @Test
@@ -85,7 +85,7 @@ class ArchiveFeatureTogglesByEnvironmentHandlerTest extends AbstractUnitTest {
         sut.handle(command);
 
         // then
-        assertDoesNotContainEventOfType(FEATURE_TOGGLE.topic(), FeatureToggleStatusChanged.class);
+        assertDoesNotContainEventOfType(FEATURE_TOGGLE.topicName(), FeatureToggleStatusChanged.class);
     }
 
     @Test
@@ -119,7 +119,7 @@ class ArchiveFeatureTogglesByEnvironmentHandlerTest extends AbstractUnitTest {
         assertThat(updated.featureToggle().isArchived()).isTrue();
         assertThat(updated.featureToggle().isActive()).isFalse();
 
-        assertHasEventCountOfType(FEATURE_TOGGLE.topic(), FeatureToggleStatusChanged.class, 1);
+        assertHasEventCountOfType(FEATURE_TOGGLE.topicName(), FeatureToggleStatusChanged.class, 1);
     }
 
 }
