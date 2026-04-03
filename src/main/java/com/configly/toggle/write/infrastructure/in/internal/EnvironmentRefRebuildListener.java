@@ -1,0 +1,25 @@
+package com.configly.toggle.write.infrastructure.in.internal;
+
+import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.transaction.event.TransactionalEventListener;
+import com.configly.event.processing.api.CorrelationScope;
+import com.configly.toggle.write.application.port.in.EnvironmentRefConsistency;
+import com.configly.toggle.write.application.projection.environment.event.RebuildEnvironmentRefRequested;
+
+import static org.springframework.transaction.event.TransactionPhase.AFTER_COMMIT;
+
+@AllArgsConstructor
+class EnvironmentRefRebuildListener {
+
+    private final EnvironmentRefConsistency environmentRefConsistency;
+
+    @Async
+    @TransactionalEventListener(phase = AFTER_COMMIT)
+    void on(RebuildEnvironmentRefRequested event) {
+        CorrelationScope.run(
+                event.correlationId(),
+                () -> environmentRefConsistency.rebuild(event.projectId(), event.environmentId()));
+    }
+
+}

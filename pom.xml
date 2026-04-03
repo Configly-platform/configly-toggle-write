@@ -8,10 +8,10 @@
         <version>4.0.0</version>
         <relativePath/>
     </parent>
-    <groupId>pl.feature.toggle.service</groupId>
-    <artifactId>feature-toggle-write</artifactId>
+    <groupId>com.configly</groupId>
+    <artifactId>toggle-write</artifactId>
     <version>${revision}</version>
-    <name>write</name>
+    <name>configly-toggle-write</name>
     <properties>
         <java.version>21</java.version>
         <jooq.version>3.20.6</jooq.version>
@@ -63,28 +63,28 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>pl.feature.toggle.service</groupId>
-            <artifactId>feature-toggle-outbox</artifactId>
+            <groupId>com.configly</groupId>
+            <artifactId>outbox</artifactId>
             <version>${outbox.version}</version>
         </dependency>
         <dependency>
-            <groupId>pl.feature.toggle.service</groupId>
-            <artifactId>feature-toggle-event-processing</artifactId>
+            <groupId>com.configly</groupId>
+            <artifactId>event-processing</artifactId>
             <version>${event.processing.version}</version>
         </dependency>
         <dependency>
-            <groupId>pl.feature.toggle.service</groupId>
-            <artifactId>feature-toggle-contracts</artifactId>
+            <groupId>com.configly</groupId>
+            <artifactId>contracts</artifactId>
             <version>${contracts.version}</version>
         </dependency>
         <dependency>
-            <groupId>pl.feature.toggle.service</groupId>
-            <artifactId>feature-toggle-value</artifactId>
+            <groupId>com.configly</groupId>
+            <artifactId>value</artifactId>
             <version>${value.version}</version>
         </dependency>
         <dependency>
-            <groupId>pl.feature.toggle.service</groupId>
-            <artifactId>feature-toggle-model</artifactId>
+            <groupId>com.configly</groupId>
+            <artifactId>model</artifactId>
             <version>${model.version}</version>
         </dependency>
         <dependency>
@@ -116,15 +116,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>pl.feature.toggle.service</groupId>
-            <artifactId>feature-toggle-contracts</artifactId>
+            <groupId>com.configly</groupId>
+            <artifactId>contracts</artifactId>
             <version>${contracts.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>pl.feature.toggle.service</groupId>
-            <artifactId>feature-toggle-shared-web</artifactId>
+            <groupId>com.configly</groupId>
+            <artifactId>shared-web</artifactId>
             <version>${shared-web.version}</version>
         </dependency>
     </dependencies>
@@ -183,7 +183,7 @@
                                 </generate>
 
                                 <target>
-                                    <packageName>github.saqie.ftaas.jooq</packageName>
+                                    <packageName>com.configly.jooq</packageName>
                                     <directory>${project.build.directory}/generated-sources/jooq</directory>
                                 </target>
                             </generator>
