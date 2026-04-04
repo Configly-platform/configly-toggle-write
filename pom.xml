@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <groupId>com.configly</groupId>
-    <artifactId>toggle-write</artifactId>
+    <artifactId>configly-toggle-write</artifactId>
     <version>${revision}</version>
     <name>configly-toggle-write</name>
     <properties>
@@ -64,27 +64,27 @@
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>outbox</artifactId>
+            <artifactId>configly-outbox</artifactId>
             <version>${outbox.version}</version>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>event-processing</artifactId>
+            <artifactId>configly-event-processing</artifactId>
             <version>${event.processing.version}</version>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>contracts</artifactId>
+            <artifactId>configly-contracts</artifactId>
             <version>${contracts.version}</version>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>value</artifactId>
+            <artifactId>configly-value</artifactId>
             <version>${value.version}</version>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>model</artifactId>
+            <artifactId>configly-model</artifactId>
             <version>${model.version}</version>
         </dependency>
         <dependency>
@@ -117,14 +117,14 @@
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>contracts</artifactId>
+            <artifactId>configly-contracts</artifactId>
             <version>${contracts.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>shared-web</artifactId>
+            <artifactId>configly-shared-web</artifactId>
             <version>${shared-web.version}</version>
         </dependency>
     </dependencies>
