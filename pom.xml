@@ -64,27 +64,27 @@
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>configly-outbox</artifactId>
+            <artifactId>outbox</artifactId>
             <version>${outbox.version}</version>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>configly-event-processing</artifactId>
+            <artifactId>event-processing</artifactId>
             <version>${event.processing.version}</version>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>configly-contracts</artifactId>
+            <artifactId>contracts</artifactId>
             <version>${contracts.version}</version>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>configly-value</artifactId>
+            <artifactId>value</artifactId>
             <version>${value.version}</version>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>configly-model</artifactId>
+            <artifactId>model</artifactId>
             <version>${model.version}</version>
         </dependency>
         <dependency>
@@ -117,14 +117,14 @@
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>configly-contracts</artifactId>
+            <artifactId>contracts</artifactId>
             <version>${contracts.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>configly-shared-web</artifactId>
+            <artifactId>shared-web</artifactId>
             <version>${shared-web.version}</version>
         </dependency>
     </dependencies>
