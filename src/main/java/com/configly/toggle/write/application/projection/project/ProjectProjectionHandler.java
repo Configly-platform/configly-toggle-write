@@ -13,7 +13,7 @@ import com.configly.event.processing.internal.RevisionApplierResult;
 import com.configly.model.Revision;
 import com.configly.model.project.ProjectId;
 import com.configly.model.project.ProjectStatus;
-import com.configly.web.correlation.CorrelationId;
+import com.configly.web.model.correlation.CorrelationId;
 import com.configly.toggle.write.application.port.in.ProjectProjection;
 import com.configly.toggle.write.application.port.out.ProjectRefProjectionRepository;
 import com.configly.toggle.write.application.port.out.ProjectRefQueryRepository;

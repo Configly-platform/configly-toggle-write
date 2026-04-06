@@ -14,7 +14,7 @@ import com.configly.model.Revision;
 import com.configly.model.environment.EnvironmentId;
 import com.configly.model.environment.EnvironmentStatus;
 import com.configly.model.project.ProjectId;
-import com.configly.web.correlation.CorrelationId;
+import com.configly.web.model.correlation.CorrelationId;
 import com.configly.toggle.write.application.port.in.EnvironmentProjection;
 import com.configly.toggle.write.application.port.out.EnvironmentRefProjectionRepository;
 import com.configly.toggle.write.application.port.out.EnvironmentRefQueryRepository;

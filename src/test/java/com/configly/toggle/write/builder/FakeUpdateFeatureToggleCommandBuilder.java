@@ -5,8 +5,8 @@ import com.configly.model.featuretoggle.FeatureToggleDescription;
 import com.configly.model.featuretoggle.FeatureToggleId;
 import com.configly.model.featuretoggle.FeatureToggleName;
 import com.configly.model.project.ProjectId;
-import com.configly.web.actor.Actor;
-import com.configly.web.correlation.CorrelationId;
+import com.configly.web.model.actor.Actor;
+import com.configly.web.model.correlation.CorrelationId;
 import com.configly.toggle.write.application.port.in.command.UpdateFeatureToggleCommand;
 
 public class FakeUpdateFeatureToggleCommandBuilder {

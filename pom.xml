@@ -21,7 +21,7 @@
         <model.version>1.0.0-SNAPSHOT</model.version>
         <value.version>1.0.0-SNAPSHOT</value.version>
         <event.processing.version>1.0.0-SNAPSHOT</event.processing.version>
-        <shared-web.version>1.0.0-SNAPSHOT</shared-web.version>
+        <web.version>1.0.0-SNAPSHOT</web.version>
     </properties>
     <dependencies>
         <dependency>
@@ -124,8 +124,8 @@
         </dependency>
         <dependency>
             <groupId>com.configly</groupId>
-            <artifactId>shared-web</artifactId>
-            <version>${shared-web.version}</version>
+            <artifactId>web</artifactId>
+            <version>${web.version}</version>
         </dependency>
     </dependencies>
 

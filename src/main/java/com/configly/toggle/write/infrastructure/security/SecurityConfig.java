@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import com.configly.web.actor.ActorProvider;
-import com.configly.web.correlation.CorrelationProvider;
+import com.configly.web.model.actor.ActorProvider;
+import com.configly.web.model.correlation.CorrelationProvider;
 
 @Configuration
 class SecurityConfig {

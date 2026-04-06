@@ -2,8 +2,8 @@ package com.configly.toggle.write.application.projection.environment.event;
 
 import com.configly.contracts.shared.Metadata;
 import com.configly.model.environment.EnvironmentId;
-import com.configly.web.actor.Actor;
-import com.configly.web.correlation.CorrelationId;
+import com.configly.web.model.actor.Actor;
+import com.configly.web.model.correlation.CorrelationId;
 
 public record EnvironmentArchivedCascadeRequest(
         EnvironmentId environmentId,

@@ -3,7 +3,7 @@ package com.configly.toggle.write.infrastructure.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import com.configly.web.actor.*;
+import com.configly.web.model.actor.*;
 
 import java.util.Objects;
 import java.util.Optional;
