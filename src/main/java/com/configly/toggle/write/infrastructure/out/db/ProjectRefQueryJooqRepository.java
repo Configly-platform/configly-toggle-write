@@ -8,7 +8,8 @@ import com.configly.toggle.write.domain.reference.ProjectRef;
 
 import java.util.Optional;
 
-import static github.saqie.ftaas.jooq.tables.ProjectRef.PROJECT_REF;
+import static com.configly.jooq.tables.ProjectRef.PROJECT_REF;
+
 
 @AllArgsConstructor
 class ProjectRefQueryJooqRepository implements ProjectRefQueryRepository {

@@ -16,7 +16,7 @@ import com.configly.contracts.event.project.ProjectCreated;
 
 @Slf4j
 @AllArgsConstructor
-@KafkaListener(topics = "${topics.feature-toggle-configuration-events}")
+@KafkaListener(topics = "${topics.configly-structure-events}")
 class KafkaEventConsumer {
 
     private final ProjectProjection projectProjection;

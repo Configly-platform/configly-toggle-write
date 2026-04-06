@@ -7,7 +7,7 @@ import com.configly.toggle.write.domain.featuretoggle.FeatureToggle;
 import com.configly.toggle.write.domain.featuretoggle.FeatureToggleUpdateResult;
 import com.configly.toggle.write.domain.featuretoggle.exception.FeatureToggleUpdateFailedException;
 
-import static github.saqie.ftaas.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
+import static com.configly.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
 import static com.configly.toggle.write.infrastructure.out.db.DatabaseUniqueConstraintExceptionHandler.translateUniqueConstraintException;
 
 

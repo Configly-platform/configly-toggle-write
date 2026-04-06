@@ -10,7 +10,7 @@ import com.configly.toggle.write.domain.featuretoggle.exception.FeatureToggleNot
 
 import java.util.List;
 
-import static github.saqie.ftaas.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
+import static com.configly.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
 
 
 @AllArgsConstructor

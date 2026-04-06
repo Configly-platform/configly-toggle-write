@@ -7,7 +7,7 @@ import com.configly.toggle.write.application.port.out.ProjectRefProjectionReposi
 import com.configly.toggle.write.domain.reference.ProjectRef;
 import com.configly.toggle.write.domain.reference.exception.ProjectNotFoundException;
 
-import static github.saqie.ftaas.jooq.tables.ProjectRef.PROJECT_REF;
+import static com.configly.jooq.tables.ProjectRef.PROJECT_REF;
 
 
 @AllArgsConstructor

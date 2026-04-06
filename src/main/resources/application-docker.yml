@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://configly-toggle-write-db:5432/configly_toggle_write
+    username: admin
+    password: admin
+
+outbox:
+  kafka:
+    bootstrap-servers: kafka:29092

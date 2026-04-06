@@ -1,6 +1,6 @@
 package com.configly.toggle.write;
 
-import github.saqie.ftaas.jooq.tables.records.ProcessedEventsRecord;
+import com.configly.jooq.tables.records.ProcessedEventsRecord;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.TestInstance;
@@ -13,10 +13,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
-import static github.saqie.ftaas.jooq.tables.EnvironmentRef.ENVIRONMENT_REF;
-import static github.saqie.ftaas.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
-import static github.saqie.ftaas.jooq.tables.ProcessedEvents.PROCESSED_EVENTS;
-import static github.saqie.ftaas.jooq.tables.ProjectRef.PROJECT_REF;
+import static com.configly.jooq.tables.EnvironmentRef.ENVIRONMENT_REF;
+import static com.configly.jooq.tables.FeatureToggle.FEATURE_TOGGLE;
+import static com.configly.jooq.tables.ProcessedEvents.PROCESSED_EVENTS;
+import static com.configly.jooq.tables.ProjectRef.PROJECT_REF;
 import static pl.feature.ftaas.outbox.jooq.tables.OutboxEvents.OUTBOX_EVENTS;
 
 @Testcontainers

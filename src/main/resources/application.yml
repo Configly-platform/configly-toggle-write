@@ -1,19 +1,19 @@
 spring:
   application:
-    name: feature-toggle-write
+    name: configly-toggle-write
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
   datasource:
-    url: jdbc:postgresql://localhost:5433/feature_toggle_write
+    url: jdbc:postgresql://localhost:5433/configly_toggle_write
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
   kafka:
     consumer:
-      group-id: feature-toggle-write
+      group-id: configly-toggle-write
 
 topics: # Topic do konsumowania
-  feature-toggle-configuration-events: feature-toggle-configuration-events
+  configly-structure-events: configly-structure-events
 
 logging:
   pattern:
@@ -27,9 +27,9 @@ outbox:
   kafka:
     enabled: true
     bootstrap-servers: localhost:9092
-    client-id: feature-toggle-write-client
+    client-id: configly-toggle-write-client
     topics: # Topic do wytwarzania
-      - name: feature-toggle-events
+      - name: configly-toggle-events
         partitions: 3
         replication-factor: 1
     props:

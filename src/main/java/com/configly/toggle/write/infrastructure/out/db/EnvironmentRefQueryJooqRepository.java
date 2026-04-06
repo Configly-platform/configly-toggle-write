@@ -9,7 +9,8 @@ import com.configly.toggle.write.domain.reference.EnvironmentRef;
 
 import java.util.Optional;
 
-import static github.saqie.ftaas.jooq.tables.EnvironmentRef.ENVIRONMENT_REF;
+import static com.configly.jooq.tables.EnvironmentRef.ENVIRONMENT_REF;
+
 
 @AllArgsConstructor
 class EnvironmentRefQueryJooqRepository implements EnvironmentRefQueryRepository {

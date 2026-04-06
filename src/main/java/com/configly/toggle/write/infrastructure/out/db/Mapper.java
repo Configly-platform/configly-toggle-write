@@ -1,8 +1,8 @@
 package com.configly.toggle.write.infrastructure.out.db;
 
-import github.saqie.ftaas.jooq.tables.records.EnvironmentRefRecord;
-import github.saqie.ftaas.jooq.tables.records.FeatureToggleRecord;
-import github.saqie.ftaas.jooq.tables.records.ProjectRefRecord;
+import com.configly.jooq.tables.records.EnvironmentRefRecord;
+import com.configly.jooq.tables.records.FeatureToggleRecord;
+import com.configly.jooq.tables.records.ProjectRefRecord;
 import com.configly.model.CreatedAt;
 import com.configly.model.Revision;
 import com.configly.model.UpdatedAt;

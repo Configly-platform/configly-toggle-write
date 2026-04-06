@@ -5,7 +5,7 @@ import org.jooq.DSLContext;
 import com.configly.contracts.shared.EventId;
 import com.configly.event.processing.api.ProcessedEventRepository;
 
-import static github.saqie.ftaas.jooq.tables.ProcessedEvents.PROCESSED_EVENTS;
+import static com.configly.jooq.tables.ProcessedEvents.PROCESSED_EVENTS;
 
 
 @AllArgsConstructor
