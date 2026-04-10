@@ -132,4 +132,21 @@ class FeatureToggleWriteApplicationConfig {
         );
     }
 
+    @Bean
+    ChangeFeatureToggleRulesUseCase changeFeatureToggleRulesUseCase(
+            FeatureToggleCommandRepository featureToggleCommandRepository,
+            FeatureToggleQueryRepository featureToggleQueryRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
+            OutboxWriter outboxWriter
+    ) {
+        return FeatureToggleHandlerFacade.changeFeatureToggleRulesUseCase(
+                featureToggleCommandRepository,
+                featureToggleQueryRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
+                outboxWriter
+        );
+    }
+
 }

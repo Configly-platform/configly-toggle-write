@@ -6,7 +6,7 @@ import com.configly.model.environment.EnvironmentStatus;
 import com.configly.model.featuretoggle.FeatureToggleName;
 import com.configly.model.project.ProjectId;
 import com.configly.model.project.ProjectStatus;
-import com.configly.value.FeatureToggleValueSnapshot;
+import com.configly.value.toggle.FeatureToggleValueSnapshot;
 import com.configly.toggle.write.AbstractITTest;
 import com.configly.toggle.write.application.port.out.EnvironmentRefProjectionRepository;
 import com.configly.toggle.write.application.port.out.FeatureToggleCommandRepository;

@@ -10,7 +10,7 @@ import com.configly.model.environment.EnvironmentId;
 import com.configly.model.featuretoggle.FeatureToggleDescription;
 import com.configly.model.featuretoggle.FeatureToggleName;
 import com.configly.model.featuretoggle.FeatureToggleStatus;
-import com.configly.value.FeatureToggleValueBuilder;
+import com.configly.value.toggle.FeatureToggleValueBuilder;
 import com.configly.toggle.write.AbstractUnitTest;
 import com.configly.toggle.write.domain.featuretoggle.FeatureToggleField;
 import com.configly.toggle.write.domain.featuretoggle.FeatureToggleUpdateResult;

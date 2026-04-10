@@ -8,12 +8,16 @@ import com.configly.model.featuretoggle.FeatureToggleDescription;
 import com.configly.model.featuretoggle.FeatureToggleId;
 import com.configly.model.featuretoggle.FeatureToggleName;
 import com.configly.model.featuretoggle.FeatureToggleStatus;
-import com.configly.value.FeatureToggleValue;
-import com.configly.value.FeatureToggleValueBuilder;
-import com.configly.value.FeatureToggleValueSnapshot;
+import com.configly.toggle.write.application.port.in.command.ChangeFeatureToggleRulesCommand;
+import com.configly.toggle.write.application.port.in.command.ChangeFeatureToggleRulesCommand.RuleCommand;
+import com.configly.value.toggle.FeatureToggleValue;
+import com.configly.value.toggle.FeatureToggleValueBuilder;
+import com.configly.value.toggle.FeatureToggleValueSnapshot;
 import com.configly.toggle.write.application.port.in.command.CreateFeatureToggleCommand;
 import com.configly.toggle.write.domain.featuretoggle.exception.CannotOperateOnArchivedFeatureToggleException;
 import com.configly.toggle.write.domain.reference.EnvironmentRef;
+
+import java.util.List;
 
 import static com.configly.model.featuretoggle.FeatureToggleStatus.ACTIVE;
 import static com.configly.model.featuretoggle.FeatureToggleStatus.ARCHIVED;
@@ -32,7 +36,8 @@ public record FeatureToggle(
         FeatureToggleStatus status,
         CreatedAt createdAt,
         UpdatedAt updatedAt,
-        Revision revision
+        Revision revision,
+        Rules rules
 ) {
 
 
@@ -46,7 +51,8 @@ public record FeatureToggle(
                 ACTIVE,
                 CreatedAt.now(),
                 UpdatedAt.now(),
-                Revision.initialRevision()
+                Revision.initialRevision(),
+                Rules.empty()
         );
     }
 
@@ -63,7 +69,8 @@ public record FeatureToggle(
                 ARCHIVED,
                 createdAt,
                 UpdatedAt.now(),
-                revision.next());
+                revision.next(),
+                rules);
         var fieldChange = fieldChange(STATUS, ACTIVE, ARCHIVED);
         return updated(featureToggle, revision, fieldChange);
     }
@@ -81,7 +88,8 @@ public record FeatureToggle(
                 ACTIVE,
                 createdAt,
                 UpdatedAt.now(),
-                revision.next());
+                revision.next(),
+                rules);
         var fieldChange = fieldChange(STATUS, ARCHIVED, ACTIVE);
         return updated(featureToggle, revision, fieldChange);
     }
@@ -108,7 +116,8 @@ public record FeatureToggle(
                 status,
                 createdAt,
                 UpdatedAt.now(),
-                revision.next());
+                revision.next(),
+                rules);
         return updated(featureToggle, revision, changeSet.toArray());
     }
 
@@ -133,7 +142,8 @@ public record FeatureToggle(
                 status,
                 createdAt,
                 UpdatedAt.now(),
-                revision.next());
+                revision.next(),
+                rules);
         return updated(featureToggle, revision, changeSet.toArray());
     }
 
@@ -146,4 +156,11 @@ public record FeatureToggle(
     }
 
 
+    public void changeRules(List<RuleCommand> rulesCommands) {
+        if (isArchived()){
+            throw new CannotOperateOnArchivedFeatureToggleException(name);
+        }
+        // TODO
+
+    }
 }

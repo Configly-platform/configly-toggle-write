@@ -73,4 +73,20 @@ public final class FeatureToggleHandlerFacade {
     ) {
         return new ArchiveFeatureTogglesByEnvironmentHandler(featureToggleQueryRepository, featureToggleCommandRepository, outboxWriter);
     }
+
+    public static ChangeFeatureToggleRulesUseCase changeFeatureToggleRulesUseCase(
+            FeatureToggleCommandRepository featureToggleCommandRepository,
+            FeatureToggleQueryRepository featureToggleQueryRepository,
+            ProjectRefConsistency projectRefConsistency,
+            EnvironmentRefConsistency environmentRefConsistency,
+            OutboxWriter outboxWriter
+    ) {
+        return new ChangeFeatureToggleRulesHandler(
+                featureToggleCommandRepository,
+                featureToggleQueryRepository,
+                projectRefConsistency,
+                environmentRefConsistency,
+                outboxWriter
+        );
+    }
 }

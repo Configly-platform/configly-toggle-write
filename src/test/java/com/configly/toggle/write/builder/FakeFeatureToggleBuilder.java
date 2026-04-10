@@ -8,8 +8,8 @@ import com.configly.model.featuretoggle.FeatureToggleDescription;
 import com.configly.model.featuretoggle.FeatureToggleId;
 import com.configly.model.featuretoggle.FeatureToggleName;
 import com.configly.model.featuretoggle.FeatureToggleStatus;
-import com.configly.value.FeatureToggleValue;
-import com.configly.value.FeatureToggleValueBuilder;
+import com.configly.value.toggle.FeatureToggleValue;
+import com.configly.value.toggle.FeatureToggleValueBuilder;
 import com.configly.toggle.write.domain.featuretoggle.FeatureToggle;
 
 public class FakeFeatureToggleBuilder {

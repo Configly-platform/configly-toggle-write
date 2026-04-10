@@ -1,22 +1,17 @@
 package com.configly.toggle.write.infrastructure.in.rest;
 
+import com.configly.toggle.write.application.port.in.*;
+import com.configly.toggle.write.application.port.in.command.*;
+import com.configly.toggle.write.infrastructure.in.rest.dto.ChangeFeatureToggleRulesDto;
+import com.configly.toggle.write.infrastructure.in.rest.dto.ChangeFeatureToggleValueDto;
+import com.configly.toggle.write.infrastructure.in.rest.dto.CreateFeatureToggleDto;
+import com.configly.toggle.write.infrastructure.in.rest.dto.UpdateFeatureToggleDto;
+import com.configly.web.model.actor.ActorProvider;
+import com.configly.web.model.correlation.CorrelationProvider;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import com.configly.web.model.actor.ActorProvider;
-import com.configly.web.model.correlation.CorrelationProvider;
-import com.configly.toggle.write.application.port.in.ChangeFeatureToggleStatusUseCase;
-import com.configly.toggle.write.application.port.in.ChangeFeatureToggleValueUseCase;
-import com.configly.toggle.write.application.port.in.CreateFeatureToggleUseCase;
-import com.configly.toggle.write.application.port.in.UpdateFeatureToggleUseCase;
-import com.configly.toggle.write.application.port.in.command.ChangeFeatureToggleStatusCommand;
-import com.configly.toggle.write.application.port.in.command.ChangeFeatureToggleValueCommand;
-import com.configly.toggle.write.application.port.in.command.CreateFeatureToggleCommand;
-import com.configly.toggle.write.application.port.in.command.UpdateFeatureToggleCommand;
-import com.configly.toggle.write.infrastructure.in.rest.dto.ChangeFeatureToggleValueDto;
-import com.configly.toggle.write.infrastructure.in.rest.dto.CreateFeatureToggleDto;
-import com.configly.toggle.write.infrastructure.in.rest.dto.UpdateFeatureToggleDto;
 
 import java.util.UUID;
 
@@ -30,6 +25,7 @@ class FeatureToggleController {
     private final UpdateFeatureToggleUseCase updateFeatureToggleUseCase;
     private final ChangeFeatureToggleValueUseCase changeFeatureToggleValueUseCase;
     private final ChangeFeatureToggleStatusUseCase changeFeatureToggleStatusUseCase;
+    private final ChangeFeatureToggleRulesUseCase changeFeatureToggleRulesUseCase;
     private final ActorProvider actorProvider;
     private final CorrelationProvider correlationProvider;
 
@@ -78,6 +74,18 @@ class FeatureToggleController {
         var command = ChangeFeatureToggleValueCommand.from(projectId, environmentId, featureToggleId, dto,
                 actorProvider.current(), correlationProvider.current());
         changeFeatureToggleValueUseCase.handle(command);
+    }
+
+    @PutMapping("/{featureToggleId}/rules")
+    void changeRules(
+            @PathVariable String projectId,
+            @PathVariable String environmentId,
+            @PathVariable String featureToggleId,
+            @RequestBody @Valid ChangeFeatureToggleRulesDto dto
+    ) {
+        var command = ChangeFeatureToggleRulesCommand.from(projectId, environmentId, featureToggleId, dto,
+                actorProvider.current(), correlationProvider.current());
+        changeFeatureToggleRulesUseCase.handle(command);
     }
 
 }

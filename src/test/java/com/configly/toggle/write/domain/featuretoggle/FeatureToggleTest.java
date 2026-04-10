@@ -8,8 +8,8 @@ import com.configly.model.featuretoggle.FeatureToggleDescription;
 import com.configly.model.featuretoggle.FeatureToggleName;
 import com.configly.model.featuretoggle.FeatureToggleStatus;
 import com.configly.model.project.ProjectId;
-import com.configly.value.FeatureToggleValueBuilder;
-import com.configly.value.FeatureToggleValueSnapshot;
+import com.configly.value.toggle.FeatureToggleValueBuilder;
+import com.configly.value.toggle.FeatureToggleValueSnapshot;
 import com.configly.toggle.write.domain.featuretoggle.exception.CannotOperateOnArchivedFeatureToggleException;
 import com.configly.toggle.write.domain.reference.EnvironmentRef;
 

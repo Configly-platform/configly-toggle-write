@@ -12,7 +12,7 @@ import com.configly.model.featuretoggle.FeatureToggleName;
 import com.configly.model.featuretoggle.FeatureToggleStatus;
 import com.configly.web.model.actor.Actor;
 import com.configly.web.model.correlation.CorrelationId;
-import com.configly.value.FeatureToggleValue;
+import com.configly.value.toggle.FeatureToggleValue;
 import com.configly.toggle.write.domain.featuretoggle.FeatureToggle;
 import com.configly.toggle.write.domain.featuretoggle.FeatureToggleField;
 import com.configly.toggle.write.domain.featuretoggle.FeatureToggleUpdateResult;
